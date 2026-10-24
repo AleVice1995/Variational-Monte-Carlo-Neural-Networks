@@ -1,0 +1,715 @@
+% ============================================================
+%                     INPUT AND LANGUAGE
+% ============================================================
+
+% Modern LaTeX already uses UTF-8 by default.
+\usepackage[utf8]{inputenc} %Il pacchetto traduce varie codifiche di input standard e di altro tipo in un "linguaggio interno LATEX".
+
+% ============================================================
+%                         GRAPHICS
+% ============================================================
+
+\usepackage{graphicx}%potenziamento del pacchetto graphics con opzioni aggiuntive al commando \includegraphics
+\usepackage{animate}
+
+\graphicspath{
+	{"D:/Ale/Universita/Triennale (Bachelor)/Libri università/LaTeX/progetti/file base"}
+	{"D:/Ale/Universita/Triennale (Bachelor)/Libri università/LaTeX/progetti/file base/tex/latex"}
+	{"D:/Ale/Universita/Master/Thesis/3) Physics 30-70 Computation - Machine Learning documents/Neural Networks/Networks 	and Deep Learning"}
+	{../Images/}
+    {../Images/Chapter 1/}
+    {../Images/Chapter 2/}
+    {../Images/Chapter 3/}
+	%{"D:/Ale/Universita/Master/Thesis/3) Physics 30-70 Computation - Machine Learning documents/Neural Networks/Networks 	and Deep Learning/Images/Chapter 1"}
+	%{"D:/Ale/Universita/Master/Thesis/3) Physics 30-70 Computation - Machine Learning documents/Neural Networks/Networks 	and Deep Learning/Images/Chapter 2"}
+}
+
+% ============================================================
+%                       LANGUAGE
+% ============================================================
+
+\usepackage[english]{babel} %cambia i termini viaulizzati nella lingua scelta esempio references invece che bibliografia.
+
+
+% ============================================================
+%                    MATHEMATICS
+% ============================================================
+
+\usepackage{amsmath} %pacchetto per utilizzo di equazioni matematiche
+\usepackage{amsfonts} %aggiunta di simboli matematici
+\usepackage{amssymb} %aggiunge ulteriori simboli matematici.
+\usepackage{mathtools} %fornisce una serie di pacchetti progettati per migliorare l'aspetto dei documenti contenenti molta matematica.
+\usepackage{mathrsfs} %introduce un nuovo tipo di font di tipo matematico
+\usepackage{nccmath} %aggiunge alcuni commandi matematici
+\usepackage{bigints} %permetter di scrivere integrali piu grandi
+\usepackage{cancel}        %il pacchetto introduce simboli di semplificazione delle equazioni \bacancel{}
+\usepackage{old-arrows} % Questo pacchetto rende disponibili le frecce Computer Modern vecchio stile.
+\usepackage{tcolorbox}
+% ============================================================
+%                         FIGURES
+% ============================================================
+
+\usepackage{caption}       %permette di customizzare le didascalie
+\usepackage{float} %migliora l'interfaccia per descrivere oggetti fluttuanti come figure e tabelle.
+\usepackage{afterpage} %serve a itrodurre il comando afterpage per sistemare le pagine con figure e testi
+\usepackage[rightcaption]{sidecap}  %il pacchetto permette di posizionare la didascalia a destra dell'immagine
+\usepackage{subfigure} %Fornisce supporto per la manipolazione e il riferimento di figure e tabelle piccole o "sottostanti" all'interno di una singola figura o ambiente di tabella
+\usepackage{wrapfig} % Consente alle figure o alle tabelle di avere il testo avvolto attorno ad esse
+
+% ============================================================
+%                         TABLES
+% ============================================================
+
+\usepackage{makecell}  %permette di modificare le tabelle
+\usepackage{tabularx} %permette di definire un ambiente tabularx, una estensione di tabular, che ha un aggiuntivo designatore di colonne.
+
+% ============================================================
+%                    CIRCUITS AND PLOTS
+% ============================================================
+
+\usepackage{circuitikz}  %il pacchetto permette di disegnare circuiti
+\usepackage{pgfplots} %disegna grafci ad alta qualità di funzioni in scala normale o logaritmica
+\usepackage{pgfplotstable}% is used to read, process, format, and typeset tabular data—especially data stored in .csv or other text files.
+\usepackage{tkz-fct} %offre facile accesso ai grafici di programmazione delle funzioni con TikZ e gnuplot.
+
+% ============================================================
+%                    DOCUMENT STRUCTURE
+% ============================================================
+
+\usepackage[toc,page]{appendix} %aggiunge alla tabella dei contenuti l'appendice e provvede alcuni commandi per l'appendice
+\usepackage[nottoc]{tocbibind} %permette di aggiungere la bibliografia alla tabella dei contenuti
+\usepackage{comment}  %permette di commentare intere sezioni invece che frasi singole
+\usepackage{enumerate} %permette di modificare le liste di punti numerati
+
+
+% ============================================================
+%                       PAGE LAYOUT
+% ============================================================
+
+\usepackage[margin=30mm]{geometry}  %permette di impostare i margini del foglio otre che il tipo di font e altri dettagli di impaginazione
+\usepackage{fancyhdr} %fornisce funzionalità estese, sia per la creazione di intestazioni e piè di pagina, sia per il controllo del loro utilizzo
+
+% ============================================================
+%                    FONTS AND DECORATION
+% ============================================================
+
+\usepackage{calligra}      	%pacchetto che introduce i font calligra
+\usepackage{miama}         	%pacchetto che introduce i font miama
+
+\usepackage{lmodern}			%cambia il font di tutto il docuemnto
+
+%\usepackage{stix2}
+
+%\usepackage{tgtermes}
+
+
+% ============================================================
+%                    CODE LISTINGS
+% ============================================================
+
+\usepackage{listings}
+
+% ============================================================
+%                      OTHER PACKAGES
+% ============================================================
+
+\usepackage{authblk} %Il pacchetto ridefinisce il comando \author in modo che funzioni normalmente o per consentire uno stile di nota a piè di pagina.
+\usepackage{afterpage}
+\usepackage{lipsum}  %genera dummy text
+
+% ============================================================
+%                     HYPERLINKS
+% ============================================================
+%\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks, pdfstartview=FitH]{hyperref}
+%\usepackage{hyperref} %permette di creare link ipertesto (il comando [hidelinks] nasconde i controni rossi
+
+
+% ============================================================
+%                         SETTINGS
+% ============================================================
+
+% ---------- Hyperref ----------
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor={red!50!black},
+	citecolor={blue!50!black},
+	urlcolor={blue!80!black}
+}
+
+
+% ---------- Code listings ----------
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    backgroundcolor=\color{gray!10},
+    frame=none,
+    breaklines=true,
+    escapeinside={(*@}{@*)}
+}
+
+
+% ---------- Equations ----------
+
+\numberwithin{equation}{section} %permette di avere le equazioni numerati in base alla sezione o sottosezione in cui esse sono disposte
+
+
+% ---------- PGFPlots ----------
+
+\pgfplotsset{
+	compat=1.16,
+    width=\textwidth,
+    height=0.625\textwidth
+}
+
+
+
+
+% ============================================================
+%                     CUSTOM COMMANDS
+% ============================================================
+
+\newcommand{\quotes}[1]{``#1''}
+
+\DeclareRobustCommand{\rchi}{{\mathpalette\irchi\relax}}   %aggiunge un comando \rhi per disgnare meglio il chi greco
+
+\newcommand{\irchi}[2]{\raisebox{\depth}{$#1\chi$}} % inner command, used by \rchi %modi diversi per scrivere il chi greco
+
+\newcommand{\eqstackrel}[1]{
+	\stackrel{
+		\substack{
+			\mathclap{#1}\\[0.5ex]
+			\displaystyle\uparrow\\
+			 ~
+		}
+	}{ = }
+} %permette di introdurre il commando \eqstackrel{} in maniera da disegnare un uguale con una freccia legata al testa tra parentesi
+
+\newcommand\Item[1][]{%
+  \ifx\relax#1\relax
+  	\item
+  \else
+  	\item[#1]
+  \fi
+  \abovedisplayskip=0pt
+  \abovedisplayshortskip=0pt
+  \belowdisplayshortskip=0pt
+  ~\vspace*{-\baselineskip}
+}
+
+\newcommand{\heart}{\ensuremath\heartsuit} %aggiunge un commando \heart in maniera da aggiungere un simbolo di un cuoricino
+
+\newcommand{\verteq}{\rotatebox{90}{$\,=$}} %aggiunge un commando \verteq in mnaiera da aggiungere un segno di uguale in verticale anziche in orizzontale
+
+\newcommand{\equalto}[2]
+	{\underset{
+		\scriptstyle\overset{\mkern4mu\verteq}{#2}
+		}{#1}
+} %aggiunge un commando \equalto{}{} in maniera da associare al testo dentro le prime graffe il testo dentro le seconde tramite un segno di uguale posizionato in verticale
+%\newcommand{\superv}{Prof. William Joseph Weber} %aggiunge un ulteriore autore
+
+
+
+
+%create a circuit representina Neuron in a NN
+\newcommand{\neuron}[4]{%
+\begin{tikzpicture}[
+    >=stealth,
+    thick,
+    every node/.style={font=\large}
+]
+
+% Input
+\node (input) at (-1,0) {$x=1$};
+
+% Neuron
+\draw (4,0) circle (1);
+\node at (4,0) {$\sigma$};
+
+% ------------------------------------------------
+% Weight
+% ------------------------------------------------
+
+% First arrow
+\draw[->] (-0.3,0) -- (3,0);
+
+% Weight label and value
+\node at (1.25,0.85) {$w:~#1$};
+
+% Weight box
+\fill[#4!40] (1.2,0.25) rectangle (1.2+#1*0.5,0.60);
+\draw (0.2,0.25) rectangle (2.2,0.60);
+
+% Zero line
+\draw (1.2,0.25) -- (1.2,0.60);
+
+% ------------------------------------------------
+% Bias
+% ------------------------------------------------
+
+
+% Bias label and value
+\node at (4.05,1.75) {$b:~#2$};
+
+% Bias box
+\fill[#4!40] (4.0,1.15) rectangle (4.0+#2*0.5,1.50);
+\draw (3.0,1.15) rectangle (5.0,1.5);
+
+% Zero line
+\draw (4.0,1.15) -- (4.0,1.50);
+
+% ------------------------------------------------
+% Output
+% ------------------------------------------------
+
+% Output arrow
+\draw[->] (5,0) -- (8,0);
+
+% Output label and value
+\node at (9.15,0.45) {$a:~#3$};
+
+% Output box
+\fill[#4!40] (8.20,-0.15) rectangle (8.2+#3*2,0.2);
+\draw (8.20,-0.15) rectangle (10.20,0.2);
+
+
+\end{tikzpicture}%
+}
+
+
+\newcommand{\Costplot}[4]{%
+\pgfmathtruncatemacro{\epoch}{#2+1}
+
+\ifnum\epoch<10
+    \edef\formattedepoch{00\epoch}
+\else
+	\ifnum\epoch<100
+    		\edef\formattedepoch{0\epoch}
+	\else
+    		\edef\formattedepoch{\epoch}
+	\fi
+\fi
+
+\begin{tikzpicture}%[show background rectangle]
+\begin{axis}[
+    xlabel={$Epochs$},
+    ylabel={$Cost$},
+    xmin=0,
+    xmax=330,
+    ymin=0,
+    ymax=1.1*#4,
+    grid=major,
+    width=7cm,
+    height=4cm,
+    scale only axis,
+    legend style={
+    		text width=2cm,
+    		align=right,
+    	},
+]
+\addplot[
+    #3,
+    thick,
+    smooth,
+] coordinates {
+    #1
+};
+\addlegendentry{Epoch: \formattedepoch}
+\end{axis}
+\end{tikzpicture}%
+}
+
+
+
+\newcommand{\animateNeuron}[2]{%
+
+    % Number of rows
+    \pgfplotstablegetrowsof{#1}
+    \pgfmathtruncatemacro{\lastrow}{\pgfplotsretval}
+
+    % Animation
+    \begin{animateinline}[
+        controls,
+    ]{60}
+	
+
+		% ------------------------------------------------
+		% Loop through CSV
+		% ------------------------------------------------
+		\def\mydata{}
+		
+        \multiframe{\lastrow}{i=0+1}{
+
+	    		% Get weight
+            \pgfplotstablegetelem{\i}{w}\of{#1}
+            \edef\currentw{\pgfplotsretval}
+
+ 	    		% Get bias
+            \pgfplotstablegetelem{\i}{b}\of{#1}
+            \edef\currentb{\pgfplotsretval}
+
+	    		% Get output
+            \pgfplotstablegetelem{\i}{a}\of{#1}
+            \edef\currenta{\pgfplotsretval}
+            
+            % Get Cost
+            \pgfplotstablegetelem{\i}{C}\of{#1}
+            \edef\currentC{\pgfplotsretval}
+            
+            % Get inital Cost (to set yrange)
+            \ifnum\i=0
+            	\xdef\initialC{\currentC}
+            	\fi
+			
+			\xdef\mydata{\mydata (\i,\currentC)}
+			
+			\hspace{-1cm}%
+			\makebox[\linewidth][c]{%
+    				\parbox{\linewidth}{%
+        				\centering
+        				\neuron{\currentw}{\currentb}{\currenta}{#2}
+
+        				\vspace{0.5cm}
+					
+					\hspace{-2cm}%
+        				\Costplot{\mydata}{\i}{#2}{\initialC}%
+    				}%
+			}
+	    		
+	    		% New animation frame
+            %\ifnum\i<\lastrow
+            %    \newframe
+            %\fi
+        }
+
+    \end{animateinline}
+}
+
+\newcommand{\softmaxBars}[8]{%
+\begin{tikzpicture}[
+    >=stealth,
+    thick,
+    every node/.style={font=\large}
+]
+
+% z1 label and value
+\node at (-2.3,2.6) {$z_1^L:~#1$};
+
+% z1 box
+\fill[red!40] (-2,3) rectangle (-2+#1*0.2,3.5);
+\draw (-3,3) rectangle (-1,3.5);
+
+% Zero line
+\draw (-2,3) -- (-2,3.5);
+
+
+
+% z2 label and value
+\node at (-2.3,.6) {$z_2^L:~#2$};
+
+% z2 box
+\fill[red!40] (-2,1) rectangle (-2+#2*0.2,1.5);
+\draw (-3,1) rectangle (-1,1.5);
+
+% Zero line
+\draw (-2,1) -- (-2,1.5);
+
+
+
+% z3 label and value
+\node at (-2.3,-1.4) {$z_3^L:~#3$};
+
+% z3 box
+\fill[red!40] (-2,-0.5) rectangle (-2+#3*0.2,-1);
+\draw (-3,-0.5) rectangle (-1,-1);
+
+% Zero line
+\draw (-2,-0.5) -- (-2,-1);
+
+
+
+% z4 label and value
+\node at (-2.3,-3.4) {$z_4^L:~#4$};
+
+% z4 box
+\fill[red!40] (-2,-2.5) rectangle (-2+#4*0.2,-3);
+\draw (-3,-2.5) rectangle (-1,-3);
+
+% Zero line
+\draw (-2,-2.5) -- (-2,-3);
+
+
+
+
+
+
+% a1 label and value
+\node at (1.7,2.6) {$a_1^L:~#5$};
+
+% a1 box
+\fill[blue!40] (1,3) rectangle (1+#5*2,3.5);
+\draw (1,3) rectangle (3,3.5);
+
+
+
+% a2 label and value
+\node at (1.7,.6) {$a_2^L:~#6$};
+
+% a2 box
+\fill[blue!40] (1,1) rectangle (1+#6*2,1.5);
+\draw (1,1) rectangle (3,1.5);
+
+
+
+% a3 label and value
+\node at (1.7,-1.4) {$a_3^L:~#7$};
+
+% a3 box
+\fill[blue!40] (1,-0.5) rectangle (1+#7*2,-1);
+\draw (1,-0.5) rectangle (3,-1);
+
+
+
+% a4 label and value
+\node at (1.7,-3.4) {$a_4^L:~#8$};
+
+% a4 box
+\fill[blue!40] (1,-2.5) rectangle (1+#8*2,-3);
+\draw (1,-2.5) rectangle (3,-3);
+
+
+\end{tikzpicture}%
+}
+
+\newcommand{\animateBars}[1]{%
+
+    % Number of rows
+    \pgfplotstablegetrowsof{#1}
+    \pgfmathtruncatemacro{\lastrow}{\pgfplotsretval}
+
+    % Animation
+    \begin{animateinline}[
+        controls,
+    ]{30}
+	
+
+		% ------------------------------------------------
+		% Loop through CSV
+		% ------------------------------------------------
+				
+        \multiframe{\lastrow}{i=0+1}{
+
+	    		% Get z1
+            \pgfplotstablegetelem{\i}{z1}\of{#1}
+            \edef\currentzone{\pgfplotsretval}
+
+ 	    		% Get z2
+            \pgfplotstablegetelem{\i}{z2}\of{#1}
+            \edef\currentztwo{\pgfplotsretval}
+            
+            % Get z3
+            \pgfplotstablegetelem{\i}{z3}\of{#1}
+            \edef\currentzthree{\pgfplotsretval}
+            
+            % Get z4
+            \pgfplotstablegetelem{\i}{z4}\of{#1}
+            \edef\currentzfour{\pgfplotsretval}
+			
+			% Get a1
+            \pgfplotstablegetelem{\i}{a1}\of{#1}
+            \edef\currentaone{\pgfplotsretval}
+            
+            % Get a2
+            \pgfplotstablegetelem{\i}{a2}\of{#1}
+            \edef\currentatwo{\pgfplotsretval}
+            
+            % Get a3
+            \pgfplotstablegetelem{\i}{a3}\of{#1}
+            \edef\currentathree{\pgfplotsretval}
+            
+            % Get a4
+            \pgfplotstablegetelem{\i}{a4}\of{#1}
+            \edef\currentafour{\pgfplotsretval}
+            
+			
+			\hspace{-1cm}%
+			\makebox[\linewidth][c]{%
+    				\parbox{\linewidth}{%
+        				\centering
+        				\softmaxBars{\currentzone}{\currentztwo}{\currentzthree}{\currentzfour}{\currentaone}{\currentatwo}{\currentathree}{\currentafour}
+
+    				}%
+			}
+	    		
+	    		% New animation frame
+            %\ifnum\i<\lastrow
+            %    \newframe
+            %\fi
+        }
+
+    \end{animateinline}
+}
+
+
+% ============================================================
+%                       WIDEBAR COMMAND
+% ============================================================
+
+
+\makeatletter %tutto il pezzo fino a \makeatother
+
+\newcommand*\rel@kern[1]{\kern#1\dimexpr\macc@kerna}
+
+\newcommand*\widebar[1]{%
+  \begingroup
+  \def\mathaccent##1##2{%
+    \rel@kern{0.8}%
+    \overline{\rel@kern{-0.8}\macc@nucleus\rel@kern{0.2}}%
+    \rel@kern{-0.2}%
+  }%
+  \macc@depth\@ne
+  \let\math@bgroup\@empty \let\math@egroup\macc@set@skewchar
+  \mathsurround\z@ \frozen@everymath{\mathgroup\macc@group\relax}%
+  \macc@set@skewchar\relax
+  \let\mathaccentV\macc@nested@a
+  \macc@nested@a\relax111{#1}%
+  \endgroup
+}
+\makeatother %tutto il pezzo da \makeatletter fino a \makeatother introduce il comando \widebar{} per avere una barra piu larga sopra il testo scritto tra le graffe
+
+\newcommand{\gigi}[1]{#1}
+
+% ============================================================
+%                       TITLE PAGE
+% ============================================================
+
+
+\makeatletter
+
+% Default: no cover image
+\def\@coverimage{}
+
+% User command
+\newcommand{\coverimage}[2]{%
+    \def\@coverimage{%
+        \includegraphics[width=#2\linewidth]{#1}%
+    }%
+}
+\makeatother
+
+\makeatletter
+
+% Default: no cover image
+\def\@citeimage{}
+
+% User command
+\newcommand{\citeimage}[1]{%
+    \def\@citeimage{{\footnotesize #1}}%
+}
+\makeatother
+
+
+\makeatletter
+
+\renewcommand\maketitle{
+\begin{titlepage}
+    \centering
+    \scshape
+
+    \vspace*{1.5\baselineskip}
+
+    % ===================
+    %   Title Section
+    % ===================
+	
+	% Double line above the title
+    \rule{\linewidth}{1.6pt}\\[-2pt]
+    \rule{\linewidth}{0.4pt}
+
+    \vspace{0.75\baselineskip}
+	
+	% Title
+    {\fontsize{26pt}{31pt}\selectfont \@title\par}
+
+    \vspace{0.75\baselineskip}
+	
+	% Double line below the title
+    \rule{\linewidth}{0.4pt}\\[-2pt]
+    \rule{\linewidth}{1.6pt}
+	
+	\vspace{2.5\baselineskip}
+    %\vspace{5\baselineskip}
+
+    % =================
+    %   Cover Image
+    % =================
+
+    \@coverimage
+
+    \begin{flushleft}
+        {\fontsize{9pt}{11pt}\selectfont \@citeimage}
+    \end{flushleft}
+
+    \vfill
+
+    % =================
+    %   Author
+    % =================
+
+    {\fontsize{23pt}{28pt}\selectfont \@author\par}
+
+    \vspace{1.5\baselineskip}
+
+\end{titlepage}
+}
+
+\makeatother
+
+% ============================================================
+%                       PAGE STYLE
+% ============================================================
+
+% per impostare l'intestazione e il piè di pagina prima si set lo style a fancy con \pagestyle{fancy}, dopo si pulisce l'intestazione e il piè di pagina con \fancyhf{} altrimenti in seguito si avrebbe i testi di deafult che continuerebbero ad apparire, e infine gli ultimi tre comandi aggiungono il numero della pagina (a destra per i numeri dispari e a sinistra per quelli pari), il testo della sezione in alto (a sinistra per pagine pari) e il testo del paragrafo (a sinistra per pagine dispari).
+
+\pagestyle{fancy}
+
+\fancyhf{}
+
+\fancyfoot[RO,LE]{\thepage}
+
+\fancyhead[LE]{\nouppercase{\leftmark}}
+
+\fancyhead[LO]{\rightmark}
+
+
+
+
+
+
+
+% ============================================================
+%                  OPTIONAL / UNUSED PACKAGES
+% ============================================================
+
+
+
+% Italian language (alternative to English)
+%\usepackage[italian]{babel}
+
+% Better looking tables
+%\usepackage{booktabs}     %il pacchetto migliora le tabelle
+
+% Advanced float/caption positioning
+% \usepackage[
+% 	  capbesideposition={top,outside},
+% 	  facing=yes,
+%	  capbesidesep=quad
+% ]{floatrow}
+
+% Enhanced underlining
+%\usepackage{soulutf8} %permette di migliorare le funzioni di \underline usando al posto suo il comando \ul
+
+% Table of contents customization
+%\usepackage{titletoc}
+%\usepackage{tocloft}

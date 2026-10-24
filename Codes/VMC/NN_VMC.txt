@@ -1,0 +1,1424 @@
+ok allora devo fare cercare di implementare una rete neurale in maniera da risolvere un problema di VMC. Ora per semplicità 
+consideriamo il caso di un singolo oscillatore armonico. Normalmente quello che faccio in VMC è il seguente:
+Inizialmente genero una posizione a caso dell'oscillatore per esempio utilizzo un distribuzione uniforme in un certo range 
+e questo è il mio punto di partenza. In seguito vado a utilizzare l'algoritmo Metropolis per generare l nuova posizione. 
+Quindi quello che faccio è genero un numer randomico con distribuzione uniforme tra 0 e 1, a questo numero sottraggo 0.5 e 
+al risultato moliplico un fattore Delta cosicche il numero generato randomicamente (con distr uniforme) sia un numero tra 
+-Delta/2 e Delta/2 e infine lo sommo al mio numero di partenza, In questa maniera ho generator una nuova posizione per la 
+psozione della mia particella. Ora quello che faccio è andare a determinare il valore del rapporto tra la funzione d'onda 
+nella nuova posizione e quella vecchia il tutto al quadrato, cio corrisponde al rapporto tra le porbabilita di anadare 
+dalla vecchia posizione alla nuova diviso quella di andare dalla nuova alla vecchia. Infine genero un nuovo valore 
+randomicamente xi tra 0 e 1 e se questo xi è minore del rapporto delle prob alora scelgo la nuova posizione come attuale 
+nuova psoziione altrimenti scelgo quella vecchia come attuale nuova posizione. Infine vado acalcolar il valore dell'energia 
+locale ( e il suo quadrato) su questa nuova posizione la accumulo mano a mano. Ripeto queste operazioni un numero sufficiente 
+di volte e infine calcola l'elergia del sistema facendo la media (cioe dividendo l'energia accumulata sul numero di ripetizioni). 
+Ora il punto e che tutto questo ciclo è stato fatto considerando un particolare valore del parametro ,alpha, della funzione d'onda. 
+Quindi se ora ripeto tutta questa procedura per diversi valori del parametro alpha alla fine saro in grado di ottenere l'andamento 
+dell'energia in funzione del parametro e potro capire quale di questi parametri meglio minimizza l'energia del sistema. Questo 
+è come VMC viene utilizzato per determinare l'energia dello stato fondamentale di un sistema descritto da una certa hamiltoniana. 
+Ora il punto e che in una rete neurale quello che si vuole fare è quello di sfruttare l'abilita delle reti neurali di saper simulare 
+le funzioni, in questa maniera io non devo sapere a priori quale sia la forma della funzione d'onda da utilizzare. Il mio problema è 
+il seguente io non so bene come strutturare i vari passaggi per la determinazione dell'energia. Ho provato a pensare al seguente metodo.
+
+Quello che faccio è (sempre considerando il caso dell'oscillatore armonico singolo 1-D) ancora una volta genero una posizione a caso 
+dell'oscillatore armonico. In seguito esattamente come prima utilizzando l'algoritmo metropolis vado a generare la nuova posizione 
+creando un numero random unif. distr. tra 0 e 1 a cui sottraggo 0.5 e che moltiplico per Delta e il cui alla fine sommo tutto alla 
+posizione iniziale. Ora viene la parte tricky. Io quello che farei e utilizzerei la NN per calcolare il valore di output (e quindi 
+il guess della rete) sia sulla vecchia e nuova posizione e il risultato lo farei al quadrato. Il punto e che come abbiamo detto 
+volgiamo che la rete sia utilizzata come se fosse in grado di simulare una funzione e nel nostro caso si tratta proprio della 
+funzione d'onda. Una volta calcolato il rapporto al quadrato come prima utilizzerei tale valore e lo confronterei con un numero 
+generato randomicamente tra 0 e 1 per decidere se tenere come attuale nuova posizione quella vecchia o quella nuova generata 
+precedentemente. Fatto ciò andrei a calcolare l'energia locale (e il suo quadrato) sulla nuova posizione scelta e la accumulerei. 
+Ripeterei il processo un numero sufficiente di volte per poter avere un valore dell'energia del sistema. In seguito quello che 
+dovrei fare e andare a utilizzare la procedura di backward propagation della rete neurale per aggiornare i suoi parametri (pesi e bias) 
+che in questo caso avrebbero lo stesso compito che prima aveva il parametro alpha nel VMC senza NN. In questo caso infatti quello che 
+abbiamo è che la media delle energie locali funge da loss function della rete. In conclusione alla fine quello che dovremmo vedere e 
+che la laoss function in unita naturali dovrebbe approcciare al valore 1.5 che corrisponde al ground state dell'oscillatore armonico. 
+I miei dubbi sono i seguenti:
+- intanto non sono sicuro questa sia la procedura (spiegata in maniera generale) per applicare la NN al VMC;
+- Se questa procedura è corretta non so bene come calcolare l'energia locale, perche quando faccio la backpropagation 
+(sto sottointendendo che utilizzero la libreria pytorch che mi permette tramite "loss.backward()" di generare i gradienti 
+della loss function) vado a calcolare i gradienti della loss fucntion ma rispetto ai parametri se invece voglio calcolare 
+l'energia locale o che il temrine di energia cienticca locale dipende dal calcolare il lalplaciano della funzione d'onda 
+rispetto alle coordinate (che quindi sarebbero i valori dei miei neuroni input per la rete) quindi dovrei essere in grado 
+di calcolare il gradiente rispetto alle coordinate;
+- un'altra cosa di cui non sono sicuro e se il valore del gradiente sulla loss puo essere fatto andando a calcolare i loss.backward 
+su tutte le energie locali e alla fine facendo la medie di questi gradienti avrei il grdiente sulla loss function;
+- un ultima cosa è che in genere nelle NN viene applicato il SGD quindi per esempio avendo anche i target che la rete 
+dovrebbe produrre una puo decidere di fare un gradiente su un batch di dati invece che su tutto il set permettendo di 
+avre prima una modifica dei parametri. Nel mio caso la mia rete è unsupervised perchè non ho i target della funzione d'onda 
+(non sapendo quale sia la forma della funzione d'onda) quindi i miei batch sarebbero le posizioni della prticella che genero 
+ogni volta quindi potrei scegliere che dopo aver prodotto deciso 10 nuovi psoziioni (alcune dell queli potrebbero essere uguali tra loro) 
+allora decido subito di fare un gradiente per andare a mdoificare i parametri
+
+
+
+
+
+
+Il tuo ragionamento è già molto vicino a quello che serve per implementare una Neural Network Variational Monte Carlo (NN-VMC).
+Hai individuato correttamente i tre ingredienti fondamentali: il campionamento di Metropolis, il calcolo dell'energia locale e l'ottimizzazione dei parametri della rete neurale.
+
+Ci sono però due distinzioni fondamentali da chiarire prima di scrivere il codice:
+
+1. Calcolare l'energia locale richiede le derivate della funzione d'onda rispetto alle coordinate della particella, non rispetto ai pesi della rete.
+2. Minimizzare l'energia media non significa semplicemente fare la backpropagation della media delle energie locali. 
+Nel VMC bisogna calcolare un gradiente particolare, che tiene conto anche del fatto che la funzione d'onda determina la distribuzione di probabilità dalla quale stiamo campionando.
+
+Vediamo tutto passo per passo, partendo proprio dall'oscillatore armonico 1-D che hai descritto.
+
+# 1. Il problema fisico: oscillatore armonico 1-D
+
+In unità naturali, ponendo $\hbar=m=\omega=1$, l'Hamiltoniana è
+
+$$
+\hat H=-\frac{1}{2}\frac{d^2}{dx^2}+\frac{x^2}{2}.
+$$
+
+L'energia dello stato fondamentale esatta è
+
+$$
+E_0=\frac12.
+$$
+
+La funzione d'onda fondamentale normalizzata è
+
+$$
+\psi_0(x)=\frac{1}{\pi^{1/4}}e^{-x^2/2}.
+$$
+
+Se utilizzi una funzione d'onda di prova parametrizzata, per esempio
+
+$$
+\psi_\alpha(x)=e^{-\alpha x^2},
+$$
+
+puoi variare $\alpha$ e cercare il minimo dell'energia. In questo caso, il minimo si trova per $\alpha=1/2$.
+
+La rete neurale serve a generalizzare questa idea: invece di scegliere una famiglia di funzioni con un solo parametro $\alpha$, utilizzi una funzione parametrizzata da molti pesi e bias,
+
+$$
+\psi_\theta(x)=\mathrm{NN}_\theta(x),
+$$
+
+dove $\theta$ indica l'insieme di tutti i parametri allenabili.
+
+La rete non deve conoscere la soluzione esatta: deve imparare una funzione d'onda che minimizzi l'energia variazionale.
+
+# 2. Come deve essere strutturata la rete neurale?
+
+La prima scelta importante è decidere che cosa deve restituire la rete.
+
+Nel tuo caso vuoi che la rete approssimi la funzione d'onda. Perciò, in linea di principio, potresti costruire una rete con:
+
+- Input: la coordinata $x$ della particella.
+- Strati nascosti: neuroni con pesi, bias e funzioni di attivazione.
+- Output: una stima della funzione d'onda $\psi_\theta(x)$.
+
+C'è però una scelta implementativa che ti consiglio: fare in modo che la rete restituisca il logaritmo della funzione d'onda,
+
+$$
+f_\theta(x)=\log\psi_\theta(x),
+\qquad
+\psi_\theta(x)=e^{f_\theta(x)}.
+$$
+
+In questo modo la funzione d'onda è sempre positiva, come quella dello stato fondamentale dell'oscillatore armonico, 
+e puoi calcolare più facilmente il rapporto tra le probabilità di due configurazioni.
+
+Attenzione: imporre una funzione d'onda positiva è una scelta adatta a questo specifico esempio, non a tutti i 
+problemi quantistici. Stati eccitati e sistemi più generali possono richiedere funzioni d'onda con nodi e cambiamenti di segno.
+
+Schema della NN-VMC
+
+Coordinata $x$
+
+Configurazione della particella
+
+Rete neurale $\mathrm{NN}_\theta(x)$
+
+Pesi e bias allenabili
+
+$f_\theta(x)=\log\psi_\theta(x)$
+
+Rappresentazione della funzione d'onda
+
+Metropolis
+
+Campiona $x$ secondo $|\psi_\theta(x)|^2$.
+
+Energia locale
+
+Calcola le derivate rispetto a $x$.
+
+Gradiente variazionale
+
+Aggiorna i pesi e i bias per ridurre l'energia media.
+
+Il punto fondamentale è che la stessa rete viene usata per due operazioni diverse: generare la distribuzione di probabilità per Metropolis e calcolare le derivate necessarie all'energia cinetica.
+
+# 3. Come applicare Metropolis alla rete neurale
+
+Questa parte del tuo ragionamento è sostanzialmente corretta.
+
+Supponiamo di avere una posizione corrente $x$. Generi una proposta
+
+$$
+x'=x+\Delta\left(u-\frac12\right),
+\qquad u\sim U(0,1).
+$$
+
+Quindi $x'-x$ è uniforme nell'intervallo $[-\Delta/2,\Delta/2]$.
+
+La distribuzione obiettivo è
+
+$$
+P_\theta(x)\propto |\psi_\theta(x)|^2.
+$$
+
+Dato che la proposta è simmetrica, la probabilità di accettazione è
+
+$$
+A(x\to x')=
+\min\left(1,
+\frac{|\psi_\theta(x')|^2}
+{|\psi_\theta(x)|^2}
+\right).
+$$
+
+Se la rete restituisce $f_\theta=\log\psi_\theta$, puoi scrivere direttamente
+
+$$
+A(x\to x')=
+\min\left(1,
+e^{2[f_\theta(x')-f_\theta(x)]}
+\right).
+$$
+
+Generi poi $\xi\sim U(0,1)$ e accetti la proposta se $\xi<A$. Altrimenti mantieni $x$.
+
+Una precisazione importante: se la proposta viene rifiutata, la nuova configurazione della catena è ancora $x$. 
+Non devi scartare il campione e generare necessariamente un altro punto. Anche le configurazioni ripetute fanno parte del campionamento e devono essere incluse nel calcolo della media.
+
+Inoltre, a ogni iterazione dell'ottimizzazione, Metropolis deve utilizzare la funzione d'onda corrispondente ai parametri correnti della rete.
+
+# 4. Come calcolare l'energia locale?
+
+Questo è il primo punto tecnico importante della tua domanda.
+
+L'energia locale è definita come
+
+$$
+E_L(x)=\frac{\hat H\psi_\theta(x)}
+{\psi_\theta(x)}.
+$$
+
+Per l'oscillatore armonico:
+
+$$
+E_L(x)=
+-\frac12\frac{\psi_\theta''(x)}
+{\psi_\theta(x)}
++\frac{x^2}{2}.
+$$
+
+Qui $\psi_\theta''(x)$ è la derivata seconda rispetto alla coordinata della particella.
+
+Non è una derivata rispetto ai pesi della rete. È una derivata rispetto all'input $x$, mantenendo fissi i parametri $\theta$.
+
+Questo è esattamente ciò che PyTorch permette di fare con `torch.autograd.grad()`.
+
+## 4.1 Calcolare la derivata seconda con PyTorch
+
+Supponiamo che la rete restituisca $f_\theta(x)=\log\psi_\theta(x)$. Vale l'identità
+
+$$
+\frac{\psi_\theta''(x)}{\psi_\theta(x)}
+=
+f_\theta''(x)+[f_\theta'(x)]^2.
+$$
+
+Di conseguenza,
+
+$$
+\boxed{
+E_L(x)=
+-\frac12\left[
+f_\theta''(x)+[f_\theta'(x)]^2
+\right]+\frac{x^2}{2}
+}
+$$
+
+Questa forma è spesso più comoda perché non richiede di calcolare esplicitamente l'esponenziale della rete.
+
+Ecco come potresti implementarla:
+
+python
+```
+
+import torch
+
+def local_energy(model, x):
+    """
+    model(x) restituisce log(psi_theta(x)).
+    x ha forma [batch_size, 1].
+    """
+    x = x.detach().clone().requires_grad_(True)
+
+    log_psi = model(x)
+
+    # Prima derivata rispetto alla coordinata x
+    dlogpsi_dx = torch.autograd.grad(
+        log_psi.sum(),
+        x,
+        create_graph=True
+    )[0]
+
+    # Derivata seconda rispetto a x
+    d2logpsi_dx2 = torch.autograd.grad(
+        dlogpsi_dx.sum(),
+        x,
+        create_graph=True
+    )[0]
+
+    # Energia locale: H = -1/2 d²/dx² + x²/2
+    e_local = (
+        -0.5 * (d2logpsi_dx2 + dlogpsi_dx**2)
+        + 0.5 * x**2
+    )
+
+    return e_local
+```
+
+Il codice presuppone una rete che restituisce un valore scalare per ogni coordinata, senza mescolare tra loro i diversi elementi del batch.
+
+Noterai che abbiamo utilizzato `create_graph=True`: è necessario per consentire a PyTorch di costruire il grafo delle derivate. 
+Se in seguito vorrai differenziare una quantità che contiene l'energia locale rispetto ai pesi della rete, la gestione del grafo diventa particolarmente importante.
+
+C'è però una distinzione che vedremo tra poco: calcolare correttamente l'energia locale non significa che sia corretto propagare direttamente il gradiente della sua media.
+
+# 5. La vera difficoltà: come aggiornare i pesi della rete?
+
+Arriviamo al dubbio più importante. Tu hai scritto che vorresti usare la media delle energie locali come loss function e poi chiamare:
+
+python
+```
+loss.backward()
+```
+
+L'idea di utilizzare l'energia media come obiettivo è corretta, ma il gradiente che devi calcolare per il VMC non coincide con il gradiente ordinario della media delle energie locali.
+
+Vediamo perché.
+
+## 5.1 L'energia media da minimizzare
+
+L'energia variazionale è
+
+$$
+E(\theta)=
+\frac{\int dx\,|\psi_\theta(x)|^2 E_L(x)}
+{\int dx\,|\psi_\theta(x)|^2}.
+$$
+
+Se campioni le posizioni $x_1,\ldots,x_N$ dalla distribuzione $|\psi_\theta(x)|^2$, puoi stimare l'energia con
+
+$$
+\widehat E(\theta)=
+\frac1N\sum_{i=1}^{N}E_L(x_i).
+$$
+
+Quindi sì: la media delle energie locali è lo stimatore Monte Carlo dell'energia del sistema.
+
+Tuttavia, i punti $x_i$ non sono indipendenti dai parametri della rete: la distribuzione da cui provengono dipende da $\theta$.
+
+Quando modifichi i pesi della rete, infatti, cambiano sia l'energia locale sia la distribuzione di probabilità che vuoi campionare.
+
+Se calcolassi semplicemente
+
+python
+```
+loss = local_energy(model, x).mean()
+loss.backward()
+```
+
+otterresti il gradiente della media delle energie locali mantenendo fissi i campioni e differenziando attraverso l'energia locale. 
+Non otterresti, in generale, il gradiente corretto dell'energia variazionale.
+
+## 5.2 La formula corretta del gradiente
+
+Per una funzione d'onda reale, positiva e normalizzata, definiamo
+
+$$
+O_k(x)=\frac{\partial\log\psi_\theta(x)}
+{\partial\theta_k}.
+$$
+
+Il gradiente dell'energia rispetto a ciascun parametro è
+
+$$
+\boxed{
+\frac{\partial E}{\partial\theta_k}
+=
+2\left[
+\langle E_L O_k\rangle
+-\langle E_L\rangle\langle O_k\rangle
+\right]
+}
+$$
+
+dove le medie sono calcolate sulla distribuzione $|\psi_\theta(x)|^2$.
+
+Equivalentemente,
+
+$$
+\frac{\partial E}{\partial\theta_k}
+=2\,\mathrm{Cov}(E_L,O_k).
+$$
+
+Questa è la formula che ti serve per allenare la rete nel VMC standard.
+
+La cosa interessante è che compare proprio la derivata di $\log\psi_\theta$ rispetto ai parametri della rete. PyTorch sa calcolarla automaticamente.
+
+Non hai bisogno di conoscere la funzione d'onda esatta, né di avere dei target supervisionati.
+
+## 5.3 Come tradurre la formula in PyTorch?
+
+Una possibilità è costruire un surrogate loss, ossia una quantità il cui gradiente rispetto ai parametri coincida con lo stimatore Monte Carlo del gradiente variazionale.
+
+Supponiamo che:
+
+- `log_psi` contenga $\log\psi_\theta(x_i)$ per tutti i campioni;
+- `e_local` contenga le rispettive energie locali;
+- le energie locali siano trattate come costanti durante il calcolo di questo gradiente.
+
+Puoi scrivere:
+
+python
+```
+
+# log_psi: shape [batch_size, 1]
+# e_local: shape [batch_size, 1]
+
+e_detached = e_local.detach()
+e_mean = e_detached.mean()
+
+# Surrogate loss per il gradiente variazionale
+loss = 2.0 * (
+    (e_detached - e_mean) * log_psi
+).mean()
+
+optimizer.zero_grad()
+loss.backward()
+optimizer.step()
+```
+
+La `loss` qui non è la stima dell'energia fisica: è un artificio matematico progettato per produrre il gradiente giusto.
+
+L'uso di `detach()` è essenziale: impedisce a PyTorch di differenziare attraverso l'energia locale in questa particolare loss.
+
+In termini matematici, il gradiente ottenuto è
+
+$$
+\nabla_\theta\mathcal L_{\mathrm{sur}}
+=
+2\left[
+\langle E_L\nabla_\theta\log\psi\rangle
+-\langle E_L\rangle
+\langle\nabla_\theta\log\psi\rangle
+\right],
+$$
+
+che è lo stimatore Monte Carlo del gradiente variazionale.
+
+Questo è un approccio standard per implementare il gradiente VMC con una rete neurale reale. 
+Esistono anche metodi più avanzati, come la stochastic reconfiguration, che possono essere più efficaci per ottimizzare reti con molti parametri.
+
+# 6. Devo fare la backpropagation su tutte le energie locali e poi fare la media?
+
+La risposta è: non nel modo in cui lo intendi inizialmente.
+
+Supponiamo di avere dieci campioni e le rispettive energie locali:
+
+$$
+E_L(x_1), E_L(x_2),\ldots,E_L(x_{10}).
+$$
+
+Non devi necessariamente chiamare `backward()` separatamente per ogni energia locale e poi fare la media dei gradienti.
+
+Puoi costruire un'unica quantità scalare, come il surrogate loss del paragrafo precedente, e chiamare `backward()` una sola volta.
+
+In questo modo PyTorch calcola direttamente la combinazione di gradienti necessaria.
+
+La differenza è sostanziale:
+
+- Approccio non corretto in generale: derivare direttamente la media delle energie locali rispetto ai pesi.
+- Approccio VMC corretto: calcolare le energie locali, considerarle costanti nella loss ausiliaria e differenziare il logaritmo della funzione d'onda, pesandolo con le fluttuazioni dell'energia locale.
+
+La media delle energie locali continua a essere fondamentale, ma il gradiente deve tenere conto anche della dipendenza della distribuzione di probabilità dai parametri.
+
+# 7. Posso aggiornare la rete ogni 10 posizioni?
+
+Sì. Questa idea è assolutamente sensata, ed è molto vicina a come si implementano concretamente molti algoritmi NN-VMC.
+
+Il tuo ragionamento è il seguente: invece di generare migliaia di posizioni prima di modificare i parametri, genero un piccolo batch di campioni, stimo il gradiente e aggiorno subito la rete.
+
+È possibile, ma bisogna distinguere due cicli differenti.
+
+### Ciclo esterno: ottimizzazione
+
+1. Fissa i pesi e i bias correnti della rete.
+2. Genera un batch di configurazioni con Metropolis.
+3. Calcola le energie locali sui campioni.
+4. Stima il gradiente variazionale del batch.
+5. Aggiorna i parametri con SGD, Adam o un altro ottimizzatore.
+6. Ripeti il processo.
+
+### Ciclo interno: Metropolis
+
+1. Parti dalla posizione corrente.
+2. Proponi una nuova posizione.
+3. Accettala o rifiutala usando la rete con i parametri correnti.
+4. Registra la configurazione risultante, anche se coincide con quella precedente.
+
+Se scegli un batch di 10 campioni, dopo averne ottenuti 10 puoi eseguire un aggiornamento della rete.
+
+Ci sono però tre accorgimenti importanti:
+
+- Un batch di 10 potrebbe essere troppo piccolo. Le energie locali possono avere una varianza elevata e i 
+campioni prodotti da Metropolis sono generalmente correlati. Potresti ottenere gradienti molto rumorosi.
+- Non è necessario che le dieci posizioni siano tutte diverse. Se Metropolis rifiuta una proposta, il 
+campione ripetuto deve essere conservato.
+- Dopo un aggiornamento dei parametri, la distribuzione obiettivo cambia. Puoi continuare la catena dalla 
+posizione corrente, ma devi consentire alla catena di adattarsi alla nuova distribuzione e monitorare la correlazione tra i campioni.
+
+In pratica, puoi sperimentare con batch da 10, 100 o più campioni, confrontando la stabilità del gradiente e la velocità di convergenza.
+
+Un'ulteriore distinzione: se raccogli un batch con i parametri $\theta$ e poi li aggiorni, quel batch è 
+un'approssimazione Monte Carlo della distribuzione associata ai parametri precedenti. Questo è normale negli 
+algoritmi di ottimizzazione stocastica, ma aggiornamenti troppo frequenti rispetto alla quantità di campionamento possono rendere l'ottimizzazione instabile.
+
+# 8. A cosa serve accumulare anche il quadrato dell'energia locale?
+
+Hai menzionato che, nel tuo VMC tradizionale, accumuli sia l'energia locale sia il suo quadrato. È corretto ed è utile anche nella versione con rete neurale.
+
+Puoi stimare
+
+$$
+\langle E_L\rangle
+\simeq \frac1N\sum_i E_L(x_i)
+$$
+
+e
+
+$$
+\langle E_L^2\rangle
+\simeq \frac1N\sum_i E_L(x_i)^2.
+$$
+
+Da queste quantità ottieni la varianza dell'energia locale:
+
+$$
+\sigma_E^2=
+\langle E_L^2\rangle-\langle E_L\rangle^2.
+$$
+
+La varianza ti aiuta a valutare la qualità della funzione d'onda appresa. Per un autostato esatto dell'Hamiltoniana, l'energia locale è costante quasi ovunque nella distribuzione e la sua varianza è zero.
+
+Quindi puoi monitorare contemporaneamente:
+
+- L'energia media, che deve tendere al minimo variazionale.
+- La varianza dell'energia locale, che dovrebbe diminuire quando la funzione d'onda si avvicina a un autostato.
+
+La varianza non è necessariamente la loss che devi utilizzare per aggiornare i pesi: nel VMC standard, il gradiente dell'energia media rimane quello discusso sopra.
+
+# 9. Quale valore dell'energia dovresti ottenere?
+
+Qui c'è una piccola ma importante correzione.
+
+Per l'oscillatore armonico singolo, unidimensionale, nelle unità naturali $\hbar=m=\omega=1$, l'energia dello stato fondamentale è
+
+$$
+\boxed{E_0=\frac12}.
+$$
+
+Il valore $3/2$ corrisponde invece all'energia dello stato fondamentale di un oscillatore armonico isotropo tridimensionale, 
+sempre nelle stesse unità, oppure al primo stato eccitato dell'oscillatore unidimensionale.
+
+Per il tuo esempio 1-D, dunque, se la rete riesce a imparare correttamente la funzione d'onda, dovresti osservare:
+
+- Energia media che tende a $0.5$.
+- Varianza dell'energia locale che tende a zero.
+- Una funzione d'onda compatibile con $e^{-x^2/2}$, a meno di un fattore di normalizzazione.
+
+Questo è un test eccellente per verificare la correttezza dell'implementazione.
+
+# 10. Come organizzerei il tuo primo esperimento
+
+Ti suggerisco di procedere in questo ordine, senza implementare subito tutte le funzionalità contemporaneamente.
+
+1. Verifica la rete neurale da sola.
+   Costruisci una rete che restituisce $f_\theta(x)=\log\psi_\theta(x)$ e verifica che PyTorch riesca a calcolare la prima e la seconda derivata rispetto a $x$.
+2. Verifica l'energia locale.
+   Prima di allenare la rete, prova una funzione d'onda analitica:
+   $$
+   f(x)=-\frac{x^2}{2}.
+   $$
+   In questo caso l'energia locale deve essere $E_L(x)=1/2$ per ogni $x$. Se questo test fallisce, c'è un problema nel calcolo delle derivate.
+3. Implementa Metropolis.
+   Usa il rapporto delle probabilità calcolato dalla rete e controlla il tasso di accettazione, la distribuzione delle posizioni e la correlazione tra campioni.
+4. Implementa il gradiente variazionale.
+   Calcola il surrogate loss, esegui `backward()` e aggiorna i parametri con un ottimizzatore.
+5. Monitora energia e varianza.
+   A ogni iterazione registra energia media, varianza dell'energia locale, tasso di accettazione e, se possibile, norma del gradiente.
+
+Il punto più importante da portare a casa è questo: la rete neurale non ha bisogno di target supervisionati. 
+La funzione d'onda viene ottimizzata usando l'informazione fisica contenuta nell'Hamiltoniana e nel gradiente dell'energia variazionale.
+
+Il tuo schema generale è quindi giusto, con una modifica cruciale: non devi usare la media delle energie 
+locali come una normale loss supervisionata; devi usare il gradiente variazionale, che puoi implementare in PyTorch attraverso una loss ausiliaria.
+
+
+
+
+
+
+
+
+
+
+ok vorrei ottenere la fomula che mi hai scritto per il calcolo della derivata dell'energia del sistema. 
+Ho pensato di fare la derivata rispetto al parametro k-esimo del'energia scritta come rapporto degli integrali. 
+Ora ho pensato di introdurre un moltiplicaotre di lagrange e quindi risolvere la derivata:
+(d/dtheta_k)[int dx |psi_theta(x)|^2 E_l(x)- mu int dx |psi_theta(x)|^2]
+il punto è che non posso portare la derivat di theta all'interno dell'integrale dato che x dipende dai paramteri theta_k quindi coe si svolge tale derivata?
+
+
+
+
+
+
+
+
+
+Il tuo ragionamento è corretto: partire dalla derivata dell'energia scritta come rapporto di 
+integrali è proprio uno dei modi più naturali per ottenere la formula del gradiente variazionale.
+
+C'è però un punto concettuale da chiarire: la coordinata $x$ non dipende dai parametri $\theta_k$ 
+nell'integrale variazionale. È una variabile di integrazione indipendente dai parametri della rete. Quello che dipende da $\theta_k$ è la funzione d'onda $\psi_\theta(x)$, valutata nella coordinata $x$.
+
+La situazione è diversa quando consideri i campioni generati da Metropolis: quei campioni sono 
+distribuiti secondo una probabilità che dipende dai parametri della rete. Ma nella derivazione analitica dell'integrale, $x$ resta una variabile indipendente.
+
+Vediamo come ottenere esattamente la formula che cerchi, partendo dal tuo moltiplicatore di Lagrange.
+
+## 1. Partiamo dall'energia variazionale
+
+Per semplicità, consideriamo una funzione d'onda reale. L'energia è
+
+$$
+E(\theta)=
+\frac{\displaystyle\int dx\,
+\psi_\theta(x)^2 E_L(x)}
+{\displaystyle\int dx\,\psi_\theta(x)^2},
+$$
+
+dove
+
+$$
+E_L(x)=\frac{\hat H\psi_\theta(x)}{\psi_\theta(x)}.
+$$
+
+Introduciamo le abbreviazioni
+
+$$
+N(\theta)=\int dx\,\psi_\theta(x)^2
+$$
+
+e
+
+$$
+A(\theta)=\int dx\,\psi_\theta(x)^2 E_L(x).
+$$
+
+Quindi
+
+$$
+E(\theta)=\frac{A(\theta)}{N(\theta)}.
+$$
+
+Possiamo procedere in due modi equivalenti: derivare direttamente il rapporto oppure introdurre il moltiplicatore di Lagrange, come hai proposto tu.
+
+## 2. Il tuo metodo con il moltiplicatore di Lagrange
+
+Definiamo il funzionale
+
+$$
+\mathcal F(\theta)=
+\int dx\,\psi_\theta(x)^2 E_L(x)
+-\mu\left[
+\int dx\,\psi_\theta(x)^2-1
+\right].
+$$
+
+Il vincolo è che la funzione d'onda sia normalizzata, cioè
+
+$$
+\int dx\,\psi_\theta(x)^2=1.
+$$
+
+Il moltiplicatore $\mu$ impone questo vincolo.
+
+Ora vogliamo calcolare
+
+$$
+\frac{\partial\mathcal F}{\partial\theta_k}.
+$$
+
+Qui entra in gioco la regola che ti serve: sotto le usuali condizioni di regolarità, possiamo 
+portare la derivata rispetto al parametro all'interno dell'integrale, perché il dominio di integrazione non dipende da $\theta_k$.
+
+In particolare,
+
+$$
+\frac{\partial}{\partial\theta_k}
+\int dx\,g(x,\theta)
+=
+\int dx\,\frac{\partial g(x,\theta)}
+{\partial\theta_k}.
+$$
+
+Questa operazione è lecita quando l'integrando e la sua derivata soddisfano condizioni adeguate di integrabilità e regolarità.
+
+Per il tuo funzionale, tuttavia, c'è un modo ancora più semplice per arrivare al risultato desiderato, che evita di dover differenziare direttamente l'energia locale.
+
+## 3. Il passaggio matematico più utile: riscrivere l'integrale
+
+Ricorda che, per definizione,
+
+$$
+E_L(x)=\frac{\hat H\psi_\theta(x)}
+{\psi_\theta(x)}.
+$$
+
+Quindi il primo termine del tuo funzionale può essere riscritto come
+
+$$
+\int dx\,\psi_\theta(x)^2 E_L(x)
+=
+\int dx\,\psi_\theta(x)\hat H\psi_\theta(x).
+$$
+
+Questo passaggio è fondamentale perché ora possiamo sfruttare il fatto che l'Hamiltoniana è un operatore hermitiano.
+
+Il funzionale diventa
+
+$$
+\mathcal F(\theta)=
+\int dx\,\psi_\theta(x)\hat H\psi_\theta(x)
+-\mu\int dx\,\psi_\theta(x)^2,
+$$
+
+dove abbiamo omesso la costante $+\mu$, che non contribuisce alla derivata.
+
+## 4. Calcoliamo la derivata rispetto a $\theta_k$
+
+Per semplicità, scriviamo $\partial_k=\partial/\partial\theta_k$.
+
+Applicando la regola di derivazione del prodotto:
+
+$$
+\begin{aligned}
+\partial_k\mathcal F
+={}&\int dx\,
+\left[
+(\partial_k\psi_\theta)\hat H\psi_\theta
++\psi_\theta\hat H(\partial_k\psi_\theta)
+\right]\\
+&-2\mu\int dx\,\psi_\theta\partial_k\psi_\theta.
+\end{aligned}
+$$
+
+Poiché $\hat H$ è hermitiano, e assumendo condizioni al contorno appropriate, i due termini del primo integrale sono uguali. Pertanto,
+
+$$
+\partial_k\mathcal F
+=
+2\int dx\,(\partial_k\psi_\theta)
+\hat H\psi_\theta
+-2\mu\int dx\,\psi_\theta\partial_k\psi_\theta.
+$$
+
+Raccogliendo i termini:
+
+$$
+\boxed{
+\partial_k\mathcal F
+=
+2\int dx\,(\partial_k\psi_\theta)
+\left(\hat H\psi_\theta-\mu\psi_\theta\right)
+}
+$$
+
+Questa è la derivata del tuo funzionale con il moltiplicatore di Lagrange.
+
+Osserva che non abbiamo mai derivato $x$ rispetto a $\theta_k$. Abbiamo derivato la funzione d'onda rispetto ai parametri della rete.
+
+## 5. Come ottenere la formula del gradiente VMC?
+
+Ora introduciamo
+
+$$
+O_k(x)=\frac{\partial_k\psi_\theta(x)}
+{\psi_\theta(x)}
+=\partial_k\log\psi_\theta(x).
+$$
+
+Poiché
+
+$$
+\partial_k\psi_\theta(x)=
+\psi_\theta(x)O_k(x)
+$$
+
+e
+
+$$
+\hat H\psi_\theta(x)=
+\psi_\theta(x)E_L(x),
+$$
+
+possiamo riscrivere la derivata del funzionale come
+
+$$
+\partial_k\mathcal F
+=
+2\int dx\,\psi_\theta(x)^2
+O_k(x)\left[E_L(x)-\mu\right].
+$$
+
+Se la funzione d'onda è normalizzata, questo diventa
+
+$$
+\partial_k\mathcal F
+=
+2\left[
+\langle E_LO_k\rangle
+-\mu\langle O_k\rangle
+\right].
+$$
+
+Nel punto in cui il vincolo di normalizzazione è soddisfatto, il moltiplicatore di Lagrange coincide con l'energia media:
+
+$$
+\mu=E=\langle E_L\rangle.
+$$
+
+Di conseguenza,
+
+$$
+\boxed{
+\frac{\partial E}{\partial\theta_k}
+=
+2\left[
+\langle E_LO_k\rangle
+-\langle E_L\rangle\langle O_k\rangle
+\right]
+}
+$$
+
+Ed ecco la formula che volevamo ottenere!
+
+Per una funzione d'onda reale positiva, questa è esattamente la formula del gradiente variazionale utilizzata nel NN-VMC.
+
+## 6. Come interpretare il risultato?
+
+La formula può essere riscritta come
+
+$$
+\frac{\partial E}{\partial\theta_k}
+=2\,\mathrm{Cov}(E_L,O_k).
+$$
+
+Quindi il gradiente dell'energia dipende dalla correlazione tra:
+
+- $E_L(x)$, l'energia locale della configurazione;
+- $O_k(x)$, la sensibilità del logaritmo della funzione d'onda rispetto al parametro $\theta_k$.
+
+Questo è il collegamento tra la tua derivazione analitica e PyTorch: la rete calcola $O_k(x)$ 
+attraverso la backpropagation, mentre l'energia locale si calcola usando le derivate rispetto alla coordinata $x$.
+
+Infine, una precisazione importante: nella tua espressione iniziale, $\int \psi^2 E_L\,dx$, 
+l'energia locale dipende a sua volta da $\theta$. Non puoi ignorare questa dipendenza se differenzi 
+direttamente quell'integrando. Riscrivendo invece il numeratore come $\int\psi\hat H\psi\,dx$, abbiamo 
+trattato correttamente entrambe le dipendenze e sfruttato l'hermiticità dell'Hamiltoniana.
+
+È proprio questo passaggio che rende la derivazione più pulita e porta alla formula del gradiente usata nell'algoritmo VMC.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ok due cose non ho capito come hai ottenuto che il moltiplicatore di lagrange è uguale all'energia media? 
+e l'altra cosa io ho provato a calcolare la derivata tulizzando la forma con l'energia locale e ottengo il seguente:
+(d/dtheta_k)[int dx |psi_theta(x)|^2 E_l(x)- mu (int dx |psi_theta(x)|^2-1)]=
+=int dx (dpsi*(x)/dtheta_k psi(x)+dpsi(x)/dtheta_k psi*(x))E_l +|psi(x)|^2 dE_l/dtheta_k - mu int dx (dpsi*(x)/dtheta_k psi(x)+dpsi(x)/dtheta_k psi*(x))=
+2<Re O_k E_l> +<d E_l/dtheta_k> - 2 mu <Re O_k>
+dove ho considerato in generale la funzione d'onda non reale, se invece la funzione d'onda alla Re O_k =O_k 
+adesso che consideriamo mu =<E_l> come hai detto tu allora lunico temrine mancante è il valore 
+di aspettazione della derivata dell'energia locale. Ho provato a fare la derivata e se come abbiamo 
+detto la coordinate della poszione non dipendono dalla posizione allora ottengo la seguente:
+int dx |psi(x)|^2 dE_l/dtheta_k= int dx psi(T dpsi/theta_k) - int dx (T psi) dpsi/dtheta_k
+quindi non capsico l'errore
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ottima osservazione: il tuo calcolo è molto vicino a quello corretto e, soprattutto, 
+hai individuato proprio il termine che crea la difficoltà, cioè $\langle \partial_{\theta_k}E_L\rangle$.
+
+La cosa interessante è che questo termine non è generalmente nullo, ma si cancella 
+esattamente con un altro termine. La formula del gradiente VMC si può quindi ricavare anche partendo dall'energia locale, senza dover necessariamente passare subito per $\langle\psi|\hat H|\psi\rangle$.
+
+Vediamo entrambe le tue domande con attenzione. Supponiamo inizialmente che $\psi_\theta(x)$ 
+sia reale e positiva; alla fine estenderemo il ragionamento al caso complesso.
+
+## 1. Perché il moltiplicatore di Lagrange è uguale all'energia?
+
+Partiamo dal funzionale
+
+$$
+\mathcal F[\psi]=
+\langle\psi|\hat H|\psi\rangle
+-\mu\left(\langle\psi|\psi\rangle-1\right).
+$$
+
+Qui stiamo variando la funzione d'onda, imponendo che sia normalizzata. Per il momento, 
+pensiamo a una variazione arbitraria $\delta\psi$, non necessariamente generata da un parametro della rete.
+
+La variazione del funzionale è
+
+$$
+\begin{aligned}
+\delta\mathcal F
+={}&
+\langle\delta\psi|\hat H|\psi\rangle
++\langle\psi|\hat H|\delta\psi\rangle\\
+&-\mu\left(
+\langle\delta\psi|\psi\rangle
++\langle\psi|\delta\psi\rangle
+\right).
+\end{aligned}
+$$
+
+Usando l'hermiticità dell'Hamiltoniana, per funzioni d'onda reali possiamo riscrivere:
+
+$$
+\delta\mathcal F
+=2\int dx\,\delta\psi(x)
+\left[\hat H\psi(x)-\mu\psi(x)\right].
+$$
+
+Perché questa variazione deve essere nulla per ogni variazione ammissibile $\delta\psi$, otteniamo l'equazione
+
+$$
+\hat H\psi=\mu\psi.
+$$
+
+Questa è proprio l'equazione agli autovalori dell'Hamiltoniana. Moltiplicando per $\psi$ e integrando:
+
+$$
+\int dx\,\psi\hat H\psi
+=\mu\int dx\,\psi^2.
+$$
+
+Se la funzione d'onda è normalizzata, $\int dx\,\psi^2=1$, quindi
+
+$$
+\boxed{\mu=\langle\psi|\hat H|\psi\rangle=E.}
+$$
+
+Dunque, il moltiplicatore di Lagrange coincide con l'energia quando la funzione d'onda 
+soddisfa la condizione stazionaria rispetto a variazioni arbitrarie della funzione d'onda.
+
+Una precisazione importante per il tuo caso: se restringi la funzione d'onda a una famiglia 
+parametrizzata da una rete neurale, la condizione stazionaria rispetto ai pesi non garantisce 
+necessariamente che $\hat H\psi=\mu\psi$ punto per punto. La formula $\mu=E$, però, continua a 
+valere per il moltiplicatore associato al vincolo di normalizzazione, quando la variazione è formulata come problema variazionale vincolato.
+
+## 2. Il tuo calcolo usando direttamente l'energia locale
+
+La tua derivazione è corretta, purché teniamo distinti il caso reale e quello complesso e assumiamo che l'Hamiltoniana non dipenda da $\theta_k$.
+
+Partiamo dal funzionale che hai scritto:
+
+$$
+\mathcal F=
+\int dx\,|\psi_\theta(x)|^2 E_L(x)
+-\mu\left[\int dx\,|\psi_\theta(x)|^2-1\right].
+$$
+
+Per una funzione d'onda reale, la derivata rispetto a $\theta_k$ è
+
+$$
+\begin{aligned}
+\partial_k\mathcal F
+={}&2\int dx\,\psi\,\partial_k\psi\,E_L\\
+&+\int dx\,\psi^2\partial_k E_L\\
+&-2\mu\int dx\,\psi\,\partial_k\psi.
+\end{aligned}
+$$
+
+Definiamo
+
+$$
+O_k(x)=\frac{\partial_k\psi(x)}{\psi(x)}.
+$$
+
+Se la funzione d'onda è normalizzata, otteniamo esattamente la tua espressione:
+
+$$
+\boxed{
+\partial_k\mathcal F
+=
+2\langle O_k E_L\rangle
++\langle\partial_k E_L\rangle
+-2\mu\langle O_k\rangle
+}
+$$
+
+Ora dobbiamo dimostrare che, nel caso reale, il termine $\langle\partial_k E_L\rangle$ è nullo.
+
+### 2.1 Calcoliamo la derivata dell'energia locale
+
+Per definizione,
+
+$$
+E_L(x)=\frac{\hat H\psi(x)}{\psi(x)}.
+$$
+
+Applichiamo la regola di derivazione del rapporto:
+
+$$
+\partial_k E_L
+=
+\frac{\hat H\,\partial_k\psi}{\psi}
+-\frac{\hat H\psi}{\psi}
+\frac{\partial_k\psi}{\psi}.
+$$
+
+Poiché $E_L=\hat H\psi/\psi$, possiamo scrivere
+
+$$
+\boxed{
+\partial_k E_L
+=
+\frac{\hat H\,\partial_k\psi}{\psi}
+-E_L O_k
+}
+$$
+
+Questo è il passaggio che ti serve. Moltiplichiamo ora per $\psi^2$ e integriamo:
+
+$$
+\begin{aligned}
+\langle\partial_k E_L\rangle
+&=\int dx\,\psi^2\partial_k E_L\\
+&=\int dx\,\psi\,\hat H\partial_k\psi
+-\int dx\,\psi^2 E_L O_k.
+\end{aligned}
+$$
+
+Il secondo termine è semplicemente
+
+$$
+\int dx\,\psi^2 E_L O_k
+=
+\int dx\,(\hat H\psi)\,\partial_k\psi.
+$$
+
+Quindi
+
+$$
+\boxed{
+\langle\partial_k E_L\rangle
+=
+\int dx\,\psi\,\hat H\partial_k\psi
+-\int dx\,(\hat H\psi)\,\partial_k\psi
+}
+$$
+
+Ed è proprio qui che il tuo ragionamento arriva al punto giusto.
+
+### 2.2 Perché i due integrali sono uguali?
+
+Se l'Hamiltoniana è hermitiana e le funzioni soddisfano le opportune condizioni al contorno, vale
+
+$$
+\int dx\,f(x)\,\hat H g(x)
+=
+\int dx\,(\hat H f(x))\,g(x)
+$$
+
+per funzioni reali.
+
+Applicando questa proprietà con $f=\psi$ e $g=\partial_k\psi$, otteniamo
+
+$$
+\int dx\,\psi\,\hat H\partial_k\psi
+=
+\int dx\,(\hat H\psi)\,\partial_k\psi.
+$$
+
+Pertanto,
+
+$$
+\boxed{\langle\partial_k E_L\rangle=0}
+$$
+
+Questo risultato vale per l'aspettazione sulla distribuzione $\psi^2$, non significa che $\partial_k E_L(x)=0$ in ogni singola posizione.
+
+Per l'oscillatore armonico, ad esempio, il termine cinetico è un operatore differenziale. 
+L'uguaglianza dei due integrali deriva dall'integrazione per parti e dalla scomparsa dei termini al bordo.
+
+## 3. Quindi otteniamo la formula del gradiente
+
+Dato che nel caso reale
+
+$$
+\langle\partial_k E_L\rangle=0,
+$$
+
+la tua espressione si riduce a
+
+$$
+\partial_k\mathcal F
+=
+2\langle O_k E_L\rangle
+-2\mu\langle O_k\rangle.
+$$
+
+Ponendo $\mu=E=\langle E_L\rangle$, troviamo
+
+$$
+\boxed{
+\frac{\partial E}{\partial\theta_k}
+=
+2\left[
+\langle O_k E_L\rangle
+-\langle O_k\rangle\langle E_L\rangle
+\right]
+}
+$$
+
+che è proprio la formula del gradiente variazionale che cercavamo.
+
+## 4. E se la funzione d'onda è complessa?
+
+Qui la tua attenzione ai complessi è importante. Bisogna mantenere le coniugazioni complesse e prendere la parte reale nel risultato finale.
+
+Definendo sempre
+
+$$
+O_k=\frac{\partial_k\psi}{\psi},
+$$
+
+si trova
+
+$$
+\langle\partial_k E_L\rangle
+=
+\langle E_L^*O_k-E_LO_k\rangle.
+$$
+
+In generale, quindi, per una funzione d'onda complessa non è corretto concludere che $\langle\partial_k E_L\rangle=0$. 
+Tuttavia, questo termine si combina con la derivata di $|\psi|^2$. Il risultato finale è
+
+$$
+\boxed{
+\frac{\partial E}{\partial\theta_k}
+=
+2\,\operatorname{Re}
+\left[
+\langle O_k^* E_L\rangle
+-\langle O_k^*\rangle\langle E_L\rangle
+\right]
+}
+$$
+
+per parametri reali $\theta_k$ e Hamiltoniana indipendente dai parametri.
+
+Questa è la generalizzazione complessa della formula precedente.
+
+In conclusione: il tuo procedimento era sostanzialmente corretto. Nel caso reale, i due integrali 
+che hai ottenuto per $\langle\partial_k E_L\rangle$ si cancellano grazie all'hermiticità dell'Hamiltoniana. 
+Nel caso complesso, la cancellazione va considerata insieme agli altri termini della derivata, e conduce alla formula con la parte reale.
+
+È un risultato utile anche per la tua implementazione in PyTorch: puoi calcolare l'energia locale 
+e il gradiente variazionale separatamente, senza dover differenziare direttamente l'energia locale rispetto ai pesi nella loss ausiliaria.
+
+
+
+
+
+
+
+
+
+
+
+
+ok ora ho una domanda abbiamo detto che la funzione d'onda dipende dai parametri sia perhce dipendende esplicitamante 
+dai paramtri sia perhce indirettamente le diverse configurazioni delle posizioni dipendono dai paramtri, dato che per 
+una scelta di paramtri avro la possibilita di scegliere certe configurazioni delle posizioni piuttosto che altre. 
+Ora VMC senza NN le configurazioni anche li dipendono dai parametri ma in quel caso io non vado a modificare i paramtri 
+in base alla minimizzazione della loss function piuttosto vado a fare un search di diversi paramtri e scelgo quello che 
+meglio minimizza l'energia. Il fatto invece che nell'integrale possiamo portare all'interno dell'integrale la derivata 
+rispetto ai parametri è perchè le posizioni non sono funzioni dei paramtri? una volta scelta una serie di posizioni esse 
+non variano in base al valore dei paramtri?
+
+
+
+
+
+
+
+
+
+
+
+
+
+Esattamente, hai individuato la distinzione fondamentale. La tua intuizione è corretta, ma dobbiamo separare due cose che sembrano simili:
+
+1. La dipendenza della distribuzione di probabilità dai parametri $\theta$.
+2. La dipendenza della singola coordinata $x$ dai parametri $\theta$.
+
+La distribuzione dipende dai parametri, ma la coordinata $x$, nell'integrale variazionale, è una variabile indipendente. Vediamo perché questo chiarisce tutto.
+
+## 1. Nell'integrale, $x$ è una variabile indipendente dai parametri
+
+L'energia variazionale è
+
+$$
+E(\theta)=
+\frac{\int dx\,|\psi_\theta(x)|^2 E_L(x;\theta)}
+{\int dx\,|\psi_\theta(x)|^2}.
+$$
+
+Qui abbiamo due tipi di dipendenza:
+
+- Esplicita: $\psi_\theta(x)$ dipende dai parametri $\theta$.
+- Indiretta attraverso il campionamento: la distribuzione $|\psi_\theta(x)|^2$ determina quali configurazioni sono più probabili.
+
+La seconda dipendenza riguarda la distribuzione con cui estraiamo i campioni, non la variabile di integrazione stessa.
+
+Per esempio, considera due funzioni d'onda gaussiane:
+
+$$
+\psi_\alpha(x)=e^{-\alpha x^2}.
+$$
+
+Se cambi $\alpha$, cambia la distribuzione di probabilità:
+
+$$
+P_\alpha(x)\propto e^{-2\alpha x^2}.
+$$
+
+Per un valore di $\alpha$ grande, le posizioni vicine a zero sono più probabili; per un valore piccolo, la distribuzione è più larga.
+
+Tuttavia, quando scrivi
+
+$$
+\frac{\partial}{\partial\alpha}
+\int_{-\infty}^{+\infty}dx\,g(x,\alpha),
+$$
+
+la variabile $x$ rimane indipendente da $\alpha$. Se valgono le usuali condizioni di regolarità, puoi scrivere
+
+$$
+\boxed{
+\frac{\partial}{\partial\alpha}
+\int dx\,g(x,\alpha)
+=
+\int dx\,\frac{\partial g(x,\alpha)}{\partial\alpha}
+}
+$$
+
+Non compare nessun termine $\partial x/\partial\alpha$, perché $x$ non è una funzione di $\alpha$ nell'integrale.
+
+## 2. Ma allora perché diciamo che i campioni dipendono dai parametri?
+
+Perché quando esegui Metropolis non stai valutando l'integrale direttamente: lo stai stimando numericamente.
+
+Immagina di scegliere $\alpha=0.5$ e di generare una catena di Metropolis:
+
+$$
+x_1,x_2,\ldots,x_N.
+$$
+
+Questi campioni sono distribuiti secondo $P_{0.5}(x)$.
+
+Se cambi $\alpha$ in $0.8$, la distribuzione obiettivo cambia. Eseguendo nuovamente Metropolis, otterrai una catena con statistiche differenti.
+
+Quindi è corretto dire che i campioni generati da Metropolis dipendono statisticamente dai parametri, 
+ma non che la coordinata $x$ sia una funzione esplicita di $\alpha$ nell'integrale.
+
+La distinzione è questa:
+
+Integrale esatto
+
+$$
+E(\theta)=\int dx\,P_\theta(x)E_L(x;\theta)
+$$
+
+La variabile $x$ è indipendente da $\theta$. Derivi l'integrando.
+
+Stima Monte Carlo
+
+$$
+\widehat E=\frac1N\sum_i E_L(x_i;\theta)
+$$
+
+I campioni sono estratti da una distribuzione che dipende da $\theta$.
+
+La derivata dell'integrale esatto tiene conto della variazione della distribuzione. 
+La formula VMC permette di stimare questo effetto usando i campioni.
+
+## 3. Il collegamento con il VMC tradizionale
+
+Hai ragione anche nel distinguere il VMC tradizionale dal NN-VMC.
+
+Nel VMC tradizionale, se utilizzi
+
+$$
+\psi_\alpha(x)=e^{-\alpha x^2},
+$$
+
+puoi scegliere una sequenza di valori di $\alpha$, eseguire Metropolis per ciascuno e stimare l'energia:
+
+$$
+\alpha_1\longrightarrow E(\alpha_1),
+\qquad
+\alpha_2\longrightarrow E(\alpha_2),
+\qquad
+\alpha_3\longrightarrow E(\alpha_3).
+$$
+
+Poi selezioni il valore che minimizza l'energia. Non sei obbligato a calcolare analiticamente il gradiente.
+
+Nel NN-VMC, invece, hai moltissimi parametri e vuoi aggiornarli progressivamente con un algoritmo di ottimizzazione:
+
+$$
+\theta^{(t)}
+\longrightarrow
+\nabla_\theta E
+\longrightarrow
+\theta^{(t+1)}.
+$$
+
+La differenza non è che nel primo caso le configurazioni dipendano dai parametri e nel secondo no: 
+in entrambi i casi la distribuzione di Metropolis dipende dai parametri della funzione d'onda. Cambia il metodo con cui cerchi il minimo.
+
+## 4. Come fa allora la derivata a tenere conto del cambiamento della distribuzione?
+
+Questa è la parte più importante.
+
+L'energia si può scrivere come
+
+$$
+E(\theta)=
+\int dx\,P_\theta(x)E_L(x;\theta),
+$$
+
+dove $P_\theta(x)$ è la distribuzione normalizzata:
+
+$$
+P_\theta(x)=
+\frac{|\psi_\theta(x)|^2}
+{\int dx\,|\psi_\theta(x)|^2}.
+$$
+
+Derivando:
+
+$$
+\frac{\partial E}{\partial\theta_k}
+=
+\int dx\,
+\frac{\partial P_\theta(x)}{\partial\theta_k}E_L(x)
++
+\int dx\,P_\theta(x)
+\frac{\partial E_L(x;\theta)}{\partial\theta_k}.
+$$
+
+Il primo termine tiene conto del cambiamento della distribuzione di probabilità. 
+Il secondo tiene conto della dipendenza esplicita dell'energia locale dai parametri.
+
+Nel VMC, grazie all'hermiticità dell'Hamiltoniana, questi termini si combinano in 
+modo da ottenere la formula del gradiente che abbiamo derivato:
+
+$$
+\boxed{
+\frac{\partial E}{\partial\theta_k}
+=
+2\left[
+\langle E_LO_k\rangle
+-\langle E_L\rangle\langle O_k\rangle
+\right]
+}
+$$
+
+per una funzione d'onda reale positiva, con
+
+$$
+O_k(x)=\frac{\partial\log\psi_\theta(x)}
+{\partial\theta_k}.
+$$
+
+Questa formula incorpora proprio l'effetto della variazione della distribuzione: 
+non devi calcolare separatamente come ciascuna configurazione cambierebbe al variare dei parametri.
+
+## 5. Una precisazione pratica sui campioni
+
+Quando implementi l'algoritmo in PyTorch, durante un singolo aggiornamento del 
+gradiente tratti le configurazioni già generate come dati fissi. Non devi calcolare 
+una derivata delle posizioni campionate rispetto ai pesi della rete.
+
+La dipendenza della distribuzione dai parametri è già incorporata nella formula del 
+gradiente variazionale, attraverso $O_k(x)$ e la covarianza con l'energia locale.
+
+Dopo l'aggiornamento dei parametri, la distribuzione obiettivo cambia. Per questo il 
+ciclo di ottimizzazione deve continuare a generare campioni con Metropolis usando la funzione d'onda aggiornata.
+
+In sintesi: non differenzi le coordinate campionate; differenzi la funzione d'onda
+rispetto ai parametri, e usi la formula variazionale per tenere conto del fatto che quei parametri determinano anche la distribuzione da cui provengono i campioni.

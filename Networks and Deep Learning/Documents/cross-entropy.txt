@@ -1,0 +1,14 @@
+The crucial insight
+So you were not misunderstanding the mathematics.
+You identified exactly the subtle point.
+
+The statement should be understood as:
+
+Cross-entropy removes the sigmoid derivative from the output-layer error δL, not from the hidden-layer errors δl.
+
+This matters particularly because the output layer is where the network directly 
+compares its prediction with the target. With quadratic cost, a badly wrong but 
+saturated sigmoid output can produce a very small gradient. Cross-entropy prevents that particular source of slowdown.
+
+It does not magically solve vanishing gradients throughout a deep sigmoid network. The hidden-layer factors 
+σ′(zl) remain, which is one reason modern networks generally use activations such as ReLU rather than sigmoid in hidden layers.

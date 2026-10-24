@@ -12,6 +12,9 @@ build/
 develop-eggs/
 dist/
 downloads/
+
+Handwriting_NN_code/neural_networks_and_deep_learning
+
 eggs/
 .eggs/
 lib/
@@ -51,10 +54,11 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-
 # Translations
 *.mo
 *.pot
+
+
 
 # Django stuff:
 *.log

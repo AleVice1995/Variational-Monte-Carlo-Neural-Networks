@@ -1,0 +1,314 @@
+ok so let me understand, if i dont remeber wrong 
+when i used the VMC method to solve so problem 
+of quantum mechanics at the time i used the 
+metropolis algorithm (based on markov chain). 
+So if i dont rember wrong i generate a population 
+of x values which where related to position 
+of particles with a certain probability and 
+by using the metropolis algorithm i decide 
+if those position nedded to change based on 
+my choice of the trial wavefucntion. In particular 
+initially i used a form for the wavefunction 
+and i fixed the parameters with some values. 
+Using the wavefunction i can modify the set 
+of position of the particles (the x values) 
+such that they will change if the new position 
+was more porpable then the previous one, 
+and the probability was given from the square 
+of the wavefunctions since the wavefunciton 
+is an amplitude of probability. i run the 
+code for a certain amount of loop and for 
+every loop i evaluated the energy by exploiting 
+the central limit theorem (now i dont remeber 
+everything but it was something like that) and 
+this run with many loops was done to claculate 
+at the ened the enrgy of the system with a 
+very small statistical error for just one parameter. 
+Then i repeat the same approach for different 
+values of the parameters and in the end i obtain 
+a graph or a map (if 2 parameters are involved) 
+of the energy in function of the parameter and 
+therefore i see waht is the minimum value of 
+the energy andits related parameter(s). This 
+should be the VMC where the monte carlo theory 
+eneter beause i am sampling the x values based 
+on the form of the wavefunction so it is probabilistic. 
+How the monte carlo theory eneters in 
+the NN approach? i understand of the 
+variational methos because at the end for 
+the NN the cost function is excatly the energy 
+determined by th variational method. But how 
+the monte carlo theory enter in the NN implementation?
+
+
+
+
+
+Yes — your recollection of VMC is basically correct. The important thing is that the Monte Carlo part does not disappear when you replace your analytical trial wavefunction with a neural network. The NN simply becomes the new way of representing ψ.
+
+There is one small correction: Metropolis doesn't directly decide whether a configuration is "more probable" in an absolute sense. It uses the ratio of probabilities between the proposed and current configurations.
+
+## The key idea
+
+With your old VMC calculation you had
+
+ψ_α(x)
+
+and therefore
+
+p(x)=|ψ_α(x)|².
+
+You use Metropolis to generate configurations
+
+x₁,x₂,…,x_N
+
+distributed approximately according to
+
+p(x)∝|ψ_α(x)|².
+
+Then you estimate the energy from those samples.
+
+---
+
+## What changes with a neural network?
+
+Almost nothing conceptually.
+
+You simply replace
+
+ψ_α(x)
+
+with
+
+ψ_θ(x)
+
+where θ contains the NN weights and biases.
+
+Therefore your probability distribution becomes
+
+p_θ(x)∝|ψ_θ(x)|².
+
+And this is where Monte Carlo enters the NQS approach.
+
+You use Metropolis (or another Monte Carlo sampler) to generate
+
+x₁,x₂,…,x_N
+
+according to
+
+|ψ_θ(x)|².
+
+Then use those samples to estimate the energy.
+
+---
+
+# The complete NQS + VMC loop
+
+Suppose you randomly initialize the NN:
+
+θ=θ₀.
+
+The NN gives you a trial wavefunction
+
+ψ_{θ₀}(x).
+
+### 1. Generate configurations
+
+Use Metropolis to sample
+
+x∼|ψ_{θ₀}(x)|².
+
+For example:
+
+x₁→x₂→x₃→⋯
+
+where each new configuration is proposed and accepted/rejected according to the Metropolis rule.
+
+### 2. Calculate the energy
+
+For every sampled configuration, calculate the local energy
+
+E_L(x)=Hψ_θ(x)/ψ_θ(x).
+
+Then estimate
+
+E(θ)≈(1/N) Σᵢ E_L(xᵢ)
+
+because the xᵢ's were sampled from |ψ_θ|².
+
+This is the Monte Carlo estimate of the variational energy.
+
+### 3. Calculate how the energy depends on NN parameters
+
+Now you have
+
+E(θ).
+
+You can calculate its gradient
+
+∇_θ E.
+
+### 4. Update the NN
+
+For ordinary gradient descent:
+
+θ←θ−η∇_θ E.
+
+Now the NN represents a new wavefunction:
+
+ψ_{θ_new}(x).
+
+### 5. Sample again
+
+Because the wavefunction changed, the probability distribution changed:
+
+|ψ_{θ_new}(x)|² ≠ |ψ_θ(x)|².
+
+So you run the Monte Carlo sampling again.
+
+And the cycle becomes:
+
+θ
+↓
+ψ_θ
+↓
+|ψ_θ|²
+↓
+Metropolis sampling
+↓
+x₁,…,x_N
+↓
+E(θ)
+↓
+∇_θ E
+↓
+update θ
+↓
+repeat
+
+---
+
+## So compare your old VMC with NQS-VMC
+
+### Your old calculation
+
+You had something like
+
+ψ_α(x)
+
+and fixed α.
+
+Then:
+
+ψ_α
+→
+|ψ_α|²
+→
+Metropolis
+→
+E(α).
+
+You repeated this for different α's:
+
+α₁,α₂,α₃,…
+
+and eventually found
+
+α_opt.
+
+### NQS-VMC
+
+Now you have
+
+ψ_θ(x)
+
+where θ might contain thousands of NN parameters.
+
+You don't normally scan all the parameters manually.
+
+Instead:
+
+θ
+→
+|ψ_θ|²
+→
+Metropolis
+→
+E(θ)
+→
+∇_θ E
+→
+update θ.
+
+So the NN is essentially replacing your old manual parameter optimization.
+
+---
+
+# And this connects directly to your previous question
+
+You asked before:
+
+> Where does Monte Carlo enter the NN approach?
+
+The answer is:
+
+Monte Carlo is used to evaluate the expectation value of the energy (and its gradient) when the configuration space is too large to integrate explicitly.
+
+The NN does not replace Monte Carlo.
+
+They do different jobs:
+
+Neural network → represents ψ_θ
+
+while
+
+Monte Carlo → samples configurations from |ψ_θ|²
+
+and
+
+Variational principle → provides the energy to minimize.
+
+Then the optimizer (SGD, SR, etc.) changes the NN parameters.
+
+So you can think of NQS-VMC as four pieces working together:
+
+NQS = NN + Monte Carlo + Variational principle + Optimizer
+
+And that is essentially the same VMC you already used, except that your old ψ_α is now replaced by a neural-network wavefunction ψ_θ, and instead of scanning a few α's, you optimize the huge parameter vector θ.
+
+
+
+Yes. The approach you're describing is usually called:
+
+ **Neural Quantum States (NQS) + Variational Monte Carlo (VMC)**
+
+ or simply:
+
+ **Neural-network Variational Monte Carlo (NN-VMC)**.
+
+ More specifically:
+
+ - **NQS** = using a neural network to represent the trial wavefunction:\
+
+  $$
+  \psi_\theta(x)
+  $$
+- **VMC** = using the variational principle to minimize the energy.
+- **Monte Carlo** = sampling configurations $x$ according to $|\psi_\theta(x)|^2$.
+- **SGD / SR / natural gradient** = methods used to optimize the NN parameters $\theta$.
+
+ So your full pipeline is essentially:
+
+ $$
+\boxed{
+\text{Neural Quantum State}
++
+\text{Variational Monte Carlo}
++
+\text{NN optimization}
+}
+$$
+
+ You'll see papers use terms such as **Neural Variational Monte Carlo (Neural VMC)**, **Neural-network quantum states**, **Neural Quantum States (NQS)**, and **deep variational Monte Carlo**. They generally refer to closely related approaches, although the exact NN architecture and optimization method can differ.
+
+

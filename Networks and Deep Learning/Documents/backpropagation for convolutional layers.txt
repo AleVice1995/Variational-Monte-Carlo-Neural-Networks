@@ -1,0 +1,767 @@
+so i was reading the book of nielsen on NN and in the inital part of 
+chapter 6 he introduces the convolutional networks. In particular let's 
+suppose that we have only one convolutional layer and 1 pooling layer. 
+So the architecture (for solving the MNIST problem) is the following 
+we have an initla input layer of 784 (28*28) neurons, then we have a 
+24 times 24 neurons for the first convolutional layer. This layer have 
+been chosen such that the local receptive filed of the input layer 
+connected to the onvolutional once consider a 5 times 5 input neuron, 
+also the stride lenght chosen is equal to 1 this means a 5 times 5 weights 
+and 1 bias for the convolutional layer. After that we have the 
+pooling layer with a 12 times 12 neurons which uses the max pooling on 
+a 2 times 2 convolutional nerons (which take mthe maximum output form 
+these 4 neurons) and in the end we have the 10 output neurons which are 
+all of them connected to the 12 times 12 pooling neuron. So in total if 
+inderstand correctly we have the initla 5 shared weight and 1 bias of the 
+convolutional layer and then the 10 times 12 tims 12 weights plus 10 
+bias for the output neruons. i think we do not have any weight for the 
+connections between the convolutional neruon and the pooling neurons 
+and also no bias for the pooling neurons, since at the ened these 
+neuorns only take the maximum value from the 2 times 2 neuorns of the 
+aconvolutional so they dont need any weight or bias, correct?
+
+
+
+
+
+
+
+
+
+
+Sure. Here is the **very first answer**, rewritten in the same clean text-only format so you can keep it together with the previous notes.
+
+ Parameters in a Simple Convolutional Neural Network — Nielsen's Example
+
+## 1\. The network architecture
+
+ Consider the simplified MNIST convolutional network with:
+
+ 28×28 input\
+ → 24×24 convolution\
+ → 12×12 max pooling\
+ → 10 output neurons.
+
+ The input consists of:
+
+ 28 × 28 = 784
+
+ neurons/pixels.
+
+ The convolutional layer uses:
+
+ - a 5×5 filter;
+- stride = 1;
+- no padding.
+
+ Therefore the spatial dimension of the convolutional output is:
+
+ 28 - 5 + 1 = 24
+
+ so the convolutional layer contains:
+
+ 24 × 24 = 576
+
+ activations.
+
+ After that we apply 2×2 max pooling with stride 2.
+
+ Therefore:
+
+ 24 × 24 → 12 × 12.
+
+ The pooling layer therefore contains:
+
+ 12 × 12 = 144
+
+ activations.
+
+ Finally, these 144 pooling activations are fully connected to the 10 output neurons.
+
+ The complete architecture is therefore:
+
+ 28×28\
+ → 24×24 convolution\
+ → 12×12 max pooling\
+ → 10 output neurons.
+
+---
+
+ ## 2\. Parameters of the convolutional layer
+
+ The convolutional layer uses a 5×5 filter.
+
+ Therefore the filter contains:
+
+ 5 × 5 = 25
+
+ weights.
+
+ There is also one bias.
+
+ So the convolutional layer has:
+
+ 25 weights + 1 bias = 26 trainable parameters.
+
+ The important point is that these 25 weights are SHARED across the entire image.
+
+ We do NOT have a different set of 25 weights for each of the 576 convolutional neurons.
+
+ Instead, the same filter is applied at every position.
+
+ For example:
+
+ z₁,₁ = Σᵣ,𝚌 wᵣ𝚌 xᵣ,𝚌 + b
+
+ and at another position:
+
+ z₁,₂ = Σᵣ,𝚌 wᵣ𝚌 xᵣ,𝚌₊₁ + b
+
+ The weights wᵣ𝚌 and the bias b are exactly the same.
+
+ Only the portion of the input image being examined changes.
+
+ This is called weight sharing.
+
+ Therefore:
+
+ Convolutional parameters = 25 weights + 1 bias = 26.
+
+---
+
+ ## 3\. Parameters of the pooling layer
+
+ The convolutional layer produces a:
+
+ 24×24
+
+ feature map.
+
+ We then apply 2×2 max pooling.
+
+ For each 2×2 region, the pooling operation simply selects the largest activation.
+
+ For example:
+
+ \[ 2 5 \]\
+ \[ 1 3 \]
+
+ becomes:
+
+ 5.
+
+ There are no weights involved.
+
+ There are also no biases.
+
+ The pooling operation is simply:
+
+ p = max(a₁, a₂, a₃, a₄).
+
+ Therefore:
+
+ Pooling weights = 0.
+
+ Pooling biases = 0.
+
+ Pooling trainable parameters = 0.
+
+ The pooling layer performs a fixed mathematical operation rather than learning parameters.
+
+---
+
+ ## 4\. Parameters of the output layer
+
+ After pooling, we have:
+
+ 12 × 12 = 144
+
+ activations.
+
+ Each of the 10 output neurons is fully connected to all 144 pooling activations.
+
+ Therefore each output neuron has:
+
+ 144 weights.
+
+ Since there are 10 output neurons:
+
+ 10 × 144 = 1440
+
+ weights.
+
+ There is also one bias for each output neuron:
+
+ 10 biases.
+
+ Therefore the output layer contains:
+
+ 1440 weights + 10 biases = 1450 trainable parameters.
+
+---
+
+ ## 5\. Total number of trainable parameters
+
+ We can now add the parameters from the two trainable layers.
+
+ Convolutional layer:
+
+ 25 weights + 1 bias = 26.
+
+ Pooling layer:
+
+ 0 weights + 0 biases = 0.
+
+ Output layer:
+
+ 1440 weights + 10 biases = 1450.
+
+ Therefore:
+
+ 26 + 0 + 1450 = 1476.
+
+ So the entire network has:
+
+ 1476 trainable parameters.
+
+---
+
+ ## 6\. Summary table
+
+ Layer:
+
+ Convolution
+
+ - Input: 28×28
+- Output: 24×24
+- Weights: 5×5 = 25
+- Biases: 1
+- Trainable parameters: 26
+
+ Max pooling
+
+ - Input: 24×24
+- Output: 12×12
+- Weights: 0
+- Biases: 0
+- Trainable parameters: 0
+
+ Fully connected output
+
+ - Input: 12×12 = 144
+- Output: 10
+- Weights: 10×144 = 1440
+- Biases: 10
+- Trainable parameters: 1450
+
+ Total:
+
+ 1476 trainable parameters.
+
+---
+
+ ## 7\. Why there are so few convolutional parameters
+
+ This is one of the most important ideas in convolutional networks.
+
+ The convolutional layer has 576 output activations.
+
+ It might initially seem that we should have:
+
+ 576 × 25
+
+ weights because every convolutional neuron looks at a 5×5 region.
+
+ But this is NOT the case.
+
+ The 25 weights are shared.
+
+ The same 5×5 filter is used at every location.
+
+ Therefore we have:
+
+ 25 weights
+
+ rather than:
+
+ 576 × 25 weights.
+
+ This is one of the main reasons convolutional networks can use far fewer parameters than fully connected networks.
+
+---
+
+ ## 8\. The important distinction: connections vs. parameters
+
+ There are many actual computational connections between the input and convolutional activations.
+
+ Each convolutional activation looks at 25 input pixels.
+
+ So there are many uses of the filter.
+
+ But these connections do NOT correspond to independent parameters.
+
+ The same 25 parameters are reused at every location.
+
+ Similarly, in max pooling, there is a relationship between each pooling neuron and the four convolutional activations it examines.
+
+ But these are not learned weighted connections.
+
+ Max pooling simply performs:
+
+ p = max(a₁,a₂,a₃,a₄).
+
+ Therefore there are no pooling weights or pooling biases.
+
+---
+
+ ## 9\. The key idea to remember
+
+ There are three different concepts that should not be confused:
+
+ 1. Connections
+2. Operations
+3. Trainable parameters
+
+ The convolutional layer has many connections, but they use the same 25 shared weights.
+
+ The pooling layer has connections in the sense that its output depends on four previous activations, but it has no trainable parameters.
+
+ The fully connected output layer has independent weights for every connection.
+
+ Therefore:
+
+ Convolution:\
+ many connections → 25 shared weights + 1 bias.
+
+ Pooling:\
+ connections → fixed max operation → 0 trainable parameters.
+
+ Fully connected:\
+ connections → independent weights → 1440 weights + 10 biases.
+
+ The complete network is therefore:
+
+ 28×28\
+ → convolution using 25 shared weights + 1 bias\
+ → 24×24\
+ → max pooling with no parameters\
+ → 12×12\
+ → fully connected using 1440 weights + 10 biases\
+ → 10 outputs.
+
+ Total trainable parameters:
+
+ 25 + 1 + 1440 + 10 = 1476.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ok now nielsen say that we want to change the code that we 
+initially wrote to solve the mnist problem which was structured 
+for a fully connected nn. and in the sample we use 3 convolutional 
+layers and 3 pooling layers. Now for the example will just stick 
+to 1 convolutional and pooling layer, but the idea in futore is 
+to expand on n possible such layers. The problem is related to 
+how to modify the code in which we make use of stochastic 
+gradient descent and backporpagation. So for the final layer 
+the determination of the derivative of C with respect to b are 
+the same wince the final part of the NN is the same for 
+derivative with respect to w almost the same the only thing 
+which is changin is the moltiplication for the activation of 
+the L-1 layer which are now a bit more (the orinial fully 
+connected was a 784 input neurons , 30 hidden and 10 output) 
+so now we would have 10*12*12 weights and so also corresponding 
+derivatives. instead the early layers and respective derivative 
+change a bit since now we don not have any weight between the 
+covolutional layers and pooling layers, and so i dont think we 
+need to make  any correction (but iam not sure) and for the early 
+alyers i think we should use the second of the 4 rules of back 
+propagation introduced by nielsen but the connnection between 
+the convolutional and pooling would be need in any case
+
+
+Yes — you are thinking of the right issue, and there is one very important correction to your reasoning:
+
+The convolution → pooling connection does not have weights, but it still has to participate in backpropagation.
+
+The pooling layer has no parameters to update, but it is still an operation through which the error gradient must be propagated.
+
+Let's build this carefully using your simplified network.
+
+Your network
+
+We have
+
+28×28
+→ 24×24 convolution
+→ 12×12 max pool
+→ 10.
+
+Let's call the layers:
+
+a^0: input, 28×28
+
+z^1,a^1: convolutional layer, 24×24
+
+a^2: pooling layer, 12×12
+
+z^3,a^3: output layer, 10 neurons
+
+The crucial thing is that not every layer is necessarily a parameterized layer.
+
+The computational graph is:
+
+a^0
+→
+z^1
+→
+a^1
+→
+a^2
+→
+z^3
+→
+a^3.
+
+The pooling operation sits right in the middle.
+
+The output layer
+
+Here your intuition is basically correct.
+
+The output layer has 10 neurons, each connected to the 144 pooling outputs.
+
+So:
+
+z_j^3 = Σ_{k=1}^{144} w_{jk}^3 a_k^2 + b_j^3.
+
+Therefore Nielsen's standard backpropagation equation still applies:
+
+δ_j^3 = ∂C/∂z_j^3.
+
+And for the biases:
+
+∂C/∂b_j^3 = δ_j^3.
+
+For the weights:
+
+∂C/∂w_{jk}^3 = a_k^2 δ_j^3.
+
+The only difference from the original fully connected example is that a^2 now has 144 components instead of whatever size the previous hidden layer had.
+
+So you correctly identified this part.
+
+But now comes the interesting part: the pooling layer
+
+You said:
+
+"we don't have any weight between the convolutional layers and pooling layers, and so I don't think we need to make any correction"
+
+This is the part I'd change.
+
+There are no weights to differentiate, but we absolutely need to propagate the gradient through the pooling operation.
+
+Why?
+
+Because the convolutional layer needs to know:
+
+∂C/∂z^1.
+
+And the error coming from the output layer reaches the convolutional layer through the pooling operation.
+
+Think of it like this:
+
+convolution
+→
+pooling
+→
+output
+
+The pooling operation has no parameters, but it is still a function.
+
+And whenever you have a function in a computational graph, you need its derivative for backpropagation.
+
+What does max pooling do?
+
+Take one 2×2 region:
+
+[ 2 5 ]
+[ 1 3 ]
+
+Max pooling gives:
+
+Now suppose the gradient arriving from the next layer is:
+
+∂C/∂p = 7.
+
+Where should this gradient go?
+
+The answer is:
+
+[ 0 7 ]
+[ 0 0 ]
+
+Because the output of the pooling operation depended on the value 5.
+
+The other three values had no influence on the output.
+
+So their derivative is zero.
+
+This is the key idea behind backpropagation through max pooling.
+
+Mathematically
+
+Suppose a pooling neuron is:
+
+p = max(a_1,a_2,a_3,a_4).
+
+Then, assuming a_2 is the maximum:
+
+∂p/∂a_1 = 0
+
+∂p/∂a_2 = 1
+
+∂p/∂a_3 = 0
+
+∂p/∂a_4 = 0.
+
+Then, using the chain rule:
+
+∂C/∂a_i
+
+∂C/∂p
+×
+∂p/∂a_i.
+
+So if a_2 was the maximum:
+
+∂C/∂a_2 = ∂C/∂p
+
+while
+
+∂C/∂a_1
+∂C/∂a_3
+∂C/∂a_4
+
+That's how the gradient crosses the pooling layer.
+
+This is why the distinction "weights vs operations" is important
+
+You can think about the network as having two different kinds of layers.
+
+Parameterized layers
+
+These contain things we need to learn.
+
+For example:
+
+z = wa+b.
+
+They have:
+
+weights
+
+biases
+
+gradients with respect to those weights/biases.
+
+Your convolutional layer is parameterized:
+
+z^1 = convolution(a^0,w^1)+b^1.
+
+And your final fully connected layer is parameterized:
+
+z^3 = w^3a^2+b^3.
+
+Non-parameterized layers
+
+Pooling doesn't contain parameters:
+
+a^2 = MaxPool(a^1).
+
+There is therefore no:
+
+∂C/∂w^pool
+
+because w^pool doesn't exist.
+
+But there is:
+
+∂C/∂a^1.
+
+And that's exactly what we need to continue backpropagating toward the convolutional layer.
+
+So the backpropagation chain looks like this
+
+Starting from the output:
+
+δ^3 = ∂C/∂z^3.
+
+Then calculate the output-layer parameter gradients:
+
+∂C/∂b^3 = δ^3
+
+and
+
+∂C/∂w^3 = δ^3(a^2)^T.
+
+Then propagate backwards through the fully connected layer:
+
+∂C/∂a^2 = (w^3)^Tδ^3.
+
+Now we reach the pooling layer.
+
+There are no parameters to update, but we calculate:
+
+∂C/∂a^1
+
+∂C/∂a^2
+×
+∂a^2/∂a^1.
+
+For max pooling, this means:
+
+Send the gradient to whichever convolutional activation was the maximum; send zero to the others.
+
+And now we have the gradient that reaches the convolutional layer.
+
+Then comes the convolutional layer
+
+This is where Nielsen's usual backpropagation equations need the biggest modification.
+
+In an ordinary fully connected network you might have something like:
+
+z_j^l = Σ_k w_{jk}^l a_k^{l-1} + b_j^l.
+
+But convolution doesn't work like that.
+
+A convolutional neuron only looks at a 5×5 region, and all 576 convolutional neurons share the same 25 weights.
+
+So if we call the filter:
+
+W =
+
+[ w_11 ... w_15
+...
+w_51 ... w_55 ]
+
+then each convolutional neuron uses this same W.
+
+For example:
+
+z_{1,1}
+
+Σ_{r=1}^{5} Σ_{c=1}^{5}
+w_{rc}x_{r,c}
++
+b.
+
+But:
+
+z_{1,2}
+
+Σ_{r=1}^{5} Σ_{c=1}^{5}
+w_{rc}x_{r,c+1}
++
+b.
+
+Same w_{rc}, different input region.
+
+And this creates an important consequence for the gradient
+
+Suppose the same weight w_{rc} is used in 576 different locations.
+
+Then the total derivative with respect to that weight has to include the contribution from every location where that weight was used.
+
+Conceptually:
+
+∂C/∂w_{rc}
+
+Σ_{all positions}
+(∂C/∂z_position)
+(∂z_position/∂w_{rc}).
+
+And because:
+
+∂z_position/∂w_{rc}
+
+corresponding input pixel,
+
+we get something like:
+
+∂C/∂w_{rc}
+
+Σ_{i,j}
+δ^1_{i,j}
+x_{i+r-1,j+c-1}
+
+where δ^1_{i,j} is the error associated with the convolutional activation at position (i,j).
+
+Similarly, because the same bias is used at every convolutional position:
+
+∂C/∂b
+
+Σ_{i,j} δ^1_{i,j}.
+
+This is one of the really important differences between ordinary fully connected backpropagation and convolutional backpropagation.
+
+The overall picture
+
+So I would modify your mental model to this:
+
+TRAINABLE NO PARAMETERS TRAINABLE
+
+Convolution Max Pooling Fully Connected
+
+25 weights 0 weights 1440 weights
+1 bias 0 biases 10 biases
+
+24×24 12×12 10
+
+During backward propagation:
+
+output
+↓
+δ^3
+↓
+calculate dC/dW^3 and dC/db^3
+↓
+pooling gradient
+↓
+no parameters to calculate,
+but gradient MUST pass through
+↓
+convolutional δ^1
+↓
+calculate dC/dW^1 and dC/db^1
+↓
+input
+
+So your intuition was very close. The important distinction is:
+
+"No weights" does NOT mean "nothing happens during backpropagation."
+
+Pooling has no parameters, so there is nothing to learn there. But it still has a derivative, and that derivative is necessary to transmit the error backward.

@@ -1,0 +1,108 @@
+Sì, e quello che descrivi è un problema tipico nell'ottimizzazione VMC con potenziali molto repulsivi come Lennard-Jones. Puoi intervenire per evitare che una singola configurazione rovini l'ottimizzazione, mantenendo però attenzione a non modificare in modo incontrollato il problema fisico che stai risolvendo.
+
+Nel tuo caso, il meccanismo è probabilmente questo:
+
+1. Le particelle si avvicinano troppo e il termine $r^{-12}$ del potenziale di Lennard-Jones diventa enorme.
+2. L'energia locale $E_L=H\psi/\psi$ assume un valore molto grande.
+3. Il gradiente della loss, che dipende dalle fluttuazioni dell'energia locale, diventa enorme e aggiorna violentemente i pesi della rete.
+4. La funzione d'onda cambia in modo incontrollato; le sue derivate spaziali possono diventare enormi e l'energia cinetica locale può andare in overflow, producendo `inf` o `NaN`.
+
+Il punto fondamentale è che il problema non è soltanto il potenziale: è la combinazione tra campionamento, forma della funzione d'onda e aggiornamento dei parametri.
+
+## 1. La soluzione più immediata: gradient clipping
+
+La prima modifica che proverei è limitare la norma del gradiente prima di aggiornare i pesi della rete.
+
+In PyTorch:
+
+python
+```
+optimizer.zero_grad()
+loss.backward()
+
+torch.nn.utils.clip_grad_norm_(
+    model_HeHe.parameters(),
+    max_norm=1.0
+)
+
+optimizer.step()
+```
+
+Naturalmente, inseriscilo nel punto in cui la tua funzione `Training_NN_VMC` esegue effettivamente l'aggiornamento dell'ottimizzatore.
+
+Il valore `max_norm=1.0` è un punto di partenza da provare, non un valore universale: controlla anche la norma dei gradienti prima del clipping.
+
+Questo impedisce a un singolo gradiente enorme di produrre un aggiornamento altrettanto enorme. È una tecnica usata anche nei codici moderni di neural VMC per affrontare gli outlier dell'energia locale.
+
+AIP Publishing
+
++1
+
+Attenzione: il gradient clipping non corregge una funzione d'onda già diventata `NaN` o `inf`. In quel caso devi prima ripristinare un checkpoint valido.
+
+## 2. La soluzione fisicamente più importante: una funzione d'onda che eviti le collisioni
+
+Nel tuo problema, la funzione d'onda dovrebbe essere fortemente soppressa quando la distanza $r_{12}$ tende a zero, perché il potenziale repulsivo diverge come $r_{12}^{-12}$.
+
+Una possibilità è introdurre un fattore di correlazione esplicito:
+
+$$
+\psi(\mathbf r_1,\mathbf r_2)
+=\psi_{\rm NN}(\mathbf r_1,\mathbf r_2)
+\exp\left[-\frac{b^5}{r_{12}^5}\right],
+$$
+
+con $b>0$ da scegliere o ottimizzare.
+
+Questo fattore tende rapidamente a zero per $r_{12}\to0$, riducendo la probabilità di campionare configurazioni estremamente repulsive. È un esempio di fattore di tipo Jastrow, non l'unica scelta possibile.
+
+La cosa importante è che la rete non debba imparare da zero una caratteristica fisica già nota: i due atomi non possono avvicinarsi arbitrariamente senza pagare un'enorme energia repulsiva.
+
+## 3. Limita l'influenza degli outlier sulla loss
+
+Se la tua loss dipende da $E_L-\langle E_L\rangle$, una singola energia locale enorme può dominare l'aggiornamento.
+
+Puoi valutare una strategia di clipping delle energie locali solo nel calcolo del gradiente di ottimizzazione. Per esempio, definisci
+
+$$
+\widetilde E_L=
+\operatorname{clip}(E_L,\mu-C,\mu+C),
+$$
+
+dove $\mu$ è una stima robusta del centro della distribuzione e $C$ è una soglia scelta in base alla dispersione delle energie.
+
+La letteratura sulla neural VMC utilizza strategie di questo tipo per ridurre il rumore degli aggiornamenti.
+
+AIP Publishing
+
+È essenziale distinguere due operazioni:
+
+- Durante l'ottimizzazione: il clipping può rendere il gradiente più stabile.
+- Per calcolare l'energia finale: devi usare le energie locali non tagliate e controllare la convergenza statistica. Il clipping può introdurre bias nella stima dell'energia.
+
+## 4. Proteggi la simulazione dai valori non finiti
+
+Aggiungerei anche un controllo prima dell'aggiornamento:
+
+python
+```
+if not torch.isfinite(loss):
+    print("Loss non finita: salto l'aggiornamento")
+    continue
+```
+
+Questo è solo un controllo minimo: devi verificare anche che le energie locali, i gradienti e i parametri siano finiti. Se i parametri sono già diventati non finiti, saltare l'aggiornamento non basta: occorre ripristinare l'ultimo checkpoint valido.
+
+Inoltre, non risolverei il problema semplicemente imponendo un limite artificiale al potenziale di Lennard-Jones o vietando tutte le configurazioni con $r_{12}$ piccolo: altereresti la distribuzione fisica o l'Hamiltoniana, a meno di trattare correttamente tali modifiche.
+
+## Cosa farei nel tuo caso, in ordine
+
+1. Aggiungerei il gradient clipping con una norma iniziale pari a 1.
+2. Ridurrei temporaneamente il learning rate, ad esempio da $5\times10^{-4}$ a $10^{-4}$.
+3. Introdurrei un fattore Jastrow repulsivo nella funzione d'onda.
+4. Salverei periodicamente il miglior checkpoint valido e ripristinerei quello precedente in caso di `NaN` o `inf`.
+5. Registrerei la minima distanza interatomica e la norma dei gradienti a ogni epoca, per identificare quale evento precede l'instabilità.
+
+La mia raccomandazione principale: partirei da gradient clipping e da una funzione d'onda che incorpori la repulsione a corto raggio. Sono due interventi complementari: il primo protegge l'ottimizzazione, il secondo migliora la struttura fisica dell'ansatz.
+
+Se mi mostri il blocco di `Training_NN_VMC` in cui calcoli la loss e aggiorni i pesi, posso indicarti esattamente dove inserire questi controlli senza modificare inutilmente il resto del codice.

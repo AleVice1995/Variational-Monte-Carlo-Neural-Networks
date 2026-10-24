@@ -1,0 +1,662 @@
+This is one of the exercise gien by micheal nielsen:
+"Verify that the standard deviation of z=∑jwjxj+b
+ in the paragraph above is 3/2−−−√
+. It may help to know that: (a) the variance of a sum of independent random variables is the sum of the variances of the individual random variables; and (b) the variance is the square of the standard deviation."
+
+i actually more interested in proving that the variance of z (so the variance of the sum) is equal to the sum of the variances.
+So before touching on the variance i thought about the mean. I knwo that the mean of z is equal to the sum of the means. If we choose one neuron then the weighted sum will be:
+z=sum_j x_j w_j+ b
+now we define z, all the w_j and b as random variables thern i have:
+<z>=sum_k z^k/N=sum_k (sum_j w_j^k x_j +b^k)/N
+
+where z^k w_j^k and b^k are the possible outcomes of the random variables and N is the number of outcomes considered. Then:
+<z>=sum_j (sum_k w_j^k/N)x_j +(sum_k b^k/N)=sum_j <w_j> x_j +<b>
+
+which shows thta the mean value of z is equl to the function z of the mean values.
+
+Waht wht about the variances?
+
+
+
+
+
+
+
+
+
+Yes. Since you want it as a reusable `.txt` text, I’ll preserve the mathematical content and wording from the two previous answers as closely as possible.
+
+ Nielsen Exercise — Variance of the Weighted Sum
+
+Yes — your derivation of the **mean** is correct, and you're approaching the variance in exactly the right way.
+
+ There is one crucial point, though:
+
+ > The statement\
+>
+> $$
+> \operatorname{Var}(X_1+\cdots+X_n)
+> =
+> \operatorname{Var}(X_1)+\cdots+\operatorname{Var}(X_n)
+> $$
+>
+> \
+>  is **not true for arbitrary random variables**. It is true when the random variables are **independent** (more generally, when their covariances are zero).
+
+ That's why Nielsen explicitly gives you the hint about independent random variables.
+
+ Let's derive it from scratch.
+
+ ## 1\. Start with your neuron
+
+ You have
+
+ $$
+z=\sum_j w_jx_j+b.
+$$
+
+ In Nielsen's exercise, the $x_j$'s are treated as fixed values, while the $w_j$'s and $b$ are random variables.
+
+ Since the $x_j$'s are constants, define
+
+ $$
+X_j=w_jx_j.
+$$
+
+ Then
+
+ $$
+z=X_1+X_2+\cdots+X_n+b.
+$$
+
+ We want
+
+ $$
+\operatorname{Var}(z).
+$$
+
+---
+
+ ## 2\. Start from the definition of variance
+
+ The variance of a random variable $Z$ is
+
+ $$
+\operatorname{Var}(Z)
+=
+E[(Z-E[Z])^2].
+$$
+
+ You already showed that
+
+ $$
+E[z]=\sum_j E[w_j]x_j+E[b].
+$$
+
+ Therefore
+
+ $$
+z-E[z]
+=
+\sum_j w_jx_j+b
+-
+\left(
+\sum_j E[w_j]x_j+E[b]
+\right).
+$$
+
+ Rearrange:
+
+ $$
+z-E[z]
+=
+\sum_j
+\left(w_j-E[w_j]\right)x_j
++
+\left(b-E[b]\right).
+$$
+
+ For readability, let's call
+
+ $$
+\tilde w_j=w_j-E[w_j]
+$$
+
+ and
+
+ $$
+\tilde b=b-E[b].
+$$
+
+ Then
+
+ $$
+z-E[z]
+=
+\sum_j \tilde w_jx_j+\tilde b.
+$$
+
+ So the variance is
+
+ $$
+\operatorname{Var}(z)
+=
+E\left[
+\left(
+\sum_j\tilde w_jx_j+\tilde b
+\right)^2
+\right].
+$$
+
+ And **this is where the important part happens**.
+
+---
+
+ # 3\. Expand the square
+
+ Let's temporarily consider just two weights:
+
+ $$
+z=w_1x_1+w_2x_2+b.
+$$
+
+ Then
+
+ $$
+z-E[z]
+=
+\tilde w_1x_1+\tilde w_2x_2+\tilde b.
+$$
+
+ Squaring:
+
+ $$
+(z-E[z])^2
+=
+\tilde w_1^2x_1^2
++
+\tilde w_2^2x_2^2
++
+\tilde b^2
+$$
+
+ plus the cross terms:
+
+ $$
++2\tilde w_1\tilde w_2x_1x_2
++2\tilde w_1\tilde b x_1
++2\tilde w_2\tilde b x_2.
+$$
+
+ Now take the expectation:
+
+ $$
+\operatorname{Var}(z)
+=
+E[\tilde w_1^2]x_1^2
++
+E[\tilde w_2^2]x_2^2
++
+E[\tilde b^2]
+$$
+
+ $$
++2x_1x_2E[\tilde w_1\tilde w_2]
++2x_1E[\tilde w_1\tilde b]
++2x_2E[\tilde w_2\tilde b].
+$$
+
+ Now notice:
+
+ $$
+E[\tilde w_1^2]
+=
+\operatorname{Var}(w_1)
+$$
+
+ and similarly:
+
+ $$
+E[\tilde w_2^2]
+=
+\operatorname{Var}(w_2),
+$$
+
+ $$
+E[\tilde b^2]
+=
+\operatorname{Var}(b).
+$$
+
+ So we have
+
+ $$
+\operatorname{Var}(z)
+=
+x_1^2\operatorname{Var}(w_1)
++x_2^2\operatorname{Var}(w_2)
++\operatorname{Var}(b)
+$$
+
+ plus those cross terms.
+
+---
+
+ # 4\. This is where independence matters
+
+ Consider:
+
+ $$
+E[\tilde w_1\tilde w_2].
+$$
+
+ Since
+
+ $$
+\tilde w_1=w_1-E[w_1]
+$$
+
+ and
+
+ $$
+\tilde w_2=w_2-E[w_2],
+$$
+
+ we have
+
+ $$
+E[\tilde w_1\tilde w_2]
+=
+\operatorname{Cov}(w_1,w_2).
+$$
+
+ If $w_1$ and $w_2$ are independent, then
+
+ $$
+\operatorname{Cov}(w_1,w_2)=0.
+$$
+
+ Therefore
+
+ $$
+E[\tilde w_1\tilde w_2]=0.
+$$
+
+ And similarly,
+
+ $$
+E[\tilde w_1\tilde b]=0,
+$$
+
+ $$
+E[\tilde w_2\tilde b]=0.
+$$
+
+ So **all the cross terms disappear**.
+
+ What's left is
+
+ $$
+\boxed{
+\operatorname{Var}(z)
+=
+x_1^2\operatorname{Var}(w_1)
++
+x_2^2\operatorname{Var}(w_2)
++
+\operatorname{Var}(b)
+}
+$$
+
+ and for the general case:
+
+ $$
+\boxed{
+\operatorname{Var}(z)
+=
+\sum_j x_j^2\operatorname{Var}(w_j)
++
+\operatorname{Var}(b)
+}
+$$
+
+ assuming the $w_j$'s and $b$ are independent.
+
+---
+
+ ## 5\. This is slightly different from the statement in Nielsen's hint
+
+ The general rule Nielsen gives you is:
+
+ $$
+\boxed{
+\operatorname{Var}(X+Y)
+=
+\operatorname{Var}(X)+\operatorname{Var}(Y)
+}
+$$
+
+ when $X$ and $Y$ are independent.
+
+ You can apply that repeatedly:
+
+ $$
+z=
+w_1x_1+w_2x_2+\cdots+w_nx_n+b.
+$$
+
+ Therefore
+
+ $$
+\operatorname{Var}(z)
+=
+\operatorname{Var}(w_1x_1)
++
+\operatorname{Var}(w_2x_2)
++\cdots+
+\operatorname{Var}(w_nx_n)
++
+\operatorname{Var}(b).
+$$
+
+ And because $x_j$ is a constant,
+
+ $$
+\operatorname{Var}(cx)=c^2\operatorname{Var}(x)
+$$
+
+ when $c$ is a constant. Therefore:
+
+ $$
+\boxed{
+\operatorname{Var}(z)
+=
+\sum_j x_j^2\operatorname{Var}(w_j)
++
+\operatorname{Var}(b)
+}
+$$
+
+ which is the result you need.
+
+---
+
+ ## 6\. Why your mean derivation was useful
+
+ Your reasoning for the mean was:
+
+ $$
+E[z]
+=
+E\left[\sum_jw_jx_j+b\right]
+$$
+
+ and linearity of expectation gives
+
+ $$
+\boxed{
+E[z]
+=
+\sum_jx_jE[w_j]+E[b].
+}
+$$
+
+ Notice something interesting:
+
+ **you didn't need independence to prove this.**
+
+ Expectation is always linear:
+
+ $$
+E[X+Y]=E[X]+E[Y]
+$$
+
+ even if $X$ and $Y$ are correlated.
+
+ Variance is different because of the square:
+
+ $$
+\operatorname{Var}(X+Y)
+=
+E[(X+Y-E[X+Y])^2].
+$$
+
+ When you expand that square, the cross term
+
+ $$
+2E[(X-E[X])(Y-E[Y])]
+$$
+
+ appears. That's the covariance.
+
+ So the fundamental difference is:
+
+ $$
+\boxed{\text{Mean: cross terms don't appear}}
+$$
+
+ whereas
+
+ $$
+\boxed{\text{Variance: cross terms appear, and independence eliminates them}.}
+$$
+
+ This is really the key mathematical idea behind that Nielsen exercise.
+
+ And once you have this, the final part of his exercise — obtaining the standard deviation $\sqrt{3/2}$ — is just plugging in the particular distributions/variances that Nielsen specifies in the preceding paragraph.
+
+
+
+
+
+
+
+in your 4 point of before you showed me that the espctation of [w_1^tilde, w_2^tilde] is equal to the covariance of w1 w2. can u show me better how?
+
+
+
+
+---
+
+ # Covariance derivation
+
+ Absolutely. This is one of those identities that looks obvious after you've seen it, but it's worth deriving carefully.
+
+ Let's start from the definition of the "centered" variables:
+
+ $$
+\tilde w_1 = w_1-E[w_1]
+$$
+
+ and
+
+ $$
+\tilde w_2 = w_2-E[w_2].
+$$
+
+ We want to understand why
+
+ $$
+E[\tilde w_1\tilde w_2]
+=
+\operatorname{Cov}(w_1,w_2).
+$$
+
+ ### 1\. Start from the left-hand side
+
+ Substitute the definitions of the tilde variables:
+
+ $$
+E[\tilde w_1\tilde w_2]
+=
+E[
+(w_1-E[w_1])
+(w_2-E[w_2])
+].
+$$
+
+ Now expand the product:
+
+ $$
+=
+E[
+w_1w_2
+-w_1E[w_2]
+-E[w_1]w_2
++E[w_1]E[w_2]
+].
+$$
+
+ ### 2\. Use linearity of expectation
+
+ We can take the expectation term by term:
+
+ $$
+=
+E[w_1w_2]
+-
+E[w_1E[w_2]]
+-
+E[E[w_1]w_2]
++
+E[E[w_1]E[w_2]].
+$$
+
+ Now remember that $E[w_1]$ and $E[w_2]$ are **numbers**, not random variables. Therefore we can pull them outside the expectation:
+
+ $$
+=
+E[w_1w_2]
+-
+E[w_2]E[w_1]
+-
+E[w_1]E[w_2]
++
+E[w_1]E[w_2].
+$$
+
+ The second and third terms are the same, so:
+
+ $$
+=
+E[w_1w_2]
+-
+E[w_1]E[w_2]
+-
+E[w_1]E[w_2]
++
+E[w_1]E[w_2].
+$$
+
+ Therefore:
+
+ $$
+\boxed{
+E[\tilde w_1\tilde w_2]
+=
+E[w_1w_2]-E[w_1]E[w_2]
+}
+$$
+
+ But this is **exactly the definition of covariance**:
+
+ $$
+\boxed{
+\operatorname{Cov}(w_1,w_2)
+=
+E[w_1w_2]-E[w_1]E[w_2].
+}
+$$
+
+ Therefore:
+
+ $$
+\boxed{
+E[\tilde w_1\tilde w_2]
+=
+\operatorname{Cov}(w_1,w_2)
+}
+$$
+
+---
+
+ ### Another way to see it
+
+ Covariance is actually **defined** as the expectation of the product of the deviations from the mean:
+
+ $$
+\boxed{
+\operatorname{Cov}(X,Y)
+=
+E[
+(X-E[X])(Y-E[Y])
+]
+}
+$$
+
+ So if you define
+
+ $$
+\tilde X=X-E[X],
+\qquad
+\tilde Y=Y-E[Y],
+$$
+
+ then you have immediately:
+
+ $$
+\operatorname{Cov}(X,Y)
+=
+E[\tilde X\tilde Y].
+$$
+
+ In your neural-network problem:
+
+ $$
+\tilde w_j=w_j-E[w_j],
+$$
+
+ so
+
+ $$
+\operatorname{Cov}(w_1,w_2)
+=
+E[\tilde w_1\tilde w_2].
+$$
+
+ ### And now the connection with independence
+
+ This is why the cross terms in your variance calculation disappear.
+
+ If $w_1$ and $w_2$ are independent, then:
+
+ $$
+E[w_1w_2]=E[w_1]E[w_2].
+$$
+
+ Therefore:
+
+ $$
+\operatorname{Cov}(w_1,w_2)
+=
+E[w_1w_2]-E[w_1]E[w_2]
+=0.
+$$
+
+ And consequently:
+
+ $$
+\boxed{
+E[\tilde w_1\tilde w_2]=0
+}
+$$
+
+ which is exactly why the cross term
+
+ $$
+2x_1x_2E[\tilde w_1\tilde w_2]
+$$
+
+ vanishes in the variance of your neuron's weighted sum.
+
+ One subtle but important point: **independence implies zero covariance, but zero covariance does not in general imply independence.** For this calculation, though, independence is more than enough to make the covariance term vanish.
