@@ -6,9 +6,9 @@ Created on Fri Oct  9 16:11:13 2026
 """
 import time
 from datetime import datetime
-from VMC.NN_class_for_VMC import Neural_Network_VMC as NNVMC
-from VMC.NN_class_for_VMC import HO_potential
-from VMC.NN_class_for_VMC import tot_para_NN
+from VMC.old_methods.NN_class_for_VMC import Neural_Network_VMC as NNVMC
+from VMC.old_methods.NN_class_for_VMC import HO_potential
+from VMC.old_methods.NN_class_for_VMC import tot_para_NN
 import torch.nn as nn
 import torch
 import matplotlib.pyplot as plt
@@ -66,10 +66,10 @@ scheduler=None
 #                                                         threshold=0.01,
 #                                                         eps=10**(-12))
 # model_HO.load_state_dict(
-#     torch.load("VMC/trained_model_HO.pth", weights_only=True)
+#     torch.load("VMC.old_methods/trained_model_HO.pth", weights_only=True)
 # )
 # model_HO.load_state_dict(
-#     torch.load("VMC/trained_model_2_part.pth", weights_only=True)
+#     torch.load("VMC.old_methods/trained_model_2_part.pth", weights_only=True)
 # )
 # model_HO.pbc_cond=False
 # model_HO.MC_samples=MC_samples
@@ -252,4 +252,4 @@ torch.save({
     "scheduler_state_dict": scheduler.state_dict(),
     "epochs_completed": epochs,
     "learning_rate": learning_rate,
-}, "VMC/checkpoint_HO_minSR.pth")
+}, "VMC.old_methods/checkpoint_HO_minSR.pth")

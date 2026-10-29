@@ -7,16 +7,14 @@ Created on Sun Oct 18 03:16:34 2026
 
 import time
 from datetime import datetime
-from VMC.NN_class_for_VMC import Neural_Network_VMC as NNVMC
-from VMC.NN_class_for_VMC import HO_potential
-from VMC.NN_class_for_VMC import tot_para_NN
+from VMC.old_methods.NN_class_for_VMC import Neural_Network_VMC as NNVMC
+from VMC.old_methods.NN_class_for_VMC import HO_potential
+from VMC.old_methods.NN_class_for_VMC import tot_para_NN
 import torch.nn as nn
 import torch
 import matplotlib.pyplot as plt
 import numpy as np
-from VMC.FCC_lattice_He import FCC
-from VMC.NN_class_for_VMC import Lennard_jones_potential
-from VMC.NN_class_for_VMC import HO_potential
+from VMC.old_methods.NN_class_for_VMC import Lennard_jones_potential
 import gc
 
 
@@ -205,7 +203,7 @@ plt.ylabel(r"||$\Delta$||")
 plt.grid(True)
 plt.show()
 
-#test
+
 
 r_12=torch.linspace(0.1,20,10000)
 r_12=r_12.unsqueeze(1)

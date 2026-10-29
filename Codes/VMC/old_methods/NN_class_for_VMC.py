@@ -17,7 +17,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from torch.func import vmap, jacrev, functional_call, hessian
-from torch.autograd.functional import jvp
+from torch.func import jvp
 # from torch.utils.data import DataLoader
 # from torch.utils.data import TensorDataset
 
@@ -30,21 +30,26 @@ class Neural_Network_VMC(nn.Module):
         self.num_of_layers=len(layers)
         self.layers=nn.ModuleList()
         self.activations=nn.ModuleList(activations)
+        
         self.particle_config=[]
         self.acceptance_ratio=0
+        
         self.energy=0
         self.en_std_dev=0
         self.energy_list=[]
         self.en_std_dev_list=[]
         self.en_err_list=[]
+        
         self.grad_list=[]
         self.MC_samples=0
         self.loss_list=[]
         self.acc_ratio_list=[]
         self.Delta_list=[]
+        
         self.particles=0
         self.density=0
         self.use_Jastrow=False
+        
         self.kinetic_factor_multiplier=0.5
         self.HO_pot_factor=0.5
         self.list_f_NN=[]
@@ -79,6 +84,7 @@ class Neural_Network_VMC(nn.Module):
         # nn.init.zeros_(self.layers[-1].weight)
         nn.init.zeros_(self.layers[-1].bias)
     def forward(self, x):
+        #PRIMO FORWARD
         # single=(x.ndim==1)
         
         # if single:
@@ -112,7 +118,7 @@ class Neural_Network_VMC(nn.Module):
         
         
         
-        
+        #SECONDO FORWARD
         single=(x.ndim==1)
         
         if single:
@@ -146,7 +152,7 @@ class Neural_Network_VMC(nn.Module):
     
     
     
-    
+        #TERZO FORWARD
         # if self.use_Jastrow:
         #     J=Jastrow(x, self.length_box_pbc)
         
@@ -295,7 +301,6 @@ class Neural_Network_VMC(nn.Module):
                     displacement = Delta * (
                         torch.rand_like(curr_config[idx_start:idx_end]) - 0.5
                     )
-
                     new_config[idx_start:idx_end] += displacement
                 else:
                     displacement=Delta*(torch.rand_like(curr_config)-0.5)
@@ -428,7 +433,7 @@ class Neural_Network_VMC(nn.Module):
             V=V+ pot(x=configurations, length_box_pbc=self.length_box_pbc,
                      pbc_cond=self.pbc_cond,
                       n_particles=self.particles, density=self.density,
-                      sigma=2.556, eps=10.4, HO_factor_molt=self.HO_pot_factor, r_tilde=alpha).detach()
+                      sigma=2.556, eps=10.4, HO_factor_molt=self.HO_pot_factor, r_tilde=alpha)
         
         # V=potential(x=configurations)    
         local_energies=T+V
@@ -448,9 +453,9 @@ class Neural_Network_VMC(nn.Module):
            N=1 
         print(f"T_mean: {T.mean()/N: .04f}")
         print(f"V_mean: {V.mean()/N: .04f}")
-        print(f"Energy_mean: {self.energy/N: .04f}")
+        print(f"Energy mean: {self.energy/N: .04f}")
         print(f"Energy std_dev: {self.en_std_dev/N: .04f}")
-        print(f"Energy err: {self.en_stoch_err/N: .04f}")
+        print(f"Energy stoch_err: {self.en_stoch_err/N: .04f}")
         
         return local_energies
         
@@ -478,20 +483,25 @@ class Neural_Network_VMC(nn.Module):
         # hess_fun=hessian(f_for_jac, argnums=2)
         # result_hess=(vmap(hess_fun, in_dims=(None, None, 0))(self, params, configurations)).squeeze(1)
         # hessian_pure_der=torch.stack([torch.diag(row).detach() for row in result_hess[:]], dim=0)
-        
-        directions=torch.eye(configurations.shape[0])
-        
-        def second_derivative(v):
+        # laplacian=[]
+        # for k in range(0, configurations.shape[0], 300):
+        #     directions=torch.eye(configurations.shape[1])
             
-            def first_derivative(z):
-                return jvp(self, (z,), (v,))[1]
+        #     def second_derivative(model, x, v):
+                
+        #         def first_derivative(x):
+        #             return jvp(model, (x,), (v,))[1]
+                
+        #         return jvp(first_derivative, (x,),
+        #                    (v,))[1]
             
-            return jvp(first_derivative, (configurations,), (v,))[1]
-        
-        hess_der_pur=vmap(second_derivative)(directions)
-        
-        laplacian=torch.sum(hess_der_pur, dim=0)
-        
+        #     # hess_der_pur=vmap(lambda x: vmap(lambda v : second_derivative(self, x, v)(directions))(configurations))
+        #     hess_der_pur = (vmap(lambda x: vmap(lambda v: second_derivative(self, x, v))(directions))(configurations[k:300+k])).squeeze(-1).detach()
+        #     # result_hess=vmap(hess_fun, in_dims=(None, None, 0))(self, params, configurations)
+            
+        #     # hess_der_pur=
+        #     laplacian.append(torch.sum(hess_der_pur, dim=-1))
+        # laplacian=torch.cat(laplacian, dim=0).unsqueeze(1)
         hessian_diag_terms=[]
         in_features=configurations.shape[1]
         for i in range(in_features):

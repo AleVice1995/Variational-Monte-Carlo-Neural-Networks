@@ -7,17 +7,17 @@ Created on Thu Oct 15 21:13:28 2026
 
 import time
 from datetime import datetime
-from VMC.NN_class_for_VMC import Neural_Network_VMC as NNVMC
-from VMC.NN_class_for_VMC import HO_potential
+from VMC.old_methods.NN_class_for_VMC import Neural_Network_VMC as NNVMC
+from VMC.old_methods.NN_class_for_VMC import HO_potential
 import torch.nn as nn
 import torch
 import matplotlib.pyplot as plt
 import numpy as np
 from VMC.FCC_lattice_He import FCC
-from VMC.NN_class_for_VMC import Lennard_jones_potential
-from VMC.NN_class_for_VMC import V_tail
-from VMC.NN_class_for_VMC import count_small_distances
-from VMC.NN_class_for_VMC import tot_para_NN
+from VMC.old_methods.NN_class_for_VMC import Lennard_jones_potential
+from VMC.old_methods.NN_class_for_VMC import V_tail
+from VMC.old_methods.NN_class_for_VMC import count_small_distances
+from VMC.old_methods.NN_class_for_VMC import tot_para_NN
 import gc
 
 
@@ -75,9 +75,9 @@ from_met_to_Angs=1.0e10
 
 kinetic_factor=np.float32(((h*from_met_to_Angs)**2)/(((2*np.pi)**2)*2*m_He*k_B))
 
-# seed = 13#123#1445#123#123423#8
-# print(f"Seed: {seed:d}\n")
-# torch.manual_seed(seed)
+seed = 13#123#1445#123#123423#8
+print(f"Seed: {seed:d}\n")
+torch.manual_seed(seed)
 # np.random.seed(seed)
 density=0.02#0.02#0.009#0.001#0.021#0.04#0.021559#0.03#0.021559#32
 N_particles=32
@@ -85,7 +85,7 @@ start_delta_finder=50#None#300#None#1
 single_particle_move=True
 PBC_NN=True
 Jastrow_appl=False#True
-MC_samples=2000#600#600#1200
+MC_samples=100#600#600#1200
 epochs=300#1000
 learning_rate=1e-3
 reg_param=0.0#0.01#0.0
@@ -113,11 +113,11 @@ V=Lennard_jones_potential(conf_part.unsqueeze(0), sigma=2.556, eps=10.4, pbc_con
 # inspect_configuration(starting_config_NN, Length_box)
 v_tail_contr=V_tail(N_particles, density, Length_box, 2.556, 10.4)
 print(f"V_LJ: {V.item(): .04f}")
-print(f"V_tail: {v_tail_contr: .04f}")
+print(f"V_tail: {v_tail_contr: .010f}")
 
 
 input_neurons=1#3*N_particles*(1+int(PBC_NN))
-layers=([input_neurons,32, 32,  1])
+layers=([input_neurons,16, 16,  1])
 activations=(nn.Softplus(), nn.Softplus(),  nn.Identity()) 
 tot_param=tot_para_NN(layers)
 
@@ -146,7 +146,7 @@ scheduler = torch.optim.lr_scheduler.StepLR(
 #                                                         threshold=0.01,
 #                                                         eps=10**(-12))
 
-# checkpoint = torch.load("VMC/checkpoint_He_minSR_3.pth", map_location=device, weights_only=True)
+# checkpoint = torch.load("VMC.old_methods/checkpoint_He_minSR_3.pth", map_location=device, weights_only=True)
 # model_He.load_state_dict(checkpoint["model_state_dict"])
 # optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
 # scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
@@ -257,7 +257,7 @@ plt.show()
 #     # "scheduler_state_dict": scheduler.state_dict(),
 #     "epochs_completed": epochs,
 #     "learning_rate": learning_rate,
-# }, "VMC/checkpoint_He.pth")
+# }, "VMC.old_methods/checkpoint_He.pth")
 
 
 
@@ -267,7 +267,7 @@ plt.show()
 #     # "scheduler_state_dict": scheduler.state_dict(),
 #     "epochs_completed": epochs,
 #     "learning_rate": learning_rate,
-# }, "VMC/checkpoint_He_continuation2.pth")
+# }, "VMC.old_methods/checkpoint_He_continuation2.pth")
 
 
 # torch.save({
@@ -276,7 +276,7 @@ plt.show()
 #     # "scheduler_state_dict": scheduler.state_dict(),
 #     "epochs_completed": epochs,
 #     "learning_rate": learning_rate,
-# }, "VMC/checkpoint_He_minSR.pth")
+# }, "VMC.old_methods/checkpoint_He_minSR.pth")
 
 torch.save({
     "model_state_dict": model_He.state_dict(),
@@ -284,4 +284,4 @@ torch.save({
     # "scheduler_state_dict": scheduler.state_dict(),
     "epochs_completed": epochs,
     "learning_rate": learning_rate,
-}, "VMC/checkpoint_He_minSR_3.pth")
+}, "VMC.old_methods/checkpoint_He_minSR_3.pth")
