@@ -14,6 +14,8 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+torch.set_default_dtype(torch.float64)
 # device = torch.device("cuda")
 device=torch.device("cpu")
 if device.type == "cuda":

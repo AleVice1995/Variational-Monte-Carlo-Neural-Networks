@@ -61,5 +61,5 @@ def FCC(density, N_particles):
             # particle_config = torch.stack(particle_config)
         particle_config=particle_config-length_box/2.0
     
-    return particle_config.float(), torch.tensor(length_box)
+    return particle_config, torch.tensor(length_box)
 

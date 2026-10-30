@@ -20,7 +20,7 @@ from VMC.old_methods.NN_class_for_VMC import count_small_distances
 from VMC.old_methods.NN_class_for_VMC import tot_para_NN
 import gc
 
-
+torch.set_default_dtype(torch.float64)
 def inspect_configuration(x, L, sigma=2.556, eps=10.4):
     positions = x.reshape(-1, 3)
     n = positions.shape[0]
@@ -73,7 +73,7 @@ k_B=1.38e-23
 from_met_to_Angs=1.0e10
 
 
-kinetic_factor=np.float32(((h*from_met_to_Angs)**2)/(((2*np.pi)**2)*2*m_He*k_B))
+kinetic_factor=((h*from_met_to_Angs)**2)/(((2*np.pi)**2)*2*m_He*k_B)
 
 seed = 13#123#1445#123#123423#8
 print(f"Seed: {seed:d}\n")
@@ -102,8 +102,8 @@ use_continuation=False#True
 
 # torch.empty_like()
 conf_part, Length_box=FCC(density, N_particles)
-Length_box=np.float32(Length_box)
-Length_box_half=Length_box/2.0
+Length_box_numpy=Length_box
+Length_box_half=Length_box_numpy/2.0
 starting_config_NN=conf_part.reshape(-1)
 # conf_part_large=conf_part#.unsqueeze(0)
 

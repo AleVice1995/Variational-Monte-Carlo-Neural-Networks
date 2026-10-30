@@ -10,14 +10,29 @@ import torch.nn as nn
 import numpy as np
 from torch.func import vmap, jacrev, functional_call, hessian
 from torch.func import jvp
+import time
 
 def compute_energy_local(model, particle_configurations, kinetic_factor, potentials,
                          exp_function, n_particles):
     # T=0
     # V=0
-    
+    start_kin=time.time()
+    print("Computing kinetic term:")
     T=compute_kinetic_energy_local(model, particle_configurations, kinetic_factor, exp_function)
+    end_kin=time.time()
+    elapsed=end_kin-start_kin
+    hours, remainder=divmod(elapsed, 3600)
+    minutes, seconds=divmod(remainder, 60)
+    print(f"\nElapsed time: {hours:.0f} hh {minutes:.0f} mm {seconds:.2f} ss\n")
+    
+    start_pot=time.time()
+    print("Computing potential term:")
     V=compute_potential_energy(potentials, particle_configurations)
+    end_pot=time.time()
+    elapsed=end_pot-start_pot
+    hours, remainder=divmod(elapsed, 3600)
+    minutes, seconds=divmod(remainder, 60)
+    print(f"\nElapsed time: {hours:.0f} hh {minutes:.0f} mm {seconds:.2f} ss\n")
     
     local_energies=T+V
     energy_mean=local_energies.mean()

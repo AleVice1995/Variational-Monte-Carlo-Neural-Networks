@@ -18,7 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
+torch.set_default_dtype(torch.float64)
 # device = torch.device("cuda")
 device=torch.device("cpu")
 if device.type == "cuda":
@@ -39,7 +39,7 @@ m_He=(PM_He/Na)/1000
 k_B=1.38e-23
 from_met_to_Angs=1.0e10
 
-kinetic_factor=np.float32(((h*from_met_to_Angs)**2)/(((2*np.pi)**2)*2*m_He*k_B))
+kinetic_factor=((h*from_met_to_Angs)**2)/(((2*np.pi)**2)*2*m_He*k_B)
 a0=5.0
 factor_HO=kinetic_factor/(a0**4)
 

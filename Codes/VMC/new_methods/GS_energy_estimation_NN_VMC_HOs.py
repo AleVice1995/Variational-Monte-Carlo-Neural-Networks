@@ -16,12 +16,17 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from VMC.new_methods.utils import autocorrelation_length
+
+
+
+
+torch.set_default_dtype(torch.float64)
 # device = torch.device("cuda")
 device=torch.device("cpu")
 if device.type == "cuda":
     torch.cuda.init()
     
-#%%
+
 print(f"Dispositivo utilizzato: {device}")
 
 start_datetime=datetime.now()

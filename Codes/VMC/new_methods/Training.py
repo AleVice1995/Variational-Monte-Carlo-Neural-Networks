@@ -7,8 +7,8 @@ Created on Tue Oct 27 12:25:59 2026
 
 import torch
 from VMC.new_methods.Energy import compute_energy_local
-import VMC.new_methods.sampler
 from VMC.new_methods.Optimizers import minSR
+import time
 
 
 def training_NN_VMC(model, sampler, epochs, 
@@ -49,18 +49,40 @@ def training_NN_VMC(model, sampler, epochs,
         if (condition_delta_finder and (acceptance_ratio<min_acc_ratio or acceptance_ratio>max_acc_ratio)):
             delta=sampler.delta_finder(model, starting_config, delta)
         delta_list.append(delta)
+        start_conf=time.time()
+        print("Sampling:")
         current_config, acceptance_ratio=sampler.metropolis_sampling(model, starting_config, delta, 
                                 MC_samples, burn_samples, save_data=True)
+        end_conf=time.time()
+        elapsed=end_conf-start_conf
+        hours, remainder=divmod(elapsed, 3600)
+        minutes, seconds=divmod(remainder, 60)
+        print(f"\nElapsed time: {hours:.0f} hh {minutes:.0f} mm {seconds:.2f} ss\n")
+        
         acceptance_ratio_list.append(acceptance_ratio)
+        start_en=time.time()
+        print("Computing Energy:")
         data=compute_energy_local(model, current_config, kinetic_factor, potentials,
                                   exp_function, n_particles)
+        end_en=time.time()
+        elapsed=end_en-start_en
+        hours, remainder=divmod(elapsed, 3600)
+        minutes, seconds=divmod(remainder, 60)
+        print(f"\nElapsed time: {hours:.0f} hh {minutes:.0f} mm {seconds:.2f} ss\n")
         
         local_energies=data[0]
         energy_mean=data[1]
+        
+        start_minSR=time.time()
+        print("Applying minSR::")
         grad_norm=minSR(model, current_config, n_particles,
                   local_energies, energy_mean, 
                   optimizer, exp_function, diag_shift)
-        
+        end_minSR=time.time()
+        elapsed=end_minSR-start_minSR
+        hours, remainder=divmod(elapsed, 3600)
+        minutes, seconds=divmod(remainder, 60)
+        print(f"\nElapsed time: {hours:.0f} hh {minutes:.0f} mm {seconds:.2f} ss\n")
         
         
         

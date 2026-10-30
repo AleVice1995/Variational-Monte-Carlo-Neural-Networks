@@ -21,7 +21,7 @@ import gc
 
 
 
-
+torch.set_default_dtype(torch.float64)
 # device = torch.device("cuda")
 device=torch.device("cpu")
 if device.type == "cuda":
@@ -42,14 +42,15 @@ m_He=(PM_He/Na)/1000
 k_B=1.38e-23
 from_met_to_Angs=1.0e10
 
-kinetic_factor=np.float32(((h*from_met_to_Angs)**2)/(((2*np.pi)**2)*2*m_He*k_B))
+kinetic_factor=((h*from_met_to_Angs)**2)/(((2*np.pi)**2)*2*m_He*k_B)
+
 a0=5
 factor_HO=kinetic_factor/(a0**4)
 
 
-seed = 13#123#1445#123#123423#8
-print(f"Seed: {seed:d}\n")
-torch.manual_seed(seed)
+# seed = 13#123#1445#123#123423#8
+# print(f"Seed: {seed:d}\n")
+# torch.manual_seed(seed)
 
 density=0.02
 n_particles=32
@@ -57,9 +58,9 @@ dimension=3
 coordinates=dimension*n_particles
 diag_shift=1e-2
 start_delta_finder=50
-MC_samples=300
+MC_samples=3000
 burn_samples=3000
-epochs=500
+epochs=1
 delta=1.0
 learning_rate=2e-3
 reg_param=0.0
@@ -69,8 +70,8 @@ exp_function=True
 pbc_cond=True
 
 conf_part, Length_box=FCC(density, n_particles)
-Length_box=np.float32(Length_box)
-Length_box_half_numpy=Length_box/2.0
+Length_box_numpy=Length_box.numpy()
+Length_box_half_numpy=Length_box_numpy/2.0
 starting_config=conf_part.reshape(-1)
 
 
@@ -244,17 +245,19 @@ plt.grid(True)
 plt.show()
 
 #%%
-autocorr_terms=282
+from VMC.new_methods.utils import autocorrelation_length, autocorrelation_length_Pearson
+autocorr_terms=29
 
 if autocorr_terms<MC_samples:
-    C_tau_terms_tens=autocorrelation_length(local_energies_last_epoch/n_particles, autocorr_terms=autocorr_terms)
-    C_tau_terms=C_tau_terms_tens.detach().cpu().numpy()
+    C_tau_terms=autocorrelation_length(local_energies_last_epoch/n_particles, autocorr_terms=autocorr_terms)
+    if isinstance(C_tau_terms, torch.Tensor):
+        C_tau_terms=C_tau_terms.detach().cpu().numpy()
     C_tot=np.sum(C_tau_terms)
     tau=np.arange(autocorr_terms)
     
     x_data_exp_model=np.linspace(0,autocorr_terms-1, 1000)
     y_data_exp_model=np.exp(-x_data_exp_model/C_tot)
-    
+    # plt.close(fig=7)
     plt.figure(num=7, dpi=120)
     plt.plot(tau, C_tau_terms, marker='.', linestyle='-', label='data')
     plt.plot(x_data_exp_model, y_data_exp_model, marker='None', linestyle='-', label='model')
