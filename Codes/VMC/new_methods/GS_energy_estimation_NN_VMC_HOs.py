@@ -16,6 +16,7 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from VMC.new_methods.utils import autocorrelation_length
+from VMC.new_methods.Energy import compute_energy_local
 
 
 
@@ -43,7 +44,8 @@ coordinates=dimension*n_particles
 diag_shift=1e-3
 start_delta_finder=5
 MC_samples=5000
-burn_samples=1000
+batch=500
+sweep_per_save=1
 epochs=300
 delta=13.0
 learning_rate=1e-2
@@ -88,7 +90,7 @@ scheduler = torch.optim.lr_scheduler.StepLR(
 )
 data=training_NN_VMC(model_HO, sampler, epochs, 
                     starting_config, delta, energy_info,
-                    MC_samples, burn_samples,
+                    MC_samples, batch, sweep_per_save,
                     start_delta_finder, 
                     optimizer, scheduler, diag_shift)
 
@@ -104,12 +106,22 @@ minutes, seconds=divmod(remainder, 60)
 print(f"\nRun started at: {start_datetime.strftime('%d/%m/%Y %H:%M:%S')}")
 print(f"Run finished at: {end_datetime.strftime('%d/%m/%Y %H:%M:%S')}")
 print(f"\nElapsed time: {hours:.0f} hh {minutes:.0f} mm {seconds:.2f} ss\n")
+#%%
+torch.save({
+    "model_state_dict": model_HO.state_dict(),
+    "optimizer_state_dict": optimizer.state_dict(),
+    # "scheduler_state_dict": scheduler.state_dict(),
+    "epochs_completed": epochs,
+    "learning_rate": learning_rate,
+}, "VMC/checkpoint_HO.pth")
+
 
 
 #%%
 local_energies_last_epoch, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
         T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
-            current_config, grad_list, lr_list=data
+            current_config, grad_list, lr_list,\
+                fraction_nonfinite_values_list, fraction_clipped_values_list=data
 
 
 
@@ -207,12 +219,12 @@ plt.plot(iterations, energies, marker='.', linestyle='-', label="NN Energy")
 plt.axhline(y=0.5, color='red', linestyle='--', label="Exact energy HO")
 plt.xlabel("Epoch")
 plt.ylabel("Energy")
-plt.ylim([0,1])
+plt.ylim([-1.5*energies[-1],1.5*energies[-1]])
 plt.grid(True)
 plt.legend()
 plt.show()
 
-plt.figure(num=2, dpi=120)
+plt.figure(num=4, dpi=120)
 plt.plot(iterations, lr_list, marker='.', linestyle='None')
 plt.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
 plt.xlabel("Epoch")
@@ -220,7 +232,7 @@ plt.ylabel("Learning rate")
 plt.grid(True)
 plt.show()
 
-plt.figure(num=4, dpi=120)
+plt.figure(num=5, dpi=120)
 plt.plot(iterations, delta_list, marker='.', linestyle='-')
 plt.xlabel("Epoch")
 plt.ylabel("Delta")
@@ -229,18 +241,27 @@ plt.show()
 
 
 
-plt.figure(num=5, dpi=120)
+plt.figure(num=6, dpi=120)
 plt.plot(iterations, acceptance_ratio_list, marker='.', linestyle='-')
 plt.xlabel("Epoch")
 plt.ylabel("Acceptance ratio [%]")
 plt.grid(True)
 plt.show()
 
-plt.figure(num=6, dpi=120)
+plt.figure(num=7, dpi=120)
 plt.plot(iterations, grad_list, marker='.', linestyle='-')
 plt.xlabel("Epoch")
 plt.ylabel(r"||$\nabla$||")
 plt.grid(True)
+plt.show()
+
+plt.figure(num=8, dpi=120)
+plt.plot(iterations, fraction_nonfinite_values_list, marker='.', linestyle='-', label="non-finite values")
+plt.plot(iterations, fraction_clipped_values_list, marker='.', linestyle='-', label="clipped values")
+plt.xlabel("Epoch")
+plt.ylabel(r"Percentage [%]")
+plt.grid(True)
+plt.legend()
 plt.show()
 
 # loss=model_HO.loss_list
@@ -251,19 +272,42 @@ plt.show()
 # plt.grid(True)
 # plt.show()
 
-autocorr_terms=7
+#%%
 
-if autocorr_terms<MC_samples:
-    C_tau_terms_tens=autocorrelation_length(local_energies_last_epoch, autocorr_terms=autocorr_terms)
-    C_tau_terms=C_tau_terms_tens.detach().cpu().numpy()
-    C_tot=np.sum(C_tau_terms)
+MC_samples=5000
+batch_autocorr=1
+current_config_autocorr, acceptance_ratio_autocorr=sampler.metropolis_sampling_parallel_walkers_batch(model_HO, current_config, delta_list[-1], 
+                        MC_samples, sweep_per_save=10, batch=batch_autocorr, burned_sweep=3, save_data=True)
+
+data_autocorr=compute_energy_local(model_HO, current_config_autocorr, kinetic_factor, potentials,
+                          exp_function, n_particles)
+local_energies_autocorr=data_autocorr[0]
+local_energies_autocorr=local_energies_autocorr.reshape(-1,batch_autocorr,1)
+
+#%%
+saved_samples_per_walker=local_energies_autocorr.shape[0]
+autocorr_terms=25
+C_tau_terms_per_walker=[]
+if autocorr_terms<saved_samples_per_walker:
+    for i in range(batch_autocorr):
+
+        C_tau_terms_tens=autocorrelation_length(local_energies_autocorr[:,i], autocorr_terms=autocorr_terms)
+        # C_tau_terms=C_tau_terms_tens.detach().cpu().numpy()
+        C_tau_terms_per_walker.append(C_tau_terms_tens)
+        
+    C_tau_terms_per_walker=torch.stack(C_tau_terms_per_walker)
+    C_tau_terms_mean=torch.mean(C_tau_terms_per_walker, dim=0)
+    C_tau_terms_mean=C_tau_terms_mean.detach().cpu().numpy()
+    C_tot=0.5+np.sum(C_tau_terms_mean[1:])
+    # C_tot=np.sum(C_tau_terms_mean)
     tau=np.arange(autocorr_terms)
     
     x_data_exp_model_HO=np.linspace(0,autocorr_terms-1, 1000)
-    y_data_exp_model_HO=np.exp(-x_data_exp_model_HO/C_tot)
+    y_data_exp_model_HO=np.exp(-x_data_exp_model_HO/(C_tot))
     
+    plt.close(fig=9)
     plt.figure(num=7, dpi=120)
-    plt.plot(tau, C_tau_terms, marker='.', linestyle='-', label='data')
+    plt.plot(tau, C_tau_terms_mean, marker='.', linestyle='-', label='data')
     plt.plot(x_data_exp_model_HO, y_data_exp_model_HO, marker='None', linestyle='-', label='model')
     plt.ylabel(r"$c(E)_{\tau}$")
     plt.xlabel(r"$\tau$")
@@ -274,7 +318,7 @@ if autocorr_terms<MC_samples:
 #%%
 
 weights = model_HO.layers[0].weight.detach().numpy().flatten()
-plt.figure(num=8, dpi=120)
+plt.figure(num=9, dpi=120)
 plt.hist(weights, bins=10, density=True, edgecolor="black")
 plt.xlabel("Valore del peso")
 plt.ylabel("Frequenza")

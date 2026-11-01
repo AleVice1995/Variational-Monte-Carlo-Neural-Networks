@@ -95,10 +95,98 @@ class Sampler():
                 print(f"Acceptance ratio: {acceptance_ratio:.04f}\n")
                 return torch.stack(new_config_list), acceptance_ratio
             return acceptance_ratio    
-    
+        
+        
+    def metropolis_sampling_parallel_walkers_batch(self, model, current_config, delta, 
+                            new_samples, batch,sweep_per_save, burned_sweep, save_data):
+        
+        
+        new_config_list=[]
+        accepted_new_samples=0        
+        single=(current_config.ndim==1)
+        if single:
+            current_config=current_config.unsqueeze(0)
+            
+        current_config=current_config.reshape(current_config.shape[0],-1,self.dimension)
+        # burned_sweep=10
+        # batch=300
+        
+        num_save=int(new_samples/batch)
+        # sweep_per_save=1
+        # num_save=60
+        tot_sweep=burned_sweep+(sweep_per_save*num_save)
+        burned_loops=int(self.n_particles*burned_sweep)
+        loops_during_save=int(self.n_particles*(sweep_per_save*num_save))
+        total_proposals=loops_during_save+burned_loops
+        
+        # current_config=current_config.reshape(-1, self.dimension)
+        if self.pbc_cond:
+            L=self.length_box_pbc
+        
+        with torch.no_grad():
+            i=0
+            cont_after_burn=0
+            while i<total_proposals:
+                # cont
+                if i==0:
+                    if current_config.shape[0]==1:
+                        current_config=current_config.expand(batch,self.n_particles, self.dimension)
+                    else:
+                        current_config=current_config[-batch:,:, :]
+                new_config=current_config.clone()
+                particle=i%self.n_particles
+                
+                displacement=delta*(torch.rand(batch,  self.dimension)-0.5)
+                
+                new_config[:,particle,:]+=displacement
+                    
+                if self.pbc_cond:
+                    new_config=new_config-L*torch.round((new_config/L))
+                
+                y_new=model(new_config.reshape(new_config.shape[0],-1))
+                if i==0:
+                    y_current=model(current_config.reshape(new_config.shape[0],-1))
+                    
+                if self.exp_function:
+                    log_ratio=torch.clamp(2*(y_new-y_current), max=0.0)
+                    p=torch.exp(log_ratio)
+                else:
+                    p=(y_new/y_current).square()
+                    p=torch.clamp(p, max=1.0)
+                
+                cond=(torch.rand((batch,1), device=p.device)<=p)
+                current_config=torch.where(cond.unsqueeze(-1), new_config, current_config)
+                y_current=torch.where(cond, y_new, y_current)
+                if i>=burned_loops:
+                    accepted_new_samples+=torch.sum(cond)
+                    if particle==(self.n_particles-1):
+                        cont_after_burn+=1
+                        if save_data and cont_after_burn%sweep_per_save==0:
+                            new_config_to_save=current_config.reshape(current_config.shape[0],-1)
+                            new_config_list.append(new_config_to_save)
+                    
+                        
+                    
+                
+                
+                
+                i+=1
+            
+            acceptance_ratio=accepted_new_samples/(batch*loops_during_save)
+            
+            if save_data:
+                print(f"delta: {delta:.04f}")
+                print(f"Acceptance ratio: {acceptance_ratio:.04f}\n")
+                new_config_list=torch.cat(new_config_list, dim=0)
+                return new_config_list, acceptance_ratio
+            return acceptance_ratio    
+        
+        
     def delta_finder(self, model, current_config, delta):
         print("Finding new best delta parameter...")
-        samples=1000
+        samples=2000
+        batch=200
+        sweep_per_save=1
         delta_list=[]
         func_temp=0
         func_temp_list=[]
@@ -108,7 +196,9 @@ class Sampler():
         
         for i in range(2):
             delta=self.modify_delta(delta, func_temp)
-            acceptance_ratio=self.metropolis_sampling(model, current_config, delta, samples, burn_samples=0, save_data=False)
+            
+            acceptance_ratio=self.metropolis_sampling_parallel_walkers_batch(model, current_config, delta, 
+                                    samples, batch, sweep_per_save, burned_sweep=0, save_data=False)
             
             if acceptance_ratio>min_acc_ratio and acceptance_ratio<max_acc_ratio:
                 break
@@ -123,7 +213,8 @@ class Sampler():
             if (np.sign(func_temp_list[0])==-np.sign(func_temp_list[1])):
                 delta=(delta_list[0]+delta_list[1])/2
                 print(f"Testing delta: {delta:.04f}...")
-                acceptance_ratio=self.metropolis_sampling(model, current_config, delta, samples, burn_samples=0, save_data=False)
+                acceptance_ratio=self.metropolis_sampling_parallel_walkers_batch(model, current_config, delta, 
+                                        samples, batch, sweep_per_save, burned_sweep=0, save_data=False)
                 print(f"Acceptance ratio: {acceptance_ratio: .04f}")
                 func_temp=acceptance_ratio-0.5
                 if (np.sign(func_temp)==np.sign(func_temp_list[0])):
@@ -137,7 +228,8 @@ class Sampler():
                 # Delta=delta_value_list[1]-m*f_temp_list[1]
                 delta=self.modify_delta(delta_list[-1], func_temp)
                 print(f"Testing Delta: {delta:.04f}...")
-                acceptance_ratio=self.metropolis_sampling(model, current_config, delta, samples, burn_samples=0, save_data=False)
+                acceptance_ratio=self.metropolis_sampling_parallel_walkers_batch(model, current_config, delta, 
+                                        samples, batch, sweep_per_save, burned_sweep=0, save_data=False)
                 print(f"Acceptance ratio: {acceptance_ratio: .04f}")
                 func_temp=acceptance_ratio-0.5
                 delta_list[0]=delta_list[1]

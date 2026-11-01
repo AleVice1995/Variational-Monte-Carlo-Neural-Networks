@@ -15,13 +15,59 @@ def minSR(model, particle_configurations, n_particles,
     particle_configurations.requires_grad_(True)
     optimizer.zero_grad()
     
-    e=torch.nan_to_num(local_energies).reshape(-1)-energy_mean
-    e=torch.nan_to_num(e)
-    f_NN=model(particle_configurations)
-    if exp_function:
-        f=f_NN.reshape(-1)
-    else:
-        f=torch.log(torch.abs(f_NN)).reshape(-1)
+    
+    finite_values_bool=torch.isfinite(local_energies)
+    num_nonfinite_values=torch.sum(~finite_values_bool)
+    fraction_nonfinite=num_nonfinite_values*100/local_energies.shape[0]
+    
+
+    local_energies_finite=local_energies[finite_values_bool]
+
+    energy_median=torch.median(local_energies_finite)
+    
+    local_energies_cleaned=torch.where(finite_values_bool, local_energies, energy_median)
+
+    energy_median=torch.median(local_energies_cleaned)
+    
+    energy_deviations=local_energies_cleaned-energy_median
+    energy_dispersion=torch.mean(torch.abs(energy_deviations))
+    
+    factor=10
+
+    upper_energy=energy_median+factor*energy_dispersion
+    lower_energy=energy_median-factor*energy_dispersion
+    
+    local_energies_clipped=torch.clamp(local_energies_cleaned, min=lower_energy,  max=upper_energy)
+
+    interval_energy_bool=(local_energies_cleaned<lower_energy) | (local_energies_cleaned>upper_energy)
+    
+
+    num_clipped_values=torch.sum(interval_energy_bool)
+    fraction_clipped=num_clipped_values*100/local_energies.shape[0]
+    
+
+    energy_mean_clipped=torch.mean(local_energies_clipped)
+    
+    e=(local_energies_clipped-energy_mean_clipped).reshape(-1)
+
+    energy_mean=torch.mean(local_energies)
+    
+    e2=torch.nan_to_num(local_energies).reshape(-1)-energy_mean
+    e2=torch.nan_to_num(e2)
+    
+    print(f"Fraction non-finite values: {num_nonfinite_values: d}/{local_energies.shape[0]:d}={fraction_nonfinite:.02f}%")
+    print(f"Fraction clipped values: {num_clipped_values: d}/{local_energies.shape[0]:d}={fraction_clipped:.02f}%")
+    print(f"Median of finite values: {energy_median:.04e}")
+    print(f"Median on \"cleaned\" values: {energy_median:.04e}")
+    print(f"Dispersion on \"cleaned\" values: {energy_dispersion:.04e}")
+    print(f"Energy mean clipped: {energy_mean_clipped:.04e}")
+    print(f"Energy mean non-clipped: {energy_mean:.04e}")
+    # f_NN=model(particle_configurations.reshape(particle_configurations.shape[0],-1))
+    
+    # if exp_function:
+    #     f=f_NN.reshape(-1)
+    # else:
+    #     f=torch.log(torch.abs(f_NN)).reshape(-1)
      
     
     O_rows=[]
@@ -105,4 +151,4 @@ def minSR(model, particle_configurations, n_particles,
     #     print(f"maximum distance: {r_max: .04f}")
     optimizer.step()
     particle_configurations.requires_grad_(False)
-    return grad_norm_before.item()
+    return grad_norm_before.item(), fraction_nonfinite.item(), fraction_clipped.item()

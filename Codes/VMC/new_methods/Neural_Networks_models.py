@@ -34,6 +34,55 @@ class Neural_Network_VMC_HO(nn.Module):
         nn.init.zeros_(self.layers[-1].bias)
         
     def forward(self, x):
+        
+        for i in range(self.num_of_layers-1):
+            z=self.layers[i](x)
+            x=self.activations[i](z)
+            
+        return x
+    
+    
+    
+    
+    
+class Neural_Network_VMC_HO2(nn.Module):
+    def __init__(self, layers, activations, dimension):
+        super().__init__()
+        self.num_of_layers=len(layers)
+        self.layers=nn.ModuleList()
+        self.activations=nn.ModuleList(activations)
+        self.dimension=dimension
+        
+        for i in range(self.num_of_layers-1):
+            self.layers.append(nn.Linear(layers[i], layers[i+1]))
+            nn.init.xavier_uniform_(self.layers[i].weight)
+            # nn.init.zeros_(self.layers[i].bias)
+            
+    
+        nn.init.normal_(self.layers[-1].weight, mean=0.0, std=1e-3)
+        # nn.init.zeros_(self.layers[-1].weight)
+        nn.init.zeros_(self.layers[-1].bias)
+        
+    # def forward(self, x):
+    #     for i in range(self.num_of_layers-1):
+    #         z=self.layers[i](x)
+    #         x=self.activations[i](z)
+            
+    #     return x
+    
+    def forward(self, x):
+        
+        single=(x.ndim==1)
+        
+        if single:
+            x=x.unsqueeze(0)
+        
+        x=x.reshape(x.shape[0],-1,self.dimension)
+        n_particles=x.shape[1]
+        out=self.pos(x).sum(1)
+        return out.squeeze(0)
+     
+    def pos(self, x):
         for i in range(self.num_of_layers-1):
             z=self.layers[i](x)
             x=self.activations[i](z)
@@ -46,13 +95,14 @@ class Neural_Network_VMC_HO(nn.Module):
         
 class Neural_Network_VMC_HeHe(nn.Module):
     
-    def __init__(self, layers_pos, activations_pos, layers_dist, activations_dist):
+    def __init__(self, layers_pos, activations_pos, layers_dist, activations_dist, dimension):
         super().__init__()
         
         #initializing POS subnet
         self.num_of_layers_pos=len(layers_pos)
         self.layers_pos=nn.ModuleList()
         self.activations_pos=nn.ModuleList(activations_pos)
+        self.dimension=dimension
         
         for i in range(self.num_of_layers_pos-1):
             self.layers_pos.append(nn.Linear(layers_pos[i], layers_pos[i+1]))
@@ -83,7 +133,7 @@ class Neural_Network_VMC_HeHe(nn.Module):
         if single:
             x=x.unsqueeze(0)
         
-        x=x.reshape(x.shape[0],-1,3)
+        x=x.reshape(x.shape[0],-1,self.dimension)
         n_particles=x.shape[1]
         
         ij=torch.triu_indices(n_particles,
@@ -121,12 +171,13 @@ class Neural_Network_VMC_HeHe(nn.Module):
 'introdurre il length box in qualche maniera'
 class Neural_Network_VMC_He_0K(nn.Module):
     
-    def __init__(self, layers, activations, length_box_pbc):
+    def __init__(self, layers, activations, length_box_pbc, dimension):
         super().__init__()
         self.num_of_layers=len(layers)
         self.layers=nn.ModuleList()
         self.activations=nn.ModuleList(activations)
         self.length_box_pbc=length_box_pbc
+        self.dimension=dimension
         
         for i in range(self.num_of_layers-1):
             self.layers.append(nn.Linear(layers[i], layers[i+1]))
@@ -145,7 +196,7 @@ class Neural_Network_VMC_He_0K(nn.Module):
         if single:
             x=x.unsqueeze(0)
         
-        x=x.reshape(x.shape[0],-1,3)
+        x=x.reshape(x.shape[0],-1,self.dimension)
         n_particles=x.shape[1]
         
         ij=torch.triu_indices(n_particles,
@@ -154,18 +205,18 @@ class Neural_Network_VMC_He_0K(nn.Module):
                               device=x.device)
         i, j=ij[0], ij[1]
         
-        dr=x[:, i, :]- x[:, j,:]
+        dr=x[:, i, :]- x[:, j,:] #dim: [M_conf, N*(N-1)/2,3]
         dr=dr-self.length_box_pbc*torch.round(dr/self.length_box_pbc)
         
-        r2=torch.sum(dr**2, dim=-1, keepdim=True)
-        x=(r2.sqrt()).clamp_min(1e-12)
+        r2=torch.sum(dr**2, dim=-1, keepdim=True)  #dim: [M_conf, N*(N-1)/2,1]
+        x=(r2.sqrt()).clamp_min(1e-12)             #dim: [M_conf, N*(N-1)/2,1]
         # one_over_r=1.0/r
         # x=1.0/r
         
         
             
-        out=torch.sum(self.phi(x), dim=1)
-        return out.squeeze(0) if single else out
+        out=torch.sum(self.phi(x), dim=1)   #dim: [M_conf,1]
+        return out.squeeze(0) if single else out #[M,1] or if single [1]
     
     
     def phi(self, x):
