@@ -33,8 +33,12 @@ def training_NN_VMC(model, sampler, epochs,
     energy_mean_list=[]
     energy_std_dev_list=[]
     energy_stoch_err_list=[]
-    T_mean_list=[]
     V_mean_list=[]
+    T_mean_list=[]
+    T_mean_grad_list=[]
+    energy_mean_grad_list=[]
+    T_mean_JF_list=[]
+    energy_mean_JF_list=[]
     grad_list=[]
     lr_list=[]
     fraction_nonfinite_values_list=[]
@@ -51,14 +55,15 @@ def training_NN_VMC(model, sampler, epochs,
         if (condition_delta_finder and (acceptance_ratio<min_acc_ratio or acceptance_ratio>max_acc_ratio)):
             delta=sampler.delta_finder(model, starting_config, delta)
         delta_list.append(delta)
-        # start_conf=time.time()
         print("Sampling:")
+        # start_conf=time.time()
         if epoch==0:
-            burned_sweep=1
+            burned_sweep=100
         elif epoch<20:
             burned_sweep=10
         else:
             burned_sweep=3
+        print(f"burned sweep: {burned_sweep:d}")
         current_config, acceptance_ratio=sampler.metropolis_sampling_parallel_walkers_batch(model, starting_config, delta, 
                                 MC_samples, batch,sweep_per_save, burned_sweep, save_data=True)
         # end_conf=time.time()
@@ -68,8 +73,8 @@ def training_NN_VMC(model, sampler, epochs,
         # print(f"\nElapsed time: {hours:.0f} hh {minutes:.0f} mm {seconds:.2f} ss\n")
         
         acceptance_ratio_list.append(acceptance_ratio)
-        # start_en=time.time()
         print("Computing Energy:")
+        # start_en=time.time()
         data=compute_energy_local(model, current_config, kinetic_factor, potentials,
                                   exp_function, n_particles)
         # end_en=time.time()
@@ -81,10 +86,10 @@ def training_NN_VMC(model, sampler, epochs,
         local_energies=data[0]
         energy_mean=data[1]
         
-        # start_minSR=time.time()
         print("Applying minSR::")
+        # start_minSR=time.time()
         grad_norm, fraction_nonfinite, fraction_clipped=minSR(model, current_config, n_particles,
-                  local_energies, energy_mean, 
+                  local_energies, epoch, 
                   optimizer, exp_function, diag_shift)
         # end_minSR=time.time()
         # elapsed=end_minSR-start_minSR
@@ -97,8 +102,14 @@ def training_NN_VMC(model, sampler, epochs,
         energy_mean_list.append(energy_mean)
         energy_std_dev_list.append(data[2])
         energy_stoch_err_list.append(data[3])
-        T_mean_list.append(data[4])
-        V_mean_list.append(data[5])
+        V_mean_list.append(data[4])
+        T_mean_list.append(data[5])
+        T_mean_grad_list.append(data[6])
+        energy_mean_grad_list.append([data[7]])
+        T_mean_JF_list.append(data[8])
+        energy_mean_JF_list.append([data[9]])
+        
+        
         grad_list.append(grad_norm)
         # rand_num=torch.randint(0,sampler.n_particles, ()).item()
         starting_config=current_config
@@ -117,7 +128,8 @@ def training_NN_VMC(model, sampler, epochs,
     return local_energies, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
             T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
                 current_config, grad_list, lr_list, fraction_nonfinite_values_list,\
-                    fraction_clipped_values_list
+                    fraction_clipped_values_list, T_mean_grad_list, energy_mean_grad_list,\
+                        T_mean_JF_list, energy_mean_JF_list
 
     # return current_config
         

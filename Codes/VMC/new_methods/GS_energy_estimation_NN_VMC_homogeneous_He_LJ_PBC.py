@@ -58,11 +58,11 @@ n_particles=32
 dimension=3
 coordinates=dimension*n_particles
 diag_shift=1e-2
-start_delta_finder=50
-MC_samples=1000
-batch=500
-sweep_per_save=1
-epochs=2
+start_delta_finder=20
+MC_samples=600
+batch=200
+sweep_per_save=4
+epochs=151
 delta=1.0
 learning_rate=2e-3
 reg_param=0.0
@@ -118,11 +118,11 @@ sampler=Sampler(n_particles=n_particles, dimension=dimension,
 
 optimizer=torch.optim.SGD(model_He.parameters(), lr=learning_rate, weight_decay=reg_param)
 scheduler=None
-# scheduler = torch.optim.lr_scheduler.StepLR(
-#     optimizer,
-#     step_size=50,  # Every 50 epochs
-#     gamma=0.7      # Multiply LR by 0.1
-# )
+scheduler = torch.optim.lr_scheduler.StepLR(
+    optimizer,
+    step_size=50,  # Every 50 epochs
+    gamma=0.7      # Multiply LR by 0.1
+)
 data=training_NN_VMC(model_He, sampler, epochs, 
                     starting_config, delta, energy_info,
                     MC_samples, batch, sweep_per_save,
@@ -157,9 +157,11 @@ torch.save({
 local_energies_last_epoch, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
         T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
             current_config, grad_list, lr_list,\
-                fraction_nonfinite_values_list, fraction_clipped_values_list=data
+                fraction_nonfinite_values_list, fraction_clipped_values_list,\
+                    T_mean_grad_list, energy_mean_grad_list,\
+                        T_mean_JF_list, energy_mean_JF_list=data
             
-#%%
+
 # inspect_configuration(model_He.particle_config[0], Length_box)
 plt.close('all')
 fig=plt.figure(num=0, dpi=120)
@@ -178,11 +180,15 @@ plt.legend()
 plt.show()
 
 iterations=np.arange(1, epochs+1)
+potential_energies=np.array(V_mean_list)/n_particles
 energies=np.array(energy_mean_list)/n_particles
 en_std_devs=np.array(energy_std_dev_list)/n_particles
 en_errors=np.array(energy_stoch_err_list)/n_particles
 kinetic_energies=np.array(T_mean_list)/n_particles
-potential_energies=np.array(V_mean_list)/n_particles
+kinetic_grad_energies=np.array(T_mean_grad_list)/n_particles
+energies_grad=np.array(energy_mean_grad_list)/n_particles
+kinetic_JF_energies=np.array(T_mean_JF_list)/n_particles
+energies_JF=np.array(energy_mean_JF_list)/n_particles
 #minimum energy
 index_min_en=np.argmin(energies)
 print("Minimum Energy:")
@@ -214,9 +220,13 @@ print(f"Energy std_dev: {energy_std_dev_list[index_min_grad].item()/n_particles:
 print(f"Energy stoch_err: {energy_stoch_err_list[index_min_grad].item()/n_particles: .04f}")
 print(f"Gradient norm before clip: {grad_list[index_min_grad]:.6f}\n")
 plt.figure(num=1, dpi=120)
-plt.plot(iterations, kinetic_energies, marker='.', linestyle='-', label="NN Kinetic")
-plt.plot(iterations, potential_energies, marker='.', linestyle='-', label="NN Potential")
-plt.plot(iterations, energies, marker='.', linestyle='-', label="NN Energy")
+plt.plot(iterations, potential_energies, marker='None', linestyle='-', zorder=3, label="NN V")
+plt.plot(iterations, kinetic_energies, marker='None', linestyle='-', zorder=3, label="NN T")
+plt.plot(iterations, energies, marker='None', linestyle='-', zorder=3, label="NN E")
+plt.plot(iterations, kinetic_grad_energies, marker='None', linestyle='-', label=r"NN $T_{\nabla}$")
+plt.plot(iterations, energies_grad, marker='None', linestyle='-', label=r"NN $E_{\nabla}$")
+plt.plot(iterations, kinetic_JF_energies, marker='None', linestyle='-', label=r"NN $T_{JF}$")
+plt.plot(iterations, energies_JF, marker='None', linestyle='-', label=r"NN $E_{JF}$")
 # plt.errorbar(iterations, energies, yerr=en_std_devs, fmt='o-', capsize=4, markersize=5, label="Energia VMC")
 plt.axhline(y=-6., color='red', linestyle='--', label="valore da raggiungere")
 plt.xlabel("Epochs")
@@ -261,10 +271,33 @@ plt.figure(num=6, dpi=120)
 plt.plot(iterations, fraction_nonfinite_values_list, marker='.', linestyle='-', label="non-finite values")
 plt.plot(iterations, fraction_clipped_values_list, marker='.', linestyle='-', label="clipped_values")
 plt.xlabel("Epoch")
-plt.ylabel(r"Fraction  values")
+plt.ylabel(r"Percentage [%]")
 plt.grid(True)
 plt.legend()
 plt.show()
+
+box_vertex_max_dist=np.sqrt(3)*Length_box_numpy/2
+r_12=torch.linspace(0.1,box_vertex_max_dist*1.2,10000)
+r_12=r_12.unsqueeze(1)
+
+model_He.eval()
+with torch.no_grad():
+    f_12=model_He.phi(r_12)
+    # f_12=f_12-torch.max(f_12)
+    f_12=f_12-model_He.phi(torch.tensor([Length_box_numpy/2]))
+    f_12=torch.exp(f_12)
+
+plt.figure(num=7, dpi=120)
+plt.plot(r_12, f_12, marker='.', linestyle='-')
+plt.axvline(Length_box_numpy/2, color='red', linestyle='--', label=r"$\dfrac{L}{2}$")
+plt.axvline(Length_box_numpy, color='purple', linestyle='--', label=r"L")
+plt.axvline(np.sqrt(3)*Length_box_numpy/2, color='blue', linestyle='--', label=r"$\dfrac{\sqrt{3}}{2}L$")
+plt.xlabel(r"$r_{12}$")
+plt.ylabel(r"Jastrow NN")
+plt.grid(True)
+plt.legend()
+plt.show()
+
 #%%
 MC_samples=5000
 batch_autocorr=1
@@ -297,8 +330,8 @@ if autocorr_terms<saved_samples_per_walker:
     x_data_exp_model_HO=np.linspace(0,autocorr_terms-1, 1000)
     y_data_exp_model_HO=np.exp(-x_data_exp_model_HO/(C_tot))
     
-    plt.close(fig=7)
-    plt.figure(num=7, dpi=120)
+    plt.close(fig=8)
+    plt.figure(num=8, dpi=120)
     plt.plot(tau, C_tau_terms_mean, marker='.', linestyle='-', label='data')
     plt.plot(x_data_exp_model_HO, y_data_exp_model_HO, marker='None', linestyle='-', label='model')
     plt.ylabel(r"$c(E)_{\tau}$")

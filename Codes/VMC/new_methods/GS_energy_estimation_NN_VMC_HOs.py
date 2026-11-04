@@ -43,10 +43,10 @@ dimension=1
 coordinates=dimension*n_particles
 diag_shift=1e-3
 start_delta_finder=5
-MC_samples=5000
+MC_samples=3000
 batch=500
 sweep_per_save=1
-epochs=300
+epochs=600
 delta=13.0
 learning_rate=1e-2
 reg_param=0.0
@@ -85,7 +85,7 @@ optimizer=torch.optim.SGD(model_HO.parameters(), lr=learning_rate, weight_decay=
 # scheduler=None
 scheduler = torch.optim.lr_scheduler.StepLR(
     optimizer,
-    step_size=50,  # Every 50 epochs
+    step_size=100,  # Every 50 epochs
     gamma=0.7      # Multiply LR by 0.1
 )
 data=training_NN_VMC(model_HO, sampler, epochs, 
@@ -121,7 +121,9 @@ torch.save({
 local_energies_last_epoch, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
         T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
             current_config, grad_list, lr_list,\
-                fraction_nonfinite_values_list, fraction_clipped_values_list=data
+                fraction_nonfinite_values_list, fraction_clipped_values_list,\
+                    T_mean_grad_list, energy_mean_grad_list,\
+                        T_mean_JF_list, energy_mean_JF_list=data
 
 
 
@@ -202,24 +204,31 @@ if coordinates==1:
     plt.show()
 
 
-
+potential_energies=np.array(V_mean_list)/n_particles
 energies=np.array(energy_mean_list)/n_particles
 en_std_devs=np.array(energy_std_dev_list)/n_particles
 en_errors=np.array(energy_stoch_err_list)/n_particles
 kinetic_energies=np.array(T_mean_list)/n_particles
-potential_energies=np.array(V_mean_list)/n_particles
+kinetic_grad_energies=np.array(T_mean_grad_list)/n_particles
+energies_grad=np.array(energy_mean_grad_list)/n_particles
+kinetic_JF_energies=np.array(T_mean_JF_list)/n_particles
+energies_JF=np.array(energy_mean_JF_list)/n_particles
 # min_en=(min(energies))
 # min_en_std=en_std_devs(energies.index(min_en))
 # print(f"Minimum energy: {min(energies):.04f}")
 plt.figure(num=3, dpi=120)
-plt.plot(iterations, kinetic_energies, marker='.', linestyle='-', label="NN Kinetic")
-plt.plot(iterations, potential_energies, marker='.', linestyle='-', label="NN Potential")
-plt.plot(iterations, energies, marker='.', linestyle='-', label="NN Energy")
+plt.plot(iterations, potential_energies, marker='None', linestyle='-', zorder=3, label="NN V")
+plt.plot(iterations, kinetic_energies, marker='None', linestyle='-', zorder=3, label="NN T")
+plt.plot(iterations, energies, marker='None', linestyle='-', zorder=3, label="NN E")
+plt.plot(iterations, kinetic_grad_energies, marker='None', linestyle='-', label=r"NN $T_{\nabla}$")
+plt.plot(iterations, energies_grad, marker='None', linestyle='-', label=r"NN $E_{\nabla}$")
+plt.plot(iterations, kinetic_JF_energies, marker='None', linestyle='-', label=r"NN $T_{JF}$")
+plt.plot(iterations, energies_JF, marker='None', linestyle='-', label=r"NN $E_{JF}$")
 # plt.errorbar(iterations, model_HO.energy_list, yerr=model_HO.en_std_dev_list, fmt='o-', capsize=4, markersize=5, label="Energia VMC")
 plt.axhline(y=0.5, color='red', linestyle='--', label="Exact energy HO")
 plt.xlabel("Epoch")
 plt.ylabel("Energy")
-plt.ylim([-1.5*energies[-1],1.5*energies[-1]])
+plt.ylim([-0.1*energies[-1],1.7*energies[-1]])
 plt.grid(True)
 plt.legend()
 plt.show()

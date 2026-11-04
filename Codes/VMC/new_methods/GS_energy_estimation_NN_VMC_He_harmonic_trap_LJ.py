@@ -65,8 +65,8 @@ coordinates=dimension*n_particles
 diag_shift=1e-3
 start_delta_finder=20
 MC_samples=2000
-batch=200
-sweep_per_save=4
+batch=500
+sweep_per_save=1
 epochs=1000
 delta=20.0
 learning_rate=1e-2
@@ -128,7 +128,9 @@ torch.save({
 local_energies_last_epoch, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
         T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
             current_config, grad_list, lr_list,\
-                fraction_nonfinite_values_list, fraction_clipped_values_list=data
+                fraction_nonfinite_values_list, fraction_clipped_values_list,\
+                    T_mean_grad_list, energy_mean_grad_list,\
+                        T_mean_JF_list, energy_mean_JF_list=data
             
 
 
@@ -151,16 +153,24 @@ ax.set_zlabel("z")
 plt.show()
 
 iterations=np.arange(1, epochs+1)
+potential_energies=np.array(V_mean_list)/n_particles
 energies=np.array(energy_mean_list)/n_particles
 en_std_devs=np.array(energy_std_dev_list)/n_particles
 en_errors=np.array(energy_stoch_err_list)/n_particles
 kinetic_energies=np.array(T_mean_list)/n_particles
-potential_energies=np.array(V_mean_list)/n_particles
+kinetic_grad_energies=np.array(T_mean_grad_list)/n_particles
+energies_grad=np.array(energy_mean_grad_list)/n_particles
+kinetic_JF_energies=np.array(T_mean_JF_list)/n_particles
+energies_JF=np.array(energy_mean_JF_list)/n_particles
 plt.figure(num=1, dpi=120)
-plt.plot(iterations, kinetic_energies, marker='.', linestyle='-', label="NN Kinetic")
-plt.plot(iterations, potential_energies, marker='.', linestyle='-', label="NN Potential")
-plt.plot(iterations, energies, marker='.', linestyle='-', label="NN Energy")
-# plt.errorbar(iterations, energies, yerr=en_std_devs, fmt='o-', capsize=4, markersize=5, label="Energia VMC")
+plt.plot(iterations, potential_energies, marker='None', linestyle='-', zorder=3, label="NN V")
+plt.plot(iterations, kinetic_energies, marker='None', linestyle='-', zorder=3, label="NN T")
+plt.plot(iterations, energies, marker='None', linestyle='-', zorder=3, label="NN E")
+plt.plot(iterations, kinetic_grad_energies, marker='None', linestyle='-', label=r"NN $T_{\nabla}$")
+plt.plot(iterations, energies_grad, marker='None', linestyle='-', label=r"NN $E_{\nabla}$")
+plt.plot(iterations, kinetic_JF_energies, marker='None', linestyle='-', label=r"NN $T_{JF}$")
+plt.plot(iterations, energies_JF, marker='None', linestyle='-', label=r"NN $E_{JF}$")
+# plt.errorbar(iterations, energies, yerr=en_errors, fmt='o-', capsize=4, markersize=5, label="Energia VMC")
 plt.axhline(y=1.17/2, color='red', linestyle='--', label=r"HeHe with LJ$\approx$ 0.585 K")
 plt.xlabel("Epoch")
 plt.ylabel("Energy")
@@ -169,6 +179,13 @@ plt.grid(True)
 plt.legend()
 plt.show()
 
+# plt.figure(num=10, dpi=120)
+# plt.plot(iterations, en_errors, marker='.', linestyle='-')
+# plt.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
+# plt.xlabel("Epoch")
+# plt.ylabel("Standard deviation")
+# plt.grid(True)
+# plt.show()
 
 plt.figure(num=2, dpi=120)
 plt.plot(iterations, lr_list, marker='.', linestyle='None')
@@ -222,9 +239,9 @@ plt.show()
 
 plt.figure(num=7, dpi=120)
 plt.plot(iterations, fraction_nonfinite_values_list, marker='.', linestyle='-', label="non-finite values")
-plt.plot(iterations, fraction_clipped_values_list, marker='.', linestyle='-', label="clipped_values")
+plt.plot(iterations, fraction_clipped_values_list, marker='.', linestyle='-', label="clipped values")
 plt.xlabel("Epoch")
-plt.ylabel(r"Fraction  values")
+plt.ylabel(r"Percentage [%]")
 plt.grid(True)
 plt.legend()
 plt.show()

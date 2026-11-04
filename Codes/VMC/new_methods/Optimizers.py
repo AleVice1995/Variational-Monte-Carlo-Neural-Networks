@@ -9,7 +9,7 @@ import torch
 from torch.func import vmap, jvp, functional_call, jacrev
 
 def minSR(model, particle_configurations, n_particles,
-          local_energies, energy_mean, 
+          local_energies, epoch, 
           optimizer, exp_function, diag_shift):
     
     particle_configurations.requires_grad_(True)
@@ -23,20 +23,69 @@ def minSR(model, particle_configurations, n_particles,
 
     local_energies_finite=local_energies[finite_values_bool]
 
-    energy_median=torch.median(local_energies_finite)
+    energy_median_finite=torch.median(local_energies_finite)
     
-    local_energies_cleaned=torch.where(finite_values_bool, local_energies, energy_median)
-
+    local_energies_cleaned=torch.where(finite_values_bool, local_energies, energy_median_finite)
+    
+    
     energy_median=torch.median(local_energies_cleaned)
     
     energy_deviations=local_energies_cleaned-energy_median
-    energy_dispersion=torch.mean(torch.abs(energy_deviations))
+    energy_dispersion=torch.median(torch.abs(energy_deviations))
+    energy_std=torch.std(local_energies_cleaned)
     
-    factor=10
-
-    upper_energy=energy_median+factor*energy_dispersion
-    lower_energy=energy_median-factor*energy_dispersion
+    k=5
+    mad_threshold = 1e-4
+    max_energy=torch.max(local_energies_cleaned)
+    min_energy=torch.min(local_energies_cleaned)
     
+    upper_energy_clipping_interval = None
+    lower_energy_clipping_interval = None
+    robust_scale_ratio = None
+    control_value = None
+    
+    
+    if energy_dispersion<mad_threshold:
+        print("MAD ZERO CASE\n")
+        upper_energy=torch.max(local_energies_cleaned)
+        lower_energy=torch.min(local_energies_cleaned)
+    else:
+        # k_min=5
+        # k_max=200
+        
+        #for a gaussian distribution the std=1.4826*D with D the dispersion(MAD median of aboslute deviation from median)
+        
+        robust_scale_ratio=energy_std/((1.4826*energy_dispersion))
+        robust_scale_ratio_min_value=1.5
+        control_norm_value=control_function(robust_scale_ratio_min_value)
+        control_value=control_function(robust_scale_ratio)/control_norm_value
+        # control_value=((robust_scale_ratio_min_value/robust_scale_ratio)**2)*(1-torch.exp(-1/robust_scale_ratio))/(1-torch.exp(torch.tensor(-1/robust_scale_ratio_min_value)))
+        control_value=torch.clamp(control_value, max=1.0)
+        # r_min=1
+        # r_max=30
+        
+        # if robust_scale_ratio>r_max:
+        #     control_value=0
+        # elif robust_scale_ratio<r_min:
+        #     control_value=1
+        # else:
+        #     control_value=1-(torch.log(robust_scale_ratio)/torch.log(r_max))
+        # k=k_min+(k_max-k_min)*s_exp
+        
+        upper_energy_clipping_interval=energy_median+k*energy_dispersion
+        lower_energy_clipping_interval=energy_median-k*energy_dispersion
+        
+        
+        if max_energy>upper_energy_clipping_interval:
+            upper_energy=upper_energy_clipping_interval+(max_energy-upper_energy_clipping_interval)*control_value
+        else:
+            upper_energy=max_energy
+            
+        if min_energy<lower_energy_clipping_interval:
+            lower_energy=lower_energy_clipping_interval+(min_energy-lower_energy_clipping_interval)*control_value
+        else:
+            lower_energy=min_energy
+        
     local_energies_clipped=torch.clamp(local_energies_cleaned, min=lower_energy,  max=upper_energy)
 
     interval_energy_bool=(local_energies_cleaned<lower_energy) | (local_energies_cleaned>upper_energy)
@@ -52,16 +101,32 @@ def minSR(model, particle_configurations, n_particles,
 
     energy_mean=torch.mean(local_energies)
     
-    e2=torch.nan_to_num(local_energies).reshape(-1)-energy_mean
-    e2=torch.nan_to_num(e2)
+    # e2=torch.nan_to_num(local_energies).reshape(-1)-energy_mean
+    # e2=torch.nan_to_num(e2)
+    
     
     print(f"Fraction non-finite values: {num_nonfinite_values: d}/{local_energies.shape[0]:d}={fraction_nonfinite:.02f}%")
-    print(f"Fraction clipped values: {num_clipped_values: d}/{local_energies.shape[0]:d}={fraction_clipped:.02f}%")
-    print(f"Median of finite values: {energy_median:.04e}")
+    print(f"Fraction clipped values: {num_clipped_values: d}/{local_energies.shape[0]:d}={fraction_clipped:.02f}%\n")
+    print(f"Median of finite values: {energy_median_finite:.04e}")
     print(f"Median on \"cleaned\" values: {energy_median:.04e}")
-    print(f"Dispersion on \"cleaned\" values: {energy_dispersion:.04e}")
+    print(f"MAD Dispersion on \"cleaned\" values: {energy_dispersion:.04e}")
+    print(f"Std dev on \"cleaned\" values: {energy_std:.04e}\n")
+    if robust_scale_ratio is not None:
+        print(f"Std to MAD ratio: {robust_scale_ratio: .04f}")
+        print(f"control function: {control_value: .4f}\n")
+        
+        print(f"upper energy clipping interval: {upper_energy_clipping_interval: .04e}")
+        print(f"max energy: {max_energy: .04e}")
+        print(f"upper energy choosen: {upper_energy: .04e}")
+        print(f"lower energy clipping interval: {lower_energy_clipping_interval: .04e}")
+        print(f"min energy: {min_energy: .04e}")
+        print(f"lower energy choosen: {lower_energy: .04e}\n")
+    else:
+        print(f"max energy: {max_energy: .04e}")
+        print(f"min energy: {min_energy: .04e}\n")
+        
     print(f"Energy mean clipped: {energy_mean_clipped:.04e}")
-    print(f"Energy mean non-clipped: {energy_mean:.04e}")
+    print(f"Energy mean non-clipped: {energy_mean:.04e}\n")
     # f_NN=model(particle_configurations.reshape(particle_configurations.shape[0],-1))
     
     # if exp_function:
@@ -152,3 +217,12 @@ def minSR(model, particle_configurations, n_particles,
     optimizer.step()
     particle_configurations.requires_grad_(False)
     return grad_norm_before.item(), fraction_nonfinite.item(), fraction_clipped.item()
+
+
+
+
+def control_function(x):
+    if not isinstance(x, torch.Tensor):
+        x=torch.tensor(x)
+        
+    return (1-torch.exp(-1/x))/(x)
