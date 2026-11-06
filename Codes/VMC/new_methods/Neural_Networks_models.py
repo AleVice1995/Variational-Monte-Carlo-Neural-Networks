@@ -213,9 +213,13 @@ class Neural_Network_VMC_He_0K(nn.Module):
         # one_over_r=1.0/r
         # x=1.0/r
         
+        # mask=x<(self.length_box_pbc/2)
+        # switch=torch.where(mask, (1-(x/self.length_box_pbc/2)**2)**3, torch.zeros_like(x))
+        # out=torch.sum(switch*self.phi(x), dim=1)   #dim: [M_conf,1]
         
-            
+        # out=torch.sum(torch.where(x<(self.length_box_pbc/2), self.phi(x), torch.zeros_like(x)), dim=1)
         out=torch.sum(self.phi(x), dim=1)   #dim: [M_conf,1]
+        
         return out.squeeze(0) if single else out #[M,1] or if single [1]
     
     

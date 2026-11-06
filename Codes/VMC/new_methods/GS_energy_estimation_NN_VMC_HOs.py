@@ -54,6 +54,8 @@ reg_param=0.0
 single_particle_move=True
 exp_function=True
 pbc_cond=False
+time_control=True
+
 length_box_pbc=0.0
 kinetic_factor=0.5
 
@@ -91,7 +93,7 @@ scheduler = torch.optim.lr_scheduler.StepLR(
 data=training_NN_VMC(model_HO, sampler, epochs, 
                     starting_config, delta, energy_info,
                     MC_samples, batch, sweep_per_save,
-                    start_delta_finder, 
+                    start_delta_finder, time_control,
                     optimizer, scheduler, diag_shift)
 
 
@@ -121,7 +123,7 @@ torch.save({
 local_energies_last_epoch, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
         T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
             current_config, grad_list, lr_list,\
-                fraction_nonfinite_values_list, fraction_clipped_values_list,\
+                fraction_nonfinite_values_list, fraction_clipped_values_list, control_list,\
                     T_mean_grad_list, energy_mean_grad_list,\
                         T_mean_JF_list, energy_mean_JF_list=data
 
@@ -273,6 +275,13 @@ plt.grid(True)
 plt.legend()
 plt.show()
 
+plt.figure(num=9, dpi=120)
+plt.plot(iterations, control_list, marker='.', linestyle='-')
+plt.xlabel("Epoch")
+plt.ylabel(r"Control function value")
+plt.grid(True)
+plt.legend()
+plt.show()
 # loss=model_HO.loss_list
 # plt.figure(num=4, dpi=120)
 # plt.plot(iterations, loss, marker='.', linestyle='-')
@@ -314,8 +323,8 @@ if autocorr_terms<saved_samples_per_walker:
     x_data_exp_model_HO=np.linspace(0,autocorr_terms-1, 1000)
     y_data_exp_model_HO=np.exp(-x_data_exp_model_HO/(C_tot))
     
-    plt.close(fig=9)
-    plt.figure(num=7, dpi=120)
+    plt.close(fig=10)
+    plt.figure(num=10, dpi=120)
     plt.plot(tau, C_tau_terms_mean, marker='.', linestyle='-', label='data')
     plt.plot(x_data_exp_model_HO, y_data_exp_model_HO, marker='None', linestyle='-', label='model')
     plt.ylabel(r"$c(E)_{\tau}$")

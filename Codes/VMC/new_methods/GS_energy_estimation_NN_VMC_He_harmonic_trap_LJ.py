@@ -64,16 +64,17 @@ dimension=3
 coordinates=dimension*n_particles
 diag_shift=1e-3
 start_delta_finder=20
-MC_samples=2000
+MC_samples=3000
 batch=500
-sweep_per_save=1
-epochs=1000
+sweep_per_save=4
+epochs=500
 delta=20.0
 learning_rate=1e-2
 reg_param=0.0
 
 single_particle_move=True
 exp_function=True
+time_control=True
 
 
 starting_config=torch.tensor(([0, 0, 2.0, 0, 0, -2.0]))
@@ -99,7 +100,7 @@ scheduler = torch.optim.lr_scheduler.StepLR(
 data=training_NN_VMC(model_HeHe, sampler, epochs, 
                     starting_config, delta, energy_info,
                     MC_samples, batch,sweep_per_save,
-                    start_delta_finder, 
+                    start_delta_finder, time_control, 
                     optimizer, scheduler, diag_shift)
 
 
@@ -128,7 +129,7 @@ torch.save({
 local_energies_last_epoch, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
         T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
             current_config, grad_list, lr_list,\
-                fraction_nonfinite_values_list, fraction_clipped_values_list,\
+                fraction_nonfinite_values_list, fraction_clipped_values_list, control_list,\
                     T_mean_grad_list, energy_mean_grad_list,\
                         T_mean_JF_list, energy_mean_JF_list=data
             
@@ -245,6 +246,14 @@ plt.ylabel(r"Percentage [%]")
 plt.grid(True)
 plt.legend()
 plt.show()
+
+plt.figure(num=8, dpi=120)
+plt.plot(iterations, control_list, marker='.', linestyle='-')
+plt.xlabel("Epoch")
+plt.ylabel(r"Control function value")
+plt.grid(True)
+plt.legend()
+plt.show()
 #%%
 
 MC_samples=5000
@@ -278,7 +287,7 @@ if autocorr_terms<saved_samples_per_walker:
     x_data_exp_model_HO=np.linspace(0,autocorr_terms-1, 1000)
     y_data_exp_model_HO=np.exp(-x_data_exp_model_HO/(C_tot))
     
-    plt.close(fig=8)
+    plt.close(fig=9)
     plt.figure(num=7, dpi=120)
     plt.plot(tau, C_tau_terms_mean, marker='.', linestyle='-', label='data')
     plt.plot(x_data_exp_model_HO, y_data_exp_model_HO, marker='None', linestyle='-', label='model')

@@ -14,7 +14,7 @@ import time
 def training_NN_VMC(model, sampler, epochs, 
                     starting_config, delta, energy_info,
                     MC_samples, batch, sweep_per_save,
-                    start_delta_finder, 
+                    start_delta_finder, time_control,
                     optimizer, scheduler, diag_shift):
     
     min_acc_ratio=sampler.min_accep_ratio
@@ -43,6 +43,7 @@ def training_NN_VMC(model, sampler, epochs,
     lr_list=[]
     fraction_nonfinite_values_list=[]
     fraction_clipped_values_list=[]
+    control_list=[]
     
     
     
@@ -88,8 +89,8 @@ def training_NN_VMC(model, sampler, epochs,
         
         print("Applying minSR::")
         # start_minSR=time.time()
-        grad_norm, fraction_nonfinite, fraction_clipped=minSR(model, current_config, n_particles,
-                  local_energies, epoch, 
+        grad_norm, fraction_nonfinite, fraction_clipped, control_value=minSR(model, current_config, n_particles,
+                  local_energies, time_control, [epoch, epochs],
                   optimizer, exp_function, diag_shift)
         # end_minSR=time.time()
         # elapsed=end_minSR-start_minSR
@@ -117,6 +118,7 @@ def training_NN_VMC(model, sampler, epochs,
         lr_list.append(current_lr)
         fraction_nonfinite_values_list.append(fraction_nonfinite)
         fraction_clipped_values_list.append(fraction_clipped)
+        control_list.append(control_value)
         
         
         
@@ -128,7 +130,8 @@ def training_NN_VMC(model, sampler, epochs,
     return local_energies, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
             T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
                 current_config, grad_list, lr_list, fraction_nonfinite_values_list,\
-                    fraction_clipped_values_list, T_mean_grad_list, energy_mean_grad_list,\
+                    fraction_clipped_values_list, control_list,\
+                        T_mean_grad_list, energy_mean_grad_list,\
                         T_mean_JF_list, energy_mean_JF_list
 
     # return current_config

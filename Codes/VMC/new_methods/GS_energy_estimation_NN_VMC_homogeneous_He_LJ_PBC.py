@@ -70,6 +70,7 @@ reg_param=0.0
 single_particle_move=True
 exp_function=True
 pbc_cond=True
+time_control=True
 
 conf_part, Length_box=FCC(density, n_particles)
 Length_box_numpy=Length_box.numpy()
@@ -126,7 +127,7 @@ scheduler = torch.optim.lr_scheduler.StepLR(
 data=training_NN_VMC(model_He, sampler, epochs, 
                     starting_config, delta, energy_info,
                     MC_samples, batch, sweep_per_save,
-                    start_delta_finder, 
+                    start_delta_finder, time_control, 
                     optimizer, scheduler, diag_shift)
 
 
@@ -157,7 +158,7 @@ torch.save({
 local_energies_last_epoch, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
         T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\
             current_config, grad_list, lr_list,\
-                fraction_nonfinite_values_list, fraction_clipped_values_list,\
+                fraction_nonfinite_values_list, fraction_clipped_values_list, control_list,\
                     T_mean_grad_list, energy_mean_grad_list,\
                         T_mean_JF_list, energy_mean_JF_list=data
             
@@ -277,7 +278,7 @@ plt.legend()
 plt.show()
 
 box_vertex_max_dist=np.sqrt(3)*Length_box_numpy/2
-r_12=torch.linspace(0.1,box_vertex_max_dist*1.2,10000)
+r_12=torch.linspace(0.0,box_vertex_max_dist*2.2,100)
 r_12=r_12.unsqueeze(1)
 
 model_He.eval()
@@ -288,7 +289,7 @@ with torch.no_grad():
     f_12=torch.exp(f_12)
 
 plt.figure(num=7, dpi=120)
-plt.plot(r_12, f_12, marker='.', linestyle='-')
+plt.plot(r_12, f_12, marker='None', linestyle='-')
 plt.axvline(Length_box_numpy/2, color='red', linestyle='--', label=r"$\dfrac{L}{2}$")
 plt.axvline(Length_box_numpy, color='purple', linestyle='--', label=r"L")
 plt.axvline(np.sqrt(3)*Length_box_numpy/2, color='blue', linestyle='--', label=r"$\dfrac{\sqrt{3}}{2}L$")
@@ -298,6 +299,14 @@ plt.grid(True)
 plt.legend()
 plt.show()
 
+
+plt.figure(num=8, dpi=120)
+plt.plot(iterations, control_list, marker='.', linestyle='-')
+plt.xlabel("Epoch")
+plt.ylabel(r"Control function value")
+plt.grid(True)
+# plt.legend()
+plt.show()
 #%%
 MC_samples=5000
 batch_autocorr=1
@@ -330,8 +339,8 @@ if autocorr_terms<saved_samples_per_walker:
     x_data_exp_model_HO=np.linspace(0,autocorr_terms-1, 1000)
     y_data_exp_model_HO=np.exp(-x_data_exp_model_HO/(C_tot))
     
-    plt.close(fig=8)
-    plt.figure(num=8, dpi=120)
+    plt.close(fig=9)
+    plt.figure(num=9, dpi=120)
     plt.plot(tau, C_tau_terms_mean, marker='.', linestyle='-', label='data')
     plt.plot(x_data_exp_model_HO, y_data_exp_model_HO, marker='None', linestyle='-', label='model')
     plt.ylabel(r"$c(E)_{\tau}$")

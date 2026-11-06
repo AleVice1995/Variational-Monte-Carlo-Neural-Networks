@@ -9,7 +9,7 @@ import torch
 from torch.func import vmap, jvp, functional_call, jacrev
 
 def minSR(model, particle_configurations, n_particles,
-          local_energies, epoch, 
+          local_energies, time_control, info_epochs,
           optimizer, exp_function, diag_shift):
     
     particle_configurations.requires_grad_(True)
@@ -56,9 +56,10 @@ def minSR(model, particle_configurations, n_particles,
         #for a gaussian distribution the std=1.4826*D with D the dispersion(MAD median of aboslute deviation from median)
         
         robust_scale_ratio=energy_std/((1.4826*energy_dispersion))
-        robust_scale_ratio_min_value=1.5
-        control_norm_value=control_function(robust_scale_ratio_min_value)
-        control_value=control_function(robust_scale_ratio)/control_norm_value
+        robust_scale_ratio_min_value=1.0
+        control_norm_value=control_function(robust_scale_ratio_min_value, time_control=False)
+            
+        control_value=control_function(robust_scale_ratio, time_control=time_control, info_epochs=info_epochs)/control_norm_value
         # control_value=((robust_scale_ratio_min_value/robust_scale_ratio)**2)*(1-torch.exp(-1/robust_scale_ratio))/(1-torch.exp(torch.tensor(-1/robust_scale_ratio_min_value)))
         control_value=torch.clamp(control_value, max=1.0)
         # r_min=1
@@ -216,13 +217,20 @@ def minSR(model, particle_configurations, n_particles,
     #     print(f"maximum distance: {r_max: .04f}")
     optimizer.step()
     particle_configurations.requires_grad_(False)
-    return grad_norm_before.item(), fraction_nonfinite.item(), fraction_clipped.item()
+    return grad_norm_before.item(), fraction_nonfinite.item(), fraction_clipped.item(), control_value.item()
 
 
 
 
-def control_function(x):
+def control_function(x, time_control, info_epochs=0.0):
     if not isinstance(x, torch.Tensor):
         x=torch.tensor(x)
-        
-    return (1-torch.exp(-1/x))/(x)
+    
+    factor_std_to_mad=torch.exp(-1/x)
+    if time_control:
+        epoch=info_epochs[0]
+        epochs=info_epochs[1]
+        factor_time=torch.exp(-torch.tensor(epoch/epochs))
+    else:
+        factor_time=1
+    return (1-factor_std_to_mad*factor_time)**3
