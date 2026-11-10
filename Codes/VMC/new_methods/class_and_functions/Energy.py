@@ -11,9 +11,10 @@ import numpy as np
 from torch.func import vmap, jacrev, functional_call, hessian
 from torch.func import jvp
 import time
+import textwrap
 
 def compute_energy_local(model, particle_configurations, kinetic_factor, potentials,
-                         exp_function, n_particles):
+                         exp_function, n_particles, file=None):
     
     # T=0
     # V=0
@@ -81,6 +82,43 @@ def compute_energy_local(model, particle_configurations, kinetic_factor, potenti
         print(f"E std_dev JF: {energy_std_dev_JF/n_particles: .04f}")
         print(f"E stoch_err JF: {energy_stoch_err_JF/n_particles: .04f}\n")
     
+    if file is not None:
+        text=textwrap.dedent(f"""\
+            System of {n_particles: d} particles\n
+            Total Energy of system:
+            T_mean: {T_mean: .04f}
+            V_mean: {V_mean: .04f}
+            E mean: {energy_mean: .04f}
+            E std_dev: {energy_std_dev: .04f}
+            E stoch_err: {energy_stoch_err: .04f}
+            T_mean_grad: {T_mean_grad: .04f}
+            E mean grad: {energy_mean_grad: .04f}
+            E std_dev grad: {energy_std_dev_grad: .04f}
+            E stoch_err grad: {energy_stoch_err_grad: .04f}
+            T_mean_JF: {T_mean_JF: .04f}
+            E mean JF: {energy_mean_JF: .04f}
+            E std_dev JF: {energy_std_dev_JF: .04f}
+            E stoch_err JF: {energy_stoch_err_JF: .04f}\n
+            """)
+        if n_particles!=1:
+            text+=textwrap.dedent(f"""\
+                Energy per particle:
+                T_mean: {T.mean()/n_particles: .04f}
+                V_mean: {V.mean()/n_particles: .04f}
+                E mean: {energy_mean/n_particles: .04f}
+                E std_dev: {energy_std_dev/n_particles: .04f}
+                E stoch_err: {energy_stoch_err/n_particles: .04f}
+                T_mean_grad: {T_mean_grad/n_particles: .04f}
+                E mean grad: {energy_mean_grad/n_particles: .04f}
+                E std_dev grad: {energy_std_dev_grad/n_particles: .04f}
+                E stoch_err grad: {energy_stoch_err_grad/n_particles: .04f}
+                T_mean_JF: {T_mean_JF/n_particles: .04f}
+                E mean JF: {energy_mean_JF/n_particles: .04f}
+                E std_dev JF: {energy_std_dev_JF/n_particles: .04f}
+                E stoch_err JF: {energy_stoch_err_JF/n_particles: .04f}\n
+                """)
+        file.write(text)
+        
     return local_energies, energy_mean, energy_std_dev, energy_stoch_err, V_mean, T_mean,\
         T_mean_grad, energy_mean_grad, T_mean_JF, energy_mean_JF
     

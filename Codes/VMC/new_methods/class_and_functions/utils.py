@@ -7,6 +7,7 @@ Created on Wed Oct 28 14:18:15 2026
 
 import torch
 import numpy as np
+import textwrap
 
 def autocorrelation_length(local_energies, autocorr_terms=100):
     
@@ -126,4 +127,50 @@ def autocorrelation_length_old(local_energies, autocorr_terms=100):
     else:
         print("Number of autocorrelations terms less than MC samples")
         
+
+def print_values_on_log(problem_under_study, n_particles, dimension, starting_config, energy_info,
+                        layers, activations, epochs, samples, batch, sweep_per_save, diag_shift, reg_param, 
+                        exp_function, time_control, pbc_cond=False, density=None, Length_box=None, file=None):
+    if Length_box is not None and isinstance(Length_box, torch.Tensor):
+        Length_box=Length_box.item()
+    text=textwrap.dedent(f"""\
+                         {problem_under_study}
+                         
+                         Parameter values of the run:
+                         Number of particles: {n_particles: d}
+                         Number of dimensions: {dimension: d}
+                         
+                         Total Epochs of training: {epochs: d}
+                         Monte Carlo samples: {samples: d}
+                         Batch utilized: {batch: d}
+                         Configurations swept per save: {sweep_per_save: d}
+                         
+                         MinSR diagonalization parameter: {diag_shift: .04e}
+                         Regularization parameter SGD: {reg_param: .04e}
+                         
+                         f_NN=log(Psi): {exp_function}
+                         Energy clipping controlled by epoch: {time_control}
+                         
+                         
+                         """)
+    if pbc_cond:
+       text+=textwrap.dedent(f"""\
+                             System studied under periodic boundary conditions: {pbc_cond}
+                             Density of system: {density: .04f} A^-3
+                             Length of periodic virtual box: {Length_box: .04f} A
+                             
+                             
+                             """)
+    print(text)
+    
+    if file is not None:
+        file.write(text)
+    
+    data= (n_particles, dimension, starting_config, energy_info,\
+           layers, activations, epochs, samples, batch, sweep_per_save,\
+        diag_shift, reg_param, exp_function, time_control)
+    if pbc_cond:
+        data=(*data, pbc_cond, density, Length_box)
         
+    return data
+    

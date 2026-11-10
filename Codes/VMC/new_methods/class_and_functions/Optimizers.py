@@ -7,10 +7,11 @@ Created on Tue Oct 27 13:19:03 2026
 
 import torch
 from torch.func import vmap, jvp, functional_call, jacrev
+import textwrap
 
 def minSR(model, particle_configurations, n_particles,
           local_energies, time_control, info_epochs,
-          optimizer, exp_function, diag_shift):
+          optimizer, exp_function, diag_shift, file=None):
     
     particle_configurations.requires_grad_(True)
     optimizer.zero_grad()
@@ -35,20 +36,21 @@ def minSR(model, particle_configurations, n_particles,
     energy_std=torch.std(local_energies_cleaned)
     
     k=5
-    mad_threshold = 1e-4
+    mad_threshold = 1e-5
     max_energy=torch.max(local_energies_cleaned)
     min_energy=torch.min(local_energies_cleaned)
     
-    upper_energy_clipping_interval = None
-    lower_energy_clipping_interval = None
     robust_scale_ratio = None
-    control_value = None
+    
     
     
     if energy_dispersion<mad_threshold:
         print("MAD ZERO CASE\n")
+        if file is not None:
+            file.write("MAD ZERO CASE\n\n")
         upper_energy=torch.max(local_energies_cleaned)
         lower_energy=torch.min(local_energies_cleaned)
+        control_value = torch.tensor( 1.0, dtype=local_energies.dtype, device=local_energies.device)
     else:
         # k_min=5
         # k_max=200
@@ -128,6 +130,40 @@ def minSR(model, particle_configurations, n_particles,
         
     print(f"Energy mean clipped: {energy_mean_clipped:.04e}")
     print(f"Energy mean non-clipped: {energy_mean:.04e}\n")
+    
+    
+    if file is not None:
+        text=textwrap.dedent(f"""\
+            Fraction non-finite values: {num_nonfinite_values: d}/{local_energies.shape[0]:d}={fraction_nonfinite:.02f}%
+            Fraction clipped values: {num_clipped_values: d}/{local_energies.shape[0]:d}={fraction_clipped:.02f}%\n
+            Median of finite values: {energy_median_finite:.04e}
+            Median on \"cleaned\" values: {energy_median:.04e}
+            MAD Dispersion on \"cleaned\" values: {energy_dispersion:.04e}
+            Std dev on \"cleaned\" values: {energy_std:.04e}\n
+            """)
+        if robust_scale_ratio is not None:
+            text+=textwrap.dedent(f"""\
+                Std to MAD ratio: {robust_scale_ratio: .04f}
+                control function: {control_value: .4f}\n
+                upper energy clipping interval: {upper_energy_clipping_interval: .04e}
+                max energy: {max_energy: .04e}
+                upper energy choosen: {upper_energy: .04e}
+                lower energy clipping interval: {lower_energy_clipping_interval: .04e}
+                min energy: {min_energy: .04e}
+                lower energy choosen: {lower_energy: .04e}\n
+                """)
+        else:
+            text+=textwrap.dedent(f"""\
+                max energy: {max_energy: .04e}
+                min energy: {min_energy: .04e}\n
+                """)
+        text+=textwrap.dedent(f"""\
+            Energy mean clipped: {energy_mean_clipped:.04e}
+            Energy mean non-clipped: {energy_mean:.04e}\n
+            """)
+        file.write(text)
+        
+                
     # f_NN=model(particle_configurations.reshape(particle_configurations.shape[0],-1))
     
     # if exp_function:
@@ -200,6 +236,7 @@ def minSR(model, particle_configurations, n_particles,
         max_norm=300.0
     )
     print(f"Gradient norm before clip: {grad_norm_before.item():.6f}")
+
     # grad_norm_after = torch.sqrt(
     #     sum(
     #         p.grad.detach().square().sum()
@@ -209,6 +246,9 @@ def minSR(model, particle_configurations, n_particles,
     # )
     grad_norm_after=min(grad_norm_before.item(), 300.0)
     print(f"Gradient norm after: {grad_norm_after:.6f}")
+    if file is not None:
+        file.write(f"Gradient norm before clip: {grad_norm_before.item():.6f}\n")
+        file.write(f"Gradient norm after: {grad_norm_after:.6f}\n")
     # r_min=distance(self.particle_config).min().item()
     # r_max=distance(self.particle_config).max().item()
     # if r_min<2.555:

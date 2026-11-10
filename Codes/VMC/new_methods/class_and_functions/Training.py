@@ -6,8 +6,8 @@ Created on Tue Oct 27 12:25:59 2026
 """
 
 import torch
-from VMC.new_methods.Energy import compute_energy_local
-from VMC.new_methods.Optimizers import minSR
+from VMC.new_methods.class_and_functions.Energy import compute_energy_local
+from VMC.new_methods.class_and_functions.Optimizers import minSR
 import time
 
 
@@ -15,7 +15,8 @@ def training_NN_VMC(model, sampler, epochs,
                     starting_config, delta, energy_info,
                     MC_samples, batch, sweep_per_save,
                     start_delta_finder, time_control,
-                    optimizer, scheduler, diag_shift):
+                    optimizer, scheduler, diag_shift,
+                    file=None):
     
     min_acc_ratio=sampler.min_accep_ratio
     max_acc_ratio=sampler.max_accep_ratio
@@ -44,19 +45,28 @@ def training_NN_VMC(model, sampler, epochs,
     fraction_nonfinite_values_list=[]
     fraction_clipped_values_list=[]
     control_list=[]
+    # file=None
+    # if log_file is not None:
+    #     file=open(log_file + ".txt", "w")
     
     
-    
-    
+    print("Start Training:\n")
+    if file is not None:
+        file.write("Start Training:\n\n")
     for epoch in range(epochs):
         print(f"Epoch: {epoch+1:d}")
         current_lr=optimizer.param_groups[0]["lr"]
         print(f"Learning rate: {current_lr:.04e}\n")
+        if file is not None:
+            file.write(f"Epoch: {epoch+1:d}\n")
+            file.write(f"Learning rate: {current_lr:.04e}\n\n")
         condition_delta_finder=(start_delta_finder is not None) and (epoch>=start_delta_finder)
         if (condition_delta_finder and (acceptance_ratio<min_acc_ratio or acceptance_ratio>max_acc_ratio)):
-            delta=sampler.delta_finder(model, starting_config, delta)
+            delta=sampler.delta_finder(model, starting_config, delta, file)
         delta_list.append(delta)
         print("Sampling:")
+        if file is not None:
+            file.write("Sampling:\n")
         # start_conf=time.time()
         if epoch==0:
             burned_sweep=100
@@ -65,8 +75,10 @@ def training_NN_VMC(model, sampler, epochs,
         else:
             burned_sweep=3
         print(f"burned sweep: {burned_sweep:d}")
+        if file is not None:
+            file.write(f"burned sweep: {burned_sweep:d}\n")
         current_config, acceptance_ratio=sampler.metropolis_sampling_parallel_walkers_batch(model, starting_config, delta, 
-                                MC_samples, batch,sweep_per_save, burned_sweep, save_data=True)
+                                MC_samples, batch,sweep_per_save, burned_sweep, save_data=True, file=file)
         # end_conf=time.time()
         # elapsed=end_conf-start_conf
         # hours, remainder=divmod(elapsed, 3600)
@@ -75,9 +87,11 @@ def training_NN_VMC(model, sampler, epochs,
         
         acceptance_ratio_list.append(acceptance_ratio)
         print("Computing Energy:")
+        if file is not None:
+            file.write("\nComputing Energy:\n")
         # start_en=time.time()
         data=compute_energy_local(model, current_config, kinetic_factor, potentials,
-                                  exp_function, n_particles)
+                                  exp_function, n_particles, file)
         # end_en=time.time()
         # elapsed=end_en-start_en
         # hours, remainder=divmod(elapsed, 3600)
@@ -88,10 +102,12 @@ def training_NN_VMC(model, sampler, epochs,
         energy_mean=data[1]
         
         print("Applying minSR::")
+        if file is not None:
+            file.write("\nApplying minSR::\n")
         # start_minSR=time.time()
         grad_norm, fraction_nonfinite, fraction_clipped, control_value=minSR(model, current_config, n_particles,
                   local_energies, time_control, [epoch, epochs],
-                  optimizer, exp_function, diag_shift)
+                  optimizer, exp_function, diag_shift, file)
         # end_minSR=time.time()
         # elapsed=end_minSR-start_minSR
         # hours, remainder=divmod(elapsed, 3600)
@@ -126,6 +142,11 @@ def training_NN_VMC(model, sampler, epochs,
             # scheduler.step(energy_mean)
             scheduler.step()
         print("")
+        if file is not None:
+            file.write("\n")
+    
+    # if log_file is not None:
+    #     file.close()
         
     return local_energies, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
             T_mean_list, V_mean_list, delta_list, acceptance_ratio_list,\

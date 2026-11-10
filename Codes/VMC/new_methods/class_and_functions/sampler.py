@@ -98,7 +98,7 @@ class Sampler():
         
         
     def metropolis_sampling_parallel_walkers_batch(self, model, current_config, delta, 
-                            new_samples, batch,sweep_per_save, burned_sweep, save_data):
+                            new_samples, batch,sweep_per_save, burned_sweep, save_data, file=None):
         
         
         new_config_list=[]
@@ -177,13 +177,18 @@ class Sampler():
             if save_data:
                 print(f"delta: {delta:.04f}")
                 print(f"Acceptance ratio: {acceptance_ratio:.04f}\n")
+                if file is not None:
+                    file.write(f"delta: {delta:.04f}\n")
+                    file.write(f"Acceptance ratio: {acceptance_ratio:.04f}\n")
                 new_config_list=torch.cat(new_config_list, dim=0)
                 return new_config_list, acceptance_ratio
             return acceptance_ratio    
         
         
-    def delta_finder(self, model, current_config, delta):
+    def delta_finder(self, model, current_config, delta, file=None):
         print("Finding new best delta parameter...")
+        if file is not None:
+            file.write("Finding new best delta parameter...\n")
         samples=2000
         batch=200
         sweep_per_save=1
@@ -198,7 +203,7 @@ class Sampler():
             delta=self.modify_delta(delta, func_temp)
             
             acceptance_ratio=self.metropolis_sampling_parallel_walkers_batch(model, current_config, delta, 
-                                    samples, batch, sweep_per_save, burned_sweep=0, save_data=False)
+                                    samples, batch, sweep_per_save, burned_sweep=0, save_data=False, file=file)
             
             if acceptance_ratio>min_acc_ratio and acceptance_ratio<max_acc_ratio:
                 break
@@ -213,9 +218,13 @@ class Sampler():
             if (np.sign(func_temp_list[0])==-np.sign(func_temp_list[1])):
                 delta=(delta_list[0]+delta_list[1])/2
                 print(f"Testing delta: {delta:.04f}...")
+                if file is not None:
+                    file.write(f"Testing delta: {delta:.04f}...\n")
                 acceptance_ratio=self.metropolis_sampling_parallel_walkers_batch(model, current_config, delta, 
-                                        samples, batch, sweep_per_save, burned_sweep=0, save_data=False)
+                                        samples, batch, sweep_per_save, burned_sweep=0, save_data=False, file=file)
                 print(f"Acceptance ratio: {acceptance_ratio: .04f}")
+                if file is not None:
+                    file.write(f"Acceptance ratio: {acceptance_ratio: .04f}\n")
                 func_temp=acceptance_ratio-0.5
                 if (np.sign(func_temp)==np.sign(func_temp_list[0])):
                     delta_list[0]=delta
@@ -228,9 +237,13 @@ class Sampler():
                 # Delta=delta_value_list[1]-m*f_temp_list[1]
                 delta=self.modify_delta(delta_list[-1], func_temp)
                 print(f"Testing Delta: {delta:.04f}...")
+                if file is not None:
+                    file.write(f"Testing Delta: {delta:.04f}...\n")
                 acceptance_ratio=self.metropolis_sampling_parallel_walkers_batch(model, current_config, delta, 
-                                        samples, batch, sweep_per_save, burned_sweep=0, save_data=False)
+                                        samples, batch, sweep_per_save, burned_sweep=0, save_data=False, file=file)
                 print(f"Acceptance ratio: {acceptance_ratio: .04f}")
+                if file is not None:
+                    file.write(f"Acceptance ratio: {acceptance_ratio: .04f}\n")
                 func_temp=acceptance_ratio-0.5
                 delta_list[0]=delta_list[1]
                 delta_list[1]=delta
@@ -239,6 +252,8 @@ class Sampler():
             i+=1
         
         print("Search complete\n")
+        if file is not None:
+            file.write("Search complete\n")
         # acceptance_ratio=self.new_config(curr_config, Delta, 10000, exp_function, save_data=False)
         # print(f"Delta: {Delta:.04f}")
         # print(f"Acceptance ratio: {acceptance_ratio:.04f}\n")
