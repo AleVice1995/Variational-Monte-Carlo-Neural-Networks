@@ -130,7 +130,8 @@ def autocorrelation_length_old(local_energies, autocorr_terms=100):
 
 def print_values_on_log(problem_under_study, n_particles, dimension, starting_config, energy_info,
                         layers, activations, epochs, samples, batch, sweep_per_save, diag_shift, reg_param, 
-                        exp_function, time_control, pbc_cond=False, density=None, Length_box=None, file=None):
+                        exp_function, time_control, pbc_cond=False, density=None, Length_box=None, switch_power=1.0,
+                        file=None):
     if Length_box is not None and isinstance(Length_box, torch.Tensor):
         Length_box=Length_box.item()
     text=textwrap.dedent(f"""\
@@ -158,6 +159,7 @@ def print_values_on_log(problem_under_study, n_particles, dimension, starting_co
                              System studied under periodic boundary conditions: {pbc_cond}
                              Density of system: {density: .04f} A^-3
                              Length of periodic virtual box: {Length_box: .04f} A
+                             Power of switch function: {switch_power: d}
                              
                              
                              """)
@@ -170,7 +172,18 @@ def print_values_on_log(problem_under_study, n_particles, dimension, starting_co
            layers, activations, epochs, samples, batch, sweep_per_save,\
         diag_shift, reg_param, exp_function, time_control)
     if pbc_cond:
-        data=(*data, pbc_cond, density, Length_box)
+        data=(*data, pbc_cond, density, Length_box, switch_power)
         
     return data
+
+def compute_der_for_plots(x, model, norm_const):
+    
+    x=x.requires_grad_(True)
+    
+    f=model(x)-model(norm_const)
+    f=torch.exp(f)
+    f_der=torch.autograd.grad(outputs=f.sum(), inputs=x, create_graph=True)[0]
+    f_sec_der=torch.autograd.grad(outputs=f_der.sum(), inputs=x, create_graph=False)[0]
+    x=x.requires_grad_(False)
+    return f.detach(), f_der.detach(), f_sec_der.detach()
     

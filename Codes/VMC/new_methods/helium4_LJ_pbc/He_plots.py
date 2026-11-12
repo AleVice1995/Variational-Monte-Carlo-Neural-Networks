@@ -10,12 +10,18 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 import numpy as np
 from VMC.new_methods.class_and_functions.Neural_Networks_models import  Neural_Network_VMC_He_0K
-from VMC.new_methods.class_and_functions.utils import autocorrelation_length
+from VMC.new_methods.class_and_functions.utils import autocorrelation_length, compute_der_for_plots
 from VMC.new_methods.class_and_functions.sampler import Sampler
 from VMC.new_methods.class_and_functions.Energy import compute_energy_local
+
+
+torch.set_default_dtype(torch.float64)
 device=torch.device("cpu")
 
-checkpoint = torch.load("VMC/new_methods/helium4_LJ_pbc/checkpoint_He_pbc.pth", map_location=device, weights_only=False)
+# file_name="VMC/new_methods/helium4_LJ_pbc/checkpoint_He_pbc_run1_switch_power_1.pth"
+# file_name="VMC/new_methods/helium4_LJ_pbc/checkpoint_He_pbc_run2_switch_power_2.pth"
+file_name="VMC/new_methods/helium4_LJ_pbc/checkpoint_He_pbc_run3_switch_power_3.pth"
+checkpoint = torch.load(file_name, map_location=device, weights_only=False)
 input_data=checkpoint["input_data"]
 output_data=checkpoint["output_data"]
 
@@ -23,12 +29,12 @@ output_data=checkpoint["output_data"]
 (n_particles, dimension, starting_config, energy_info,\
  layers, activations, epochs, samples, batch, sweep_per_save,\
      diag_shift, reg_param, exp_function, time_control,\
-         pbc_cond, density, Length_box)=input_data
+         pbc_cond, density, Length_box, switch_power)=input_data
     
 coordinates=n_particles*dimension
 [kinetic_factor, potentials]=energy_info
 
-model_He=Neural_Network_VMC_He_0K(layers, activations, Length_box, dimension)
+model_He=Neural_Network_VMC_He_0K(layers, activations, Length_box, dimension, switch_power)
 model_He.load_state_dict(checkpoint["model_state_dict"])
 
 local_energies_last_epoch, energy_mean_list, energy_std_dev_list, energy_stoch_err_list,\
@@ -61,28 +67,33 @@ plt.legend()
 plt.show()
 
 
+
 box_vertex_max_dist=np.sqrt(3)*Length_box/2
-r_12=torch.linspace(0.0,box_vertex_max_dist*2.5,10000)
+r_12=torch.linspace(0.0,box_vertex_max_dist*3.5,100001)
 r_12=r_12.unsqueeze(1)
 
-model_He.eval()
-with torch.no_grad():
-    f_12=model_He.phi(r_12)
-    # f_12=f_12-torch.max(f_12)
-    f_12=f_12-model_He.phi(torch.tensor([Length_box/2]))
-    f_12=torch.exp(f_12)
-    f_12_der=torch.gradient(f_12.squeeze(), spacing=(r_12.squeeze(),))[0]
+f_12, f_12_der, f_12_sec_der=compute_der_for_plots(r_12, model_He.phi, torch.tensor([Length_box/2]))
+# model_He.eval()
+# with torch.no_grad():
+#     f_12=model_He.phi(r_12.unsqueeze(1))
+#     # f_12=f_12-torch.max(f_12)
+#     f_12=f_12-model_He.phi(torch.tensor([Length_box/2]))
+#     f_12=torch.exp(f_12).squeeze()
+#     f_12_der=torch.gradient(f_12, spacing=(r_12.squeeze(),))[0]
+#     f_12_sec_der=torch.gradient(f_12_der, spacing=(r_12.squeeze(),))[0]
 
 model=torch.exp(-(2.95/r_12)**5)
 plt.figure(num=(fig_num:=fig_num+1), dpi=120)
-plt.plot(r_12, f_12, marker='None', linestyle='-', label="NN")
-plt.plot(r_12, f_12_der, marker='None', linestyle='-', label="NN derivative")
-plt.plot(r_12, model, marker='None', linestyle='-', label="model")
+plt.plot(r_12, f_12, marker='None', linestyle='-', zorder=4, label="NN")
+plt.plot(r_12, f_12_der, marker='None', linestyle='-.', zorder=3, label="NN first derivative")
+plt.plot(r_12, f_12_sec_der, marker='None', linestyle=':', zorder=3, label="NN second derivative")
+plt.plot(r_12, model, marker='None', linestyle='-', zorder=3, label="model")
 plt.axvline(Length_box/2, color='red', linestyle='--', label=r"$\dfrac{L}{2}$")
 plt.axvline(Length_box, color='purple', linestyle='--', label=r"L")
 plt.axvline(np.sqrt(3)*Length_box/2, color='blue', linestyle='--', label=r"$\dfrac{\sqrt{3}}{2}L$")
 plt.xlabel(r"$r_{12}$")
 plt.ylabel(r"Jastrow NN")
+plt.ylim([-1,1.2*f_12.max()])
 plt.grid(True)
 plt.legend()
 plt.show()
@@ -140,7 +151,7 @@ plt.plot(iterations, energies_JF, marker='None', linestyle='-', label=r"NN $E_{J
 plt.axhline(y=-6., color='red', linestyle='--', label="valore da raggiungere")
 plt.xlabel("Epochs")
 plt.ylabel("Energy")
-plt.ylim([-20,30])
+plt.ylim([-50,40])
 plt.grid(True)
 plt.legend()
 plt.show()
@@ -231,6 +242,7 @@ if autocorr_terms<saved_samples_per_walker:
     C_tau_terms_mean=C_tau_terms_mean.detach().cpu().numpy()
     C_tot=0.5+np.sum(C_tau_terms_mean[1:])
     # C_tot=np.sum(C_tau_terms_mean)
+    print(f"C_tot: {C_tot: .04f}")
     tau=np.arange(autocorr_terms)
     
     x_data_exp_model_HO=np.linspace(0,autocorr_terms-1, 1000)

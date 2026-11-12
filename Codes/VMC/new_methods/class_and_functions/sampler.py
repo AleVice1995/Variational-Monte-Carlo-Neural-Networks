@@ -264,4 +264,8 @@ class Sampler():
             increment=1.5
         else:
             increment=1.9
-        return Delta*(1+f*increment)
+        
+        Delta=Delta*(1+f*increment)
+        if self.pbc_cond:
+            Delta=min(Delta, self.length_box_pbc)
+        return Delta

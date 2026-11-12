@@ -13,6 +13,8 @@ from VMC.new_methods.class_and_functions.Neural_Networks_models import  Neural_N
 from VMC.new_methods.class_and_functions.utils import autocorrelation_length
 from VMC.new_methods.class_and_functions.sampler import Sampler
 from VMC.new_methods.class_and_functions.Energy import compute_energy_local
+
+torch.set_default_dtype(torch.float64)
 device=torch.device("cpu")
 
 checkpoint = torch.load("VMC/new_methods/helium4_harmonic_trapped_LJ/checkpoint_HeHe.pth", map_location=device, weights_only=False)
@@ -195,6 +197,7 @@ if autocorr_terms<saved_samples_per_walker:
     C_tau_terms_mean=C_tau_terms_mean.detach().cpu().numpy()
     C_tot=0.5+np.sum(C_tau_terms_mean[1:])
     # C_tot=np.sum(C_tau_terms_mean)
+    print(f"C_tot: {C_tot: .04f}")
     tau=np.arange(autocorr_terms)
     
     x_data_exp_model_HO=np.linspace(0,autocorr_terms-1, 1000)

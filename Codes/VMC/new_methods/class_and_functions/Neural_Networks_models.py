@@ -171,13 +171,14 @@ class Neural_Network_VMC_HeHe(nn.Module):
 'introdurre il length box in qualche maniera'
 class Neural_Network_VMC_He_0K(nn.Module):
     
-    def __init__(self, layers, activations, length_box_pbc, dimension):
+    def __init__(self, layers, activations, length_box_pbc, dimension, switch_power):
         super().__init__()
         self.num_of_layers=len(layers)
         self.layers=nn.ModuleList()
         self.activations=nn.ModuleList(activations)
         self.length_box_pbc=length_box_pbc
         self.dimension=dimension
+        self.switch_power=switch_power
         
         for i in range(self.num_of_layers-1):
             self.layers.append(nn.Linear(layers[i], layers[i+1]))
@@ -223,9 +224,31 @@ class Neural_Network_VMC_He_0K(nn.Module):
         return out.squeeze(0) if single else out #[M,1] or if single [1]
     
     
+    # def phi(self, x):
+    #     mask=x<(self.length_box_pbc/2)
+    #     for i in range(self.num_of_layers-1):
+    #         z=self.layers[i](x)
+    #         x=self.activations[i](z)
+        
+    #     x=torch.where(mask, x, torch.zeros_like(x))
+    #     return x
+    
     def phi(self, x):
+        rc=self.length_box_pbc/2
+        n=self.switch_power
+        switch=(1-(x/rc)**n).clamp_min(0)**3
+        
         for i in range(self.num_of_layers-1):
             z=self.layers[i](x)
             x=self.activations[i](z)
-        return x
+        
+        return x*switch
+    
+    # def phi(self, x):       
+        
+    #     for i in range(self.num_of_layers-1):
+    #         z=self.layers[i](x)
+    #         x=self.activations[i](z)
+        
+    #     return x
     

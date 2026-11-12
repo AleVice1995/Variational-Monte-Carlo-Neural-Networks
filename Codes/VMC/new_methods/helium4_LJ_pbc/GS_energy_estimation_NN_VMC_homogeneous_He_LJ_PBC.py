@@ -25,7 +25,12 @@ import gc
 
 torch.set_default_dtype(torch.float64)
 # file=None
-file=open("VMC/new_methods/helium4_LJ_pbc/GS_En_est_NN_VMC_Homog_He_LJ_PBC_log_file_run2.txt", "w")
+switch_power="3"
+file_changer="_run3_switch_power_"+switch_power
+file_name="VMC/new_methods/helium4_LJ_pbc/GS_En_est_NN_VMC_Homog_He_LJ_PBC_log_file" +file_changer + ".txt"
+checkpoint_name="VMC/new_methods/helium4_LJ_pbc/checkpoint_He_pbc" + file_changer + ".pth"
+
+file=open("VMC/new_methods/helium4_LJ_pbc/GS_En_est_NN_VMC_Homog_He_LJ_PBC_log_file" +file_changer + ".txt", "w")
 problem_under_study="VMC Neural Network Estimation of the Ground State Energy of Liquid Helium-4"
 # device = torch.device("cuda")
 device=torch.device("cpu")
@@ -63,13 +68,14 @@ dimension=3
 coordinates=dimension*n_particles
 diag_shift=1e-2
 start_delta_finder=20
-MC_samples=2000
-batch=200
+MC_samples=600
+batch=500
 sweep_per_save=4
-epochs=151
+epochs=60
 delta=1.0
 learning_rate=2e-3
 reg_param=0.0
+switch_power=int(switch_power)
 
 single_particle_move=True
 exp_function=True
@@ -116,14 +122,14 @@ activations=(nn.Softplus(), nn.Softplus(),  nn.Identity())
 input_data=print_values_on_log(problem_under_study,n_particles, dimension, conf_part, energy_info,\
                                layers, activations, epochs, MC_samples, batch, sweep_per_save,\
                                    diag_shift, reg_param, exp_function, time_control=time_control, pbc_cond=pbc_cond,
-                    density=density, Length_box=Length_box, file=file)
+                    density=density, Length_box=Length_box, switch_power=switch_power, file=file)
 
 
 
 
 
 
-model_He=Neural_Network_VMC_He_0K(layers, activations, Length_box, dimension)
+model_He=Neural_Network_VMC_He_0K(layers, activations, Length_box, dimension, switch_power)
 
 
 sampler=Sampler(n_particles=n_particles, dimension=dimension, 
@@ -167,7 +173,7 @@ if file is not None:
     file.write(f"\nElapsed time: {hours:.0f} hh {minutes:.0f} mm {seconds:.2f} ss\n")
     file.close()
 
-#%%
+
 torch.save({
     "model_state_dict": model_He.state_dict(),
     "optimizer_state_dict": optimizer.state_dict(),
@@ -176,6 +182,8 @@ torch.save({
     "learning_rate": learning_rate,
     "input_data": input_data,
     "output_data": output_data,
-}, "VMC/new_methods/helium4_LJ_pbc/checkpoint_He_pbc.pth")
+}, checkpoint_name)
 
 
+print(f"file name:\n{file_name}\n")
+print(f"checkpoint name:\n{checkpoint_name}\n")

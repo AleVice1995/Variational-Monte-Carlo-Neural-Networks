@@ -1,0 +1,4057 @@
+VMC Neural Network Estimation of the Ground State Energy of Liquid Helium-4
+
+Parameter values of the run:
+Number of particles:  32
+Number of dimensions:  3
+
+Total Epochs of training:  60
+Monte Carlo samples:  600
+Batch utilized:  500
+Configurations swept per save:  4
+
+MinSR diagonalization parameter:  1.0000e-02
+Regularization parameter SGD:  0.0000e+00
+
+f_NN=log(Psi): True
+Energy clipping controlled by epoch: True
+
+
+System studied under periodic boundary conditions: True
+Density of system:  0.0200 A^-3
+Length of periodic virtual box:  11.6961 A
+Power of switch function:  3
+
+
+Start Training:
+
+Epoch: 1
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 100
+delta: 1.0000
+Acceptance ratio: 0.9992
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  0.0137
+V_mean:  66146529060046.7578
+E mean:  66146529060046.7656
+E std_dev:  986421746112763.5000
+E stoch_err:  44114121575843.5625
+T_mean_grad:  0.0017
+E mean grad:  66146529060046.7578
+E std_dev grad:  986421746112763.5000
+E stoch_err grad:  44114121575843.5625
+T_mean_JF:  0.0077
+E mean JF:  66146529060046.7578
+E std_dev JF:  986421746112763.5000
+E stoch_err JF:  44114121575843.5625
+
+Energy per particle:
+T_mean:  0.0004
+V_mean:  2067079033126.4612
+E mean:  2067079033126.4614
+E std_dev:  30825679566023.8594
+E stoch_err:  1378566299245.1113
+T_mean_grad:  0.0001
+E mean grad:  2067079033126.4612
+E std_dev grad:  30825679566023.8594
+E stoch_err grad:  1378566299245.1113
+T_mean_JF:  0.0002
+E mean JF:  2067079033126.4612
+E std_dev JF:  30825679566023.8594
+E stoch_err JF:  1378566299245.1113
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  164/500=32.80%
+
+Median of finite values: 5.9821e+07
+Median on "cleaned" values: 5.9821e+07
+MAD Dispersion on "cleaned" values: 5.9297e+07
+Std dev on "cleaned" values: 9.8642e+14
+
+Std to MAD ratio:  11220347.7759
+control function:  0.0000
+
+upper energy clipping interval:  3.5631e+08
+max energy:  2.1686e+16
+upper energy choosen:  3.5631e+08
+lower energy clipping interval: -2.3666e+08
+min energy:  3.5775e+04
+lower energy choosen:  3.5775e+04
+
+Energy mean clipped: 1.4892e+08
+Energy mean non-clipped: 6.6147e+13
+
+Gradient norm before clip: 648855149.084899
+Gradient norm after: 300.000000
+
+Epoch: 2
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9935
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  0.2420
+V_mean:  167470945307364.8750
+E mean:  167470945307365.1250
+E std_dev:  2129708585075497.0000
+E stoch_err:  95243463369874.1094
+T_mean_grad:  0.2281
+E mean grad:  167470945307365.0625
+E std_dev grad:  2129708585075497.7500
+E stoch_err grad:  95243463369874.1406
+T_mean_JF:  0.2350
+E mean JF:  167470945307365.0938
+E std_dev JF:  2129708585075497.5000
+E stoch_err JF:  95243463369874.1250
+
+Energy per particle:
+T_mean:  0.0076
+V_mean:  5233467040855.1523
+E mean:  5233467040855.1602
+E std_dev:  66553393283609.2812
+E stoch_err:  2976358230308.5659
+T_mean_grad:  0.0071
+E mean grad:  5233467040855.1582
+E std_dev grad:  66553393283609.3047
+E stoch_err grad:  2976358230308.5669
+T_mean_JF:  0.0073
+E mean JF:  5233467040855.1592
+E std_dev JF:  66553393283609.2969
+E stoch_err JF:  2976358230308.5664
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  24/500=4.80%
+
+Median of finite values: 3.4809e+07
+Median on "cleaned" values: 3.4809e+07
+MAD Dispersion on "cleaned" values: 3.4502e+07
+Std dev on "cleaned" values: 2.1297e+15
+
+Std to MAD ratio:  41633859.5813
+control function:  0.0000
+
+upper energy clipping interval:  2.0732e+08
+max energy:  4.2537e+16
+upper energy choosen:  7.6067e+11
+lower energy clipping interval: -1.3770e+08
+min energy:  1.5082e+04
+lower energy choosen:  1.5082e+04
+
+Energy mean clipped: 4.8008e+10
+Energy mean non-clipped: 1.6747e+14
+
+Gradient norm before clip: 332219231754.203796
+Gradient norm after: 300.000000
+
+Epoch: 3
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9875
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  0.6699
+V_mean:  882141640050529.0000
+E mean:  882141640050529.6250
+E std_dev:  19713188633828664.0000
+E stoch_err:  881600596770342.1250
+T_mean_grad:  0.9174
+E mean grad:  882141640050530.0000
+E std_dev grad:  19713188633828668.0000
+E stoch_err grad:  881600596770342.2500
+T_mean_JF:  0.7937
+E mean JF:  882141640050529.7500
+E std_dev JF:  19713188633828668.0000
+E stoch_err JF:  881600596770342.2500
+
+Energy per particle:
+T_mean:  0.0209
+V_mean:  27566926251579.0312
+E mean:  27566926251579.0508
+E std_dev:  616037144807145.7500
+E stoch_err:  27550018649073.1914
+T_mean_grad:  0.0287
+E mean grad:  27566926251579.0625
+E std_dev grad:  616037144807145.8750
+E stoch_err grad:  27550018649073.1953
+T_mean_JF:  0.0248
+E mean JF:  27566926251579.0547
+E std_dev JF:  616037144807145.8750
+E stoch_err JF:  27550018649073.1953
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  2/500=0.40%
+
+Median of finite values: 1.8304e+07
+Median on "cleaned" values: 1.8304e+07
+MAD Dispersion on "cleaned" values: 1.7944e+07
+Std dev on "cleaned" values: 1.9713e+16
+
+Std to MAD ratio:  740991386.0565
+control function:  0.0001
+
+upper energy clipping interval:  1.0802e+08
+max energy:  4.4080e+17
+upper energy choosen:  6.1493e+13
+lower energy clipping interval: -7.1416e+07
+min energy:  1.2678e+04
+lower energy choosen:  1.2678e+04
+
+Energy mean clipped: 5.4734e+11
+Energy mean non-clipped: 8.8214e+14
+
+Gradient norm before clip: 8453210831319.818359
+Gradient norm after: 300.000000
+
+Epoch: 4
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9796
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  2.7375
+V_mean:  843593337107710.5000
+E mean:  843593337107713.0000
+E std_dev:  13892327384242542.0000
+E stoch_err:  621283767936963.2500
+T_mean_grad:  2.5463
+E mean grad:  843593337107712.8750
+E std_dev grad:  13892327384242548.0000
+E stoch_err grad:  621283767936963.5000
+T_mean_JF:  2.6419
+E mean JF:  843593337107712.8750
+E std_dev JF:  13892327384242546.0000
+E stoch_err JF:  621283767936963.5000
+
+Energy per particle:
+T_mean:  0.0855
+V_mean:  26362291784615.9531
+E mean:  26362291784616.0312
+E std_dev:  434135230757579.4375
+E stoch_err:  19415117748030.1016
+T_mean_grad:  0.0796
+E mean grad:  26362291784616.0273
+E std_dev grad:  434135230757579.6250
+E stoch_err grad:  19415117748030.1094
+T_mean_JF:  0.0826
+E mean JF:  26362291784616.0273
+E std_dev JF:  434135230757579.5625
+E stoch_err JF:  19415117748030.1094
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  4/500=0.80%
+
+Median of finite values: 9.8742e+06
+Median on "cleaned" values: 9.8742e+06
+MAD Dispersion on "cleaned" values: 9.7263e+06
+Std dev on "cleaned" values: 1.3892e+16
+
+Std to MAD ratio:  963388450.9930
+control function:  0.0005
+
+upper energy clipping interval:  5.8506e+07
+max energy:  2.8802e+17
+upper energy choosen:  1.3228e+14
+lower energy clipping interval: -3.8758e+07
+min energy:  9.8051e+03
+lower energy choosen:  9.8051e+03
+
+Energy mean clipped: 1.2806e+12
+Energy mean non-clipped: 8.4359e+14
+
+Gradient norm before clip: 20367335068856.054688
+Gradient norm after: 300.000000
+
+Epoch: 5
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9761
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  5.4103
+V_mean:  878735013862429184.0000
+E mean:  878735013862429184.0000
+E std_dev:  19649098863814000640.0000
+E stoch_err:  878734415122039808.0000
+T_mean_grad:  4.8419
+E mean grad:  878735013862429184.0000
+E std_dev grad:  19649098863814000640.0000
+E stoch_err grad:  878734415122039808.0000
+T_mean_JF:  5.1261
+E mean JF:  878735013862429184.0000
+E std_dev JF:  19649098863814000640.0000
+E stoch_err JF:  878734415122039808.0000
+
+Energy per particle:
+T_mean:  0.1691
+V_mean:  27460469183200912.0000
+E mean:  27460469183200912.0000
+E std_dev:  614034339494187520.0000
+E stoch_err:  27460450472563744.0000
+T_mean_grad:  0.1513
+E mean grad:  27460469183200912.0000
+E std_dev grad:  614034339494187520.0000
+E stoch_err grad:  27460450472563744.0000
+T_mean_JF:  0.1602
+E mean JF:  27460469183200912.0000
+E std_dev JF:  614034339494187520.0000
+E stoch_err JF:  27460450472563744.0000
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  1/500=0.20%
+
+Median of finite values: 4.7437e+06
+Median on "cleaned" values: 4.7437e+06
+MAD Dispersion on "cleaned" values: 4.6425e+06
+Std dev on "cleaned" values: 1.9649e+19
+
+Std to MAD ratio:  2854718617905.1899
+control function:  0.0011
+
+upper energy clipping interval:  2.7956e+07
+max energy:  4.3937e+20
+upper energy choosen:  4.6662e+17
+lower energy clipping interval: -1.8469e+07
+min energy:  1.0907e+04
+lower energy choosen:  1.0907e+04
+
+Energy mean clipped: 9.3384e+14
+Energy mean non-clipped: 8.7874e+17
+
+Gradient norm before clip: 28777248419874336.000000
+Gradient norm after: 300.000000
+
+Epoch: 6
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9759
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  6.6428
+V_mean:  1076832409156.4446
+E mean:  1076832409163.0872
+E std_dev:  20758015357188.0195
+E stoch_err:  928326668333.1399
+T_mean_grad:  7.0363
+E mean grad:  1076832409163.4811
+E std_dev grad:  20758015357198.7969
+E stoch_err grad:  928326668333.6218
+T_mean_JF:  6.8395
+E mean JF:  1076832409163.2843
+E std_dev JF:  20758015357193.4258
+E stoch_err JF:  928326668333.3815
+
+Energy per particle:
+T_mean:  0.2076
+V_mean:  33651012786.1389
+E mean:  33651012786.3465
+E std_dev:  648687979912.1256
+E stoch_err:  29010208385.4106
+T_mean_grad:  0.2199
+E mean grad:  33651012786.3588
+E std_dev grad:  648687979912.4624
+E stoch_err grad:  29010208385.4257
+T_mean_JF:  0.2137
+E mean JF:  33651012786.3526
+E std_dev JF:  648687979912.2946
+E stoch_err JF:  29010208385.4182
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  4/500=0.80%
+
+Median of finite values: 3.9843e+06
+Median on "cleaned" values: 3.9843e+06
+MAD Dispersion on "cleaned" values: 3.8553e+06
+Std dev on "cleaned" values: 2.0758e+13
+
+Std to MAD ratio:  3631625.3020
+control function:  0.0020
+
+upper energy clipping interval:  2.3261e+07
+max energy:  4.6071e+14
+upper energy choosen:  9.3236e+11
+lower energy clipping interval: -1.5292e+07
+min energy:  4.6871e+03
+lower energy choosen:  4.6871e+03
+
+Energy mean clipped: 1.3250e+10
+Energy mean non-clipped: 1.0768e+12
+
+Gradient norm before clip: 207397447486.805573
+Gradient norm after: 300.000000
+
+Epoch: 7
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9695
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  15.0072
+V_mean:  6801051910.2535
+E mean:  6801051925.2607
+E std_dev:  132098565694.4886
+E stoch_err:  5907627452.4620
+T_mean_grad:  12.8633
+E mean grad:  6801051923.1167
+E std_dev grad:  132098565707.2554
+E stoch_err grad:  5907627453.0329
+T_mean_JF:  13.9352
+E mean JF:  6801051924.1887
+E std_dev JF:  132098565700.8719
+E stoch_err JF:  5907627452.7474
+
+Energy per particle:
+T_mean:  0.4690
+V_mean:  212532872.1954
+E mean:  212532872.6644
+E std_dev:  4128080177.9528
+E stoch_err:  184613357.8894
+T_mean_grad:  0.4020
+E mean grad:  212532872.5974
+E std_dev grad:  4128080178.3517
+E stoch_err grad:  184613357.9073
+T_mean_JF:  0.4355
+E mean JF:  212532872.6309
+E std_dev JF:  4128080178.1522
+E stoch_err JF:  184613357.8984
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  4/500=0.80%
+
+Median of finite values: 1.6802e+06
+Median on "cleaned" values: 1.6802e+06
+MAD Dispersion on "cleaned" values: 1.6041e+06
+Std dev on "cleaned" values: 1.3210e+11
+
+Std to MAD ratio:  55545.1316
+control function:  0.0034
+
+upper energy clipping interval:  9.7006e+06
+max energy:  2.9429e+12
+upper energy choosen:  1.0056e+10
+lower energy clipping interval: -6.3402e+06
+min energy:  4.0767e+03
+lower energy choosen:  4.0767e+03
+
+Energy mean clipped: 2.3571e+08
+Energy mean non-clipped: 6.8011e+09
+
+Gradient norm before clip: 2086130319.807861
+Gradient norm after: 300.000000
+
+Epoch: 8
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9586
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  24.1669
+V_mean:  533825260.5523
+E mean:  533825284.7192
+E std_dev:  6899182147.2031
+E stoch_err:  308540805.4060
+T_mean_grad:  25.1450
+E mean grad:  533825285.6974
+E std_dev grad:  6899182180.0151
+E stoch_err grad:  308540806.8734
+T_mean_JF:  24.6560
+E mean JF:  533825285.2083
+E std_dev JF:  6899182163.6091
+E stoch_err JF:  308540806.1397
+
+Energy per particle:
+T_mean:  0.7552
+V_mean:  16682039.3923
+E mean:  16682040.1475
+E std_dev:  215599442.1001
+E stoch_err:  9641900.1689
+T_mean_grad:  0.7858
+E mean grad:  16682040.1780
+E std_dev grad:  215599443.1255
+E stoch_err grad:  9641900.2148
+T_mean_JF:  0.7705
+E mean JF:  16682040.1628
+E std_dev JF:  215599442.6128
+E stoch_err JF:  9641900.1919
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  11/500=2.20%
+
+Median of finite values: 7.4466e+05
+Median on "cleaned" values: 7.4466e+05
+MAD Dispersion on "cleaned" values: 6.6465e+05
+Std dev on "cleaned" values: 6.8992e+09
+
+Std to MAD ratio:  7001.3833
+control function:  0.0053
+
+upper energy clipping interval:  4.0679e+06
+max energy:  1.3646e+11
+upper energy choosen:  7.2796e+08
+lower energy clipping interval: -2.5786e+06
+min energy:  7.4831e+03
+lower energy choosen:  7.4831e+03
+
+Energy mean clipped: 3.0764e+07
+Energy mean non-clipped: 5.3383e+08
+
+Gradient norm before clip: 229977075.960792
+Gradient norm after: 300.000000
+
+Epoch: 9
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9423
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  43.8459
+V_mean:  7976114.2774
+E mean:  7976158.1233
+E std_dev:  72603260.9049
+E stoch_err:  3246916.5354
+T_mean_grad:  44.1199
+E mean grad:  7976158.3973
+E std_dev grad:  72603310.8749
+E stoch_err grad:  3246918.7702
+T_mean_JF:  43.9829
+E mean JF:  7976158.2603
+E std_dev JF:  72603285.8899
+E stoch_err JF:  3246917.6528
+
+Energy per particle:
+T_mean:  1.3702
+V_mean:  249253.5712
+E mean:  249254.9414
+E std_dev:  2268851.9033
+E stoch_err:  101466.1417
+T_mean_grad:  1.3787
+E mean grad:  249254.9499
+E std_dev grad:  2268853.4648
+E stoch_err grad:  101466.2116
+T_mean_JF:  1.3745
+E mean JF:  249254.9456
+E std_dev JF:  2268852.6841
+E stoch_err JF:  101466.1766
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  32/500=6.40%
+
+Median of finite values: 2.5772e+05
+Median on "cleaned" values: 2.5772e+05
+MAD Dispersion on "cleaned" values: 2.0160e+05
+Std dev on "cleaned" values: 7.2603e+07
+
+Std to MAD ratio:  242.9069
+control function:  0.0084
+
+upper energy clipping interval:  1.2657e+06
+max energy:  1.2390e+09
+upper energy choosen:  1.1645e+07
+lower energy clipping interval: -7.5029e+05
+min energy:  1.7610e+03
+lower energy choosen:  1.7610e+03
+
+Energy mean clipped: 1.4748e+06
+Energy mean non-clipped: 7.9762e+06
+
+Gradient norm before clip: 5475901.764412
+Gradient norm after: 300.000000
+
+Epoch: 10
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9224
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  71.8667
+V_mean:  636848.4080
+E mean:  636920.2747
+E std_dev:  3435969.0524
+E stoch_err:  153661.2074
+T_mean_grad:  72.5397
+E mean grad:  636920.9477
+E std_dev grad:  3436063.9805
+E stoch_err grad:  153665.4527
+T_mean_JF:  72.2032
+E mean JF:  636920.6112
+E std_dev JF:  3436016.5161
+E stoch_err JF:  153663.3300
+
+Energy per particle:
+T_mean:  2.2458
+V_mean:  19901.5127
+E mean:  19903.7586
+E std_dev:  107374.0329
+E stoch_err:  4801.9127
+T_mean_grad:  2.2669
+E mean grad:  19903.7796
+E std_dev grad:  107376.9994
+E stoch_err grad:  4802.0454
+T_mean_JF:  2.2564
+E mean JF:  19903.7691
+E std_dev JF:  107375.5161
+E stoch_err JF:  4801.9791
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  30/500=6.00%
+
+Median of finite values: 7.7838e+04
+Median on "cleaned" values: 7.7838e+04
+MAD Dispersion on "cleaned" values: 5.7573e+04
+Std dev on "cleaned" values: 3.4360e+06
+
+Std to MAD ratio:  40.2538
+control function:  0.0163
+
+upper energy clipping interval:  3.6570e+05
+max energy:  5.0845e+07
+upper energy choosen:  1.1906e+06
+lower energy clipping interval: -2.1003e+05
+min energy:  1.9469e+03
+lower energy choosen:  1.9469e+03
+
+Energy mean clipped: 2.0770e+05
+Energy mean non-clipped: 6.3692e+05
+
+Gradient norm before clip: 516822.599473
+Gradient norm after: 300.000000
+
+Epoch: 11
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.9014
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  108.8730
+V_mean:  68016.5195
+E mean:  68125.3925
+E std_dev:  205856.9064
+E stoch_err:  9206.2007
+T_mean_grad:  106.5647
+E mean grad:  68123.0841
+E std_dev grad:  205970.0854
+E stoch_err grad:  9211.2622
+T_mean_JF:  107.7189
+E mean JF:  68124.2383
+E std_dev JF:  205913.4893
+E stoch_err JF:  9208.7312
+
+Energy per particle:
+T_mean:  3.4023
+V_mean:  2125.5162
+E mean:  2128.9185
+E std_dev:  6433.0283
+E stoch_err:  287.6938
+T_mean_grad:  3.3301
+E mean grad:  2128.8464
+E std_dev grad:  6436.5652
+E stoch_err grad:  287.8519
+T_mean_JF:  3.3662
+E mean JF:  2128.8824
+E std_dev JF:  6434.7965
+E stoch_err JF:  287.7728
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  16/500=3.20%
+
+Median of finite values: 2.6413e+04
+Median on "cleaned" values: 2.6413e+04
+MAD Dispersion on "cleaned" values: 1.6511e+04
+Std dev on "cleaned" values: 2.0586e+05
+
+Std to MAD ratio:  8.4096
+control function:  0.0607
+
+upper energy clipping interval:  1.0897e+05
+max energy:  3.5147e+06
+upper energy choosen:  3.1568e+05
+lower energy clipping interval: -5.6141e+04
+min energy:  1.4302e+03
+lower energy choosen:  1.4302e+03
+
+Energy mean clipped: 5.0676e+04
+Energy mean non-clipped: 6.8125e+04
+
+Gradient norm before clip: 112075.517695
+Gradient norm after: 300.000000
+
+Epoch: 12
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.8731
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  152.5109
+V_mean:  22100.3468
+E mean:  22252.8576
+E std_dev:  93204.6499
+E stoch_err:  4168.2387
+T_mean_grad:  155.3936
+E mean grad:  22255.7404
+E std_dev grad:  93358.1842
+E stoch_err grad:  4175.1049
+T_mean_JF:  153.9522
+E mean JF:  22254.2990
+E std_dev JF:  93281.3783
+E stoch_err JF:  4171.6701
+
+Energy per particle:
+T_mean:  4.7660
+V_mean:  690.6358
+E mean:  695.4018
+E std_dev:  2912.6453
+E stoch_err:  130.2575
+T_mean_grad:  4.8561
+E mean grad:  695.4919
+E std_dev grad:  2917.4433
+E stoch_err grad:  130.4720
+T_mean_JF:  4.8110
+E mean JF:  695.4468
+E std_dev JF:  2915.0431
+E stoch_err JF:  130.3647
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  10/500=2.00%
+
+Median of finite values: 1.0062e+04
+Median on "cleaned" values: 1.0062e+04
+MAD Dispersion on "cleaned" values: 5.3107e+03
+Std dev on "cleaned" values: 9.3205e+04
+
+Std to MAD ratio:  11.8376
+control function:  0.0513
+
+upper energy clipping interval:  3.6615e+04
+max energy:  1.9184e+06
+upper energy choosen:  1.3324e+05
+lower energy clipping interval: -1.6492e+04
+min energy: -4.0220e+01
+lower energy choosen: -4.0220e+01
+
+Energy mean clipped: 1.7082e+04
+Energy mean non-clipped: 2.2253e+04
+
+Gradient norm before clip: 32840.901526
+Gradient norm after: 300.000000
+
+Epoch: 13
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.8495
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  210.4947
+V_mean:  5042.5415
+E mean:  5253.0362
+E std_dev:  5802.6743
+E stoch_err:  259.5035
+T_mean_grad:  201.3670
+E mean grad:  5243.9086
+E std_dev grad:  6013.6116
+E stoch_err grad:  268.9369
+T_mean_JF:  205.9309
+E mean JF:  5248.4724
+E std_dev JF:  5907.9229
+E stoch_err JF:  264.2103
+
+Energy per particle:
+T_mean:  6.5780
+V_mean:  157.5794
+E mean:  164.1574
+E std_dev:  181.3336
+E stoch_err:  8.1095
+T_mean_grad:  6.2927
+E mean grad:  163.8721
+E std_dev grad:  187.9254
+E stoch_err grad:  8.4043
+T_mean_JF:  6.4353
+E mean JF:  164.0148
+E std_dev JF:  184.6226
+E stoch_err JF:  8.2566
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  2/500=0.40%
+
+Median of finite values: 3.5755e+03
+Median on "cleaned" values: 3.5755e+03
+MAD Dispersion on "cleaned" values: 1.8876e+03
+Std dev on "cleaned" values: 5.8027e+03
+
+Std to MAD ratio:  2.0734
+control function:  0.4789
+
+upper energy clipping interval:  1.3014e+04
+max energy:  6.3642e+04
+upper energy choosen:  3.7257e+04
+lower energy clipping interval: -5.8626e+03
+min energy: -1.0448e+02
+lower energy choosen: -1.0448e+02
+
+Energy mean clipped: 5.1712e+03
+Energy mean non-clipped: 5.2530e+03
+
+Gradient norm before clip: 8259.600107
+Gradient norm after: 300.000000
+
+Epoch: 14
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.8199
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  265.9580
+V_mean:  1876.3588
+E mean:  2142.3168
+E std_dev:  2528.3873
+E stoch_err:  113.0729
+T_mean_grad:  279.8878
+E mean grad:  2156.2466
+E std_dev grad:  2820.8576
+E stoch_err grad:  126.1526
+T_mean_JF:  272.9229
+E mean JF:  2149.2817
+E std_dev JF:  2673.4778
+E stoch_err JF:  119.5616
+
+Energy per particle:
+T_mean:  8.3112
+V_mean:  58.6362
+E mean:  66.9474
+E std_dev:  79.0121
+E stoch_err:  3.5335
+T_mean_grad:  8.7465
+E mean grad:  67.3827
+E std_dev grad:  88.1518
+E stoch_err grad:  3.9423
+T_mean_JF:  8.5288
+E mean JF:  67.1651
+E std_dev JF:  83.5462
+E stoch_err JF:  3.7363
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  2/500=0.40%
+
+Median of finite values: 1.5155e+03
+Median on "cleaned" values: 1.5155e+03
+MAD Dispersion on "cleaned" values: 8.1680e+02
+Std dev on "cleaned" values: 2.5284e+03
+
+Std to MAD ratio:  2.0879
+control function:  0.4986
+
+upper energy clipping interval:  5.5995e+03
+max energy:  2.9415e+04
+upper energy choosen:  1.7473e+04
+lower energy clipping interval: -2.5685e+03
+min energy: -3.9757e+02
+lower energy choosen: -3.9757e+02
+
+Energy mean clipped: 2.0970e+03
+Energy mean non-clipped: 2.1423e+03
+
+Gradient norm before clip: 3188.353696
+Gradient norm after: 300.000000
+
+Epoch: 15
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.7950
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  347.4585
+V_mean:  363.3595
+E mean:  710.8181
+E std_dev:  712.0333
+E stoch_err:  31.8431
+T_mean_grad:  343.8376
+E mean grad:  707.1971
+E std_dev grad:  1049.9701
+E stoch_err grad:  46.9561
+T_mean_JF:  345.6481
+E mean JF:  709.0076
+E std_dev JF:  876.9765
+E stoch_err JF:  39.2196
+
+Energy per particle:
+T_mean:  10.8581
+V_mean:  11.3550
+E mean:  22.2131
+E std_dev:  22.2510
+E stoch_err:  0.9951
+T_mean_grad:  10.7449
+E mean grad:  22.0999
+E std_dev grad:  32.8116
+E stoch_err grad:  1.4674
+T_mean_JF:  10.8015
+E mean JF:  22.1565
+E std_dev JF:  27.4055
+E stoch_err JF:  1.2256
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  2/500=0.40%
+
+Median of finite values: 5.5860e+02
+Median on "cleaned" values: 5.5860e+02
+MAD Dispersion on "cleaned" values: 3.4541e+02
+Std dev on "cleaned" values: 7.1203e+02
+
+Std to MAD ratio:  1.3904
+control function:  0.9175
+
+upper energy clipping interval:  2.2856e+03
+max energy:  5.5742e+03
+upper energy choosen:  5.3030e+03
+lower energy clipping interval: -1.1685e+03
+min energy: -3.2357e+02
+lower energy choosen: -3.2357e+02
+
+Energy mean clipped: 7.1002e+02
+Energy mean non-clipped: 7.1082e+02
+
+Gradient norm before clip: 901.356997
+Gradient norm after: 300.000000
+
+Epoch: 16
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.7649
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  452.1587
+V_mean: -328.1241
+E mean:  124.0346
+E std_dev:  200.6687
+E stoch_err:  8.9742
+T_mean_grad:  440.6340
+E mean grad:  112.5099
+E std_dev grad:  539.2556
+E stoch_err grad:  24.1162
+T_mean_JF:  446.3964
+E mean JF:  118.2722
+E std_dev JF:  344.3816
+E stoch_err JF:  15.4012
+
+Energy per particle:
+T_mean:  14.1300
+V_mean: -10.2539
+E mean:  3.8761
+E std_dev:  6.2709
+E stoch_err:  0.2804
+T_mean_grad:  13.7698
+E mean grad:  3.5159
+E std_dev grad:  16.8517
+E stoch_err grad:  0.7536
+T_mean_JF:  13.9499
+E mean JF:  3.6960
+E std_dev JF:  10.7619
+E stoch_err JF:  0.4813
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: 1.0448e+02
+Median on "cleaned" values: 1.0448e+02
+MAD Dispersion on "cleaned" values: 1.2929e+02
+Std dev on "cleaned" values: 2.0067e+02
+
+Std to MAD ratio:  1.0469
+control function:  1.0000
+
+upper energy clipping interval:  7.5093e+02
+max energy:  1.0902e+03
+upper energy choosen:  1.0902e+03
+lower energy clipping interval: -5.4196e+02
+min energy: -4.2273e+02
+lower energy choosen: -4.2273e+02
+
+Energy mean clipped: 1.2403e+02
+Energy mean non-clipped: 1.2403e+02
+
+Gradient norm before clip: 76.616739
+Gradient norm after: 76.616739
+
+Epoch: 17
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.7563
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  448.2141
+V_mean: -512.8005
+E mean: -64.5863
+E std_dev:  119.0988
+E stoch_err:  5.3263
+T_mean_grad:  483.3294
+E mean grad: -29.4711
+E std_dev grad:  447.3021
+E stoch_err grad:  20.0040
+T_mean_JF:  465.7718
+E mean JF: -47.0287
+E std_dev JF:  227.5762
+E stoch_err JF:  10.1775
+
+Energy per particle:
+T_mean:  14.0067
+V_mean: -16.0250
+E mean: -2.0183
+E std_dev:  3.7218
+E stoch_err:  0.1664
+T_mean_grad:  15.1040
+E mean grad: -0.9210
+E std_dev grad:  13.9782
+E stoch_err grad:  0.6251
+T_mean_JF:  14.5554
+E mean JF: -1.4696
+E std_dev JF:  7.1118
+E stoch_err JF:  0.3180
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -6.5365e+01
+Median on "cleaned" values: -6.5365e+01
+MAD Dispersion on "cleaned" values: 8.0652e+01
+Std dev on "cleaned" values: 1.1910e+02
+
+Std to MAD ratio:  0.9960
+control function:  1.0000
+
+upper energy clipping interval:  3.3789e+02
+max energy:  3.3945e+02
+upper energy choosen:  3.3945e+02
+lower energy clipping interval: -4.6862e+02
+min energy: -3.9209e+02
+lower energy choosen: -3.9209e+02
+
+Energy mean clipped: -6.4586e+01
+Energy mean non-clipped: -6.4586e+01
+
+Gradient norm before clip: 222.470894
+Gradient norm after: 222.470894
+
+Epoch: 18
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.7587
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  446.8155
+V_mean: -545.0086
+E mean: -98.1931
+E std_dev:  94.2414
+E stoch_err:  4.2146
+T_mean_grad:  429.9737
+E mean grad: -115.0349
+E std_dev grad:  403.2480
+E stoch_err grad:  18.0338
+T_mean_JF:  438.3946
+E mean JF: -106.6140
+E std_dev JF:  215.2439
+E stoch_err JF:  9.6260
+
+Energy per particle:
+T_mean:  13.9630
+V_mean: -17.0315
+E mean: -3.0685
+E std_dev:  2.9450
+E stoch_err:  0.1317
+T_mean_grad:  13.4367
+E mean grad: -3.5948
+E std_dev grad:  12.6015
+E stoch_err grad:  0.5636
+T_mean_JF:  13.6998
+E mean JF: -3.3317
+E std_dev JF:  6.7264
+E stoch_err JF:  0.3008
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.0119e+02
+Median on "cleaned" values: -1.0119e+02
+MAD Dispersion on "cleaned" values: 5.7238e+01
+Std dev on "cleaned" values: 9.4241e+01
+
+Std to MAD ratio:  1.1105
+control function:  1.0000
+
+upper energy clipping interval:  1.8500e+02
+max energy:  5.9677e+02
+upper energy choosen:  5.9677e+02
+lower energy clipping interval: -3.8738e+02
+min energy: -3.2387e+02
+lower energy choosen: -3.2387e+02
+
+Energy mean clipped: -9.8193e+01
+Energy mean non-clipped: -9.8193e+01
+
+Gradient norm before clip: 138.877466
+Gradient norm after: 138.877466
+
+Epoch: 19
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.7596
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  421.3231
+V_mean: -548.5443
+E mean: -127.2213
+E std_dev:  87.7944
+E stoch_err:  3.9263
+T_mean_grad:  425.2706
+E mean grad: -123.2738
+E std_dev grad:  402.5371
+E stoch_err grad:  18.0020
+T_mean_JF:  423.2968
+E mean JF: -125.2475
+E std_dev JF:  218.5313
+E stoch_err JF:  9.7730
+
+Energy per particle:
+T_mean:  13.1663
+V_mean: -17.1420
+E mean: -3.9757
+E std_dev:  2.7436
+E stoch_err:  0.1227
+T_mean_grad:  13.2897
+E mean grad: -3.8523
+E std_dev grad:  12.5793
+E stoch_err grad:  0.5626
+T_mean_JF:  13.2280
+E mean JF: -3.9140
+E std_dev JF:  6.8291
+E stoch_err JF:  0.3054
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.3372e+02
+Median on "cleaned" values: -1.3372e+02
+MAD Dispersion on "cleaned" values: 5.4591e+01
+Std dev on "cleaned" values: 8.7794e+01
+
+Std to MAD ratio:  1.0847
+control function:  1.0000
+
+upper energy clipping interval:  1.3923e+02
+max energy:  5.7582e+02
+upper energy choosen:  5.7582e+02
+lower energy clipping interval: -4.0668e+02
+min energy: -3.3161e+02
+lower energy choosen: -3.3161e+02
+
+Energy mean clipped: -1.2722e+02
+Energy mean non-clipped: -1.2722e+02
+
+Gradient norm before clip: 73.450505
+Gradient norm after: 73.450505
+
+Epoch: 20
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 10
+delta: 1.0000
+Acceptance ratio: 0.7557
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  424.2810
+V_mean: -577.4835
+E mean: -153.2025
+E std_dev:  80.7522
+E stoch_err:  3.6113
+T_mean_grad:  409.3935
+E mean grad: -168.0900
+E std_dev grad:  343.2376
+E stoch_err grad:  15.3501
+T_mean_JF:  416.8372
+E mean JF: -160.6462
+E std_dev JF:  178.6979
+E stoch_err JF:  7.9916
+
+Energy per particle:
+T_mean:  13.2588
+V_mean: -18.0464
+E mean: -4.7876
+E std_dev:  2.5235
+E stoch_err:  0.1129
+T_mean_grad:  12.7935
+E mean grad: -5.2528
+E std_dev grad:  10.7262
+E stoch_err grad:  0.4797
+T_mean_JF:  13.0262
+E mean JF: -5.0202
+E std_dev JF:  5.5843
+E stoch_err JF:  0.2497
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.5325e+02
+Median on "cleaned" values: -1.5325e+02
+MAD Dispersion on "cleaned" values: 4.6631e+01
+Std dev on "cleaned" values: 8.0752e+01
+
+Std to MAD ratio:  1.1680
+control function:  1.0000
+
+upper energy clipping interval:  7.9905e+01
+max energy:  4.3812e+02
+upper energy choosen:  4.3812e+02
+lower energy clipping interval: -3.8641e+02
+min energy: -3.8029e+02
+lower energy choosen: -3.8029e+02
+
+Energy mean clipped: -1.5320e+02
+Energy mean non-clipped: -1.5320e+02
+
+Gradient norm before clip: 93.837463
+Gradient norm after: 93.837463
+
+Epoch: 21
+Learning rate: 2.0000e-03
+
+Finding new best delta parameter...
+Testing Delta: 1.7392...
+Acceptance ratio:  0.6035
+Testing Delta: 2.0092...
+Acceptance ratio:  0.5599
+Search complete
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5623
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  404.2899
+V_mean: -569.2277
+E mean: -164.9378
+E std_dev:  68.7441
+E stoch_err:  3.0743
+T_mean_grad:  396.5090
+E mean grad: -172.7187
+E std_dev grad:  316.2909
+E stoch_err grad:  14.1450
+T_mean_JF:  400.3994
+E mean JF: -168.8283
+E std_dev JF:  165.2936
+E stoch_err JF:  7.3922
+
+Energy per particle:
+T_mean:  12.6341
+V_mean: -17.7884
+E mean: -5.1543
+E std_dev:  2.1483
+E stoch_err:  0.0961
+T_mean_grad:  12.3909
+E mean grad: -5.3975
+E std_dev grad:  9.8841
+E stoch_err grad:  0.4420
+T_mean_JF:  12.5125
+E mean JF: -5.2759
+E std_dev JF:  5.1654
+E stoch_err JF:  0.2310
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.6964e+02
+Median on "cleaned" values: -1.6964e+02
+MAD Dispersion on "cleaned" values: 4.4108e+01
+Std dev on "cleaned" values: 6.8744e+01
+
+Std to MAD ratio:  1.0512
+control function:  1.0000
+
+upper energy clipping interval:  5.0896e+01
+max energy:  2.8063e+02
+upper energy choosen:  2.8063e+02
+lower energy clipping interval: -3.9018e+02
+min energy: -3.2333e+02
+lower energy choosen: -3.2333e+02
+
+Energy mean clipped: -1.6494e+02
+Energy mean non-clipped: -1.6494e+02
+
+Gradient norm before clip: 78.577263
+Gradient norm after: 78.577263
+
+Epoch: 22
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5536
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  398.4387
+V_mean: -578.9127
+E mean: -180.4740
+E std_dev:  60.2790
+E stoch_err:  2.6958
+T_mean_grad:  390.1665
+E mean grad: -188.7462
+E std_dev grad:  304.3460
+E stoch_err grad:  13.6108
+T_mean_JF:  394.3026
+E mean JF: -184.6101
+E std_dev JF:  152.8448
+E stoch_err JF:  6.8354
+
+Energy per particle:
+T_mean:  12.4512
+V_mean: -18.0910
+E mean: -5.6398
+E std_dev:  1.8837
+E stoch_err:  0.0842
+T_mean_grad:  12.1927
+E mean grad: -5.8983
+E std_dev grad:  9.5108
+E stoch_err grad:  0.4253
+T_mean_JF:  12.3220
+E mean JF: -5.7691
+E std_dev JF:  4.7764
+E stoch_err JF:  0.2136
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.7968e+02
+Median on "cleaned" values: -1.7968e+02
+MAD Dispersion on "cleaned" values: 3.5636e+01
+Std dev on "cleaned" values: 6.0279e+01
+
+Std to MAD ratio:  1.1409
+control function:  1.0000
+
+upper energy clipping interval: -1.5015e+00
+max energy:  8.2014e+01
+upper energy choosen:  8.2014e+01
+lower energy clipping interval: -3.5786e+02
+min energy: -3.8200e+02
+lower energy choosen: -3.8200e+02
+
+Energy mean clipped: -1.8047e+02
+Energy mean non-clipped: -1.8047e+02
+
+Gradient norm before clip: 71.659995
+Gradient norm after: 71.659995
+
+Epoch: 23
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5542
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  383.9358
+V_mean: -568.4624
+E mean: -184.5267
+E std_dev:  75.1309
+E stoch_err:  3.3600
+T_mean_grad:  387.9156
+E mean grad: -180.5468
+E std_dev grad:  347.6419
+E stoch_err grad:  15.5470
+T_mean_JF:  385.9257
+E mean JF: -182.5367
+E std_dev JF:  188.4915
+E stoch_err JF:  8.4296
+
+Energy per particle:
+T_mean:  11.9980
+V_mean: -17.7645
+E mean: -5.7665
+E std_dev:  2.3478
+E stoch_err:  0.1050
+T_mean_grad:  12.1224
+E mean grad: -5.6421
+E std_dev grad:  10.8638
+E stoch_err grad:  0.4858
+T_mean_JF:  12.0602
+E mean JF: -5.7043
+E std_dev JF:  5.8904
+E stoch_err JF:  0.2634
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9131e+02
+Median on "cleaned" values: -1.9131e+02
+MAD Dispersion on "cleaned" values: 3.5937e+01
+Std dev on "cleaned" values: 7.5131e+01
+
+Std to MAD ratio:  1.4101
+control function:  1.0000
+
+upper energy clipping interval: -1.1624e+01
+max energy:  7.2686e+02
+upper energy choosen:  7.2686e+02
+lower energy clipping interval: -3.7099e+02
+min energy: -4.3655e+02
+lower energy choosen: -4.3655e+02
+
+Energy mean clipped: -1.8453e+02
+Energy mean non-clipped: -1.8453e+02
+
+Gradient norm before clip: 54.387932
+Gradient norm after: 54.387932
+
+Epoch: 24
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5457
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  387.6133
+V_mean: -584.2569
+E mean: -196.6436
+E std_dev:  54.4633
+E stoch_err:  2.4357
+T_mean_grad:  393.6459
+E mean grad: -190.6111
+E std_dev grad:  289.9762
+E stoch_err grad:  12.9681
+T_mean_JF:  390.6296
+E mean JF: -193.6273
+E std_dev JF:  144.1516
+E stoch_err JF:  6.4467
+
+Energy per particle:
+T_mean:  12.1129
+V_mean: -18.2580
+E mean: -6.1451
+E std_dev:  1.7020
+E stoch_err:  0.0761
+T_mean_grad:  12.3014
+E mean grad: -5.9566
+E std_dev grad:  9.0618
+E stoch_err grad:  0.4053
+T_mean_JF:  12.2072
+E mean JF: -6.0509
+E std_dev JF:  4.5047
+E stoch_err JF:  0.2015
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9752e+02
+Median on "cleaned" values: -1.9752e+02
+MAD Dispersion on "cleaned" values: 3.1689e+01
+Std dev on "cleaned" values: 5.4463e+01
+
+Std to MAD ratio:  1.1592
+control function:  1.0000
+
+upper energy clipping interval: -3.9078e+01
+max energy:  1.3395e+02
+upper energy choosen:  1.3395e+02
+lower energy clipping interval: -3.5596e+02
+min energy: -4.1262e+02
+lower energy choosen: -4.1262e+02
+
+Energy mean clipped: -1.9664e+02
+Energy mean non-clipped: -1.9664e+02
+
+Gradient norm before clip: 48.591077
+Gradient norm after: 48.591077
+
+Epoch: 25
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5465
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  382.5568
+V_mean: -572.9871
+E mean: -190.4304
+E std_dev:  74.3297
+E stoch_err:  3.3241
+T_mean_grad:  384.9801
+E mean grad: -188.0070
+E std_dev grad:  347.2911
+E stoch_err grad:  15.5313
+T_mean_JF:  383.7684
+E mean JF: -189.2187
+E std_dev JF:  191.0629
+E stoch_err JF:  8.5446
+
+Energy per particle:
+T_mean:  11.9549
+V_mean: -17.9058
+E mean: -5.9509
+E std_dev:  2.3228
+E stoch_err:  0.1039
+T_mean_grad:  12.0306
+E mean grad: -5.8752
+E std_dev grad:  10.8528
+E stoch_err grad:  0.4854
+T_mean_JF:  11.9928
+E mean JF: -5.9131
+E std_dev JF:  5.9707
+E stoch_err JF:  0.2670
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  2/500=0.40%
+
+Median of finite values: -1.9732e+02
+Median on "cleaned" values: -1.9732e+02
+MAD Dispersion on "cleaned" values: 2.9222e+01
+Std dev on "cleaned" values: 7.4330e+01
+
+Std to MAD ratio:  1.7156
+control function:  0.9701
+
+upper energy clipping interval: -5.1211e+01
+max energy:  6.3901e+02
+upper energy choosen:  6.1840e+02
+lower energy clipping interval: -3.4343e+02
+min energy: -3.8728e+02
+lower energy choosen: -3.8597e+02
+
+Energy mean clipped: -1.9047e+02
+Energy mean non-clipped: -1.9043e+02
+
+Gradient norm before clip: 87.350906
+Gradient norm after: 87.350906
+
+Epoch: 26
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5401
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  397.3709
+V_mean: -591.8391
+E mean: -194.4682
+E std_dev:  54.4348
+E stoch_err:  2.4344
+T_mean_grad:  377.7748
+E mean grad: -214.0642
+E std_dev grad:  280.8300
+E stoch_err grad:  12.5591
+T_mean_JF:  387.5728
+E mean JF: -204.2662
+E std_dev JF:  141.0278
+E stoch_err JF:  6.3070
+
+Energy per particle:
+T_mean:  12.4178
+V_mean: -18.4950
+E mean: -6.0771
+E std_dev:  1.7011
+E stoch_err:  0.0761
+T_mean_grad:  11.8055
+E mean grad: -6.6895
+E std_dev grad:  8.7759
+E stoch_err grad:  0.3925
+T_mean_JF:  12.1117
+E mean JF: -6.3833
+E std_dev JF:  4.4071
+E stoch_err JF:  0.1971
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9599e+02
+Median on "cleaned" values: -1.9599e+02
+MAD Dispersion on "cleaned" values: 3.0960e+01
+Std dev on "cleaned" values: 5.4435e+01
+
+Std to MAD ratio:  1.1859
+control function:  1.0000
+
+upper energy clipping interval: -4.1192e+01
+max energy:  1.8602e+02
+upper energy choosen:  1.8602e+02
+lower energy clipping interval: -3.5079e+02
+min energy: -3.6857e+02
+lower energy choosen: -3.6857e+02
+
+Energy mean clipped: -1.9447e+02
+Energy mean non-clipped: -1.9447e+02
+
+Gradient norm before clip: 62.518377
+Gradient norm after: 62.518377
+
+Epoch: 27
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5395
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  381.7338
+V_mean: -579.7327
+E mean: -197.9990
+E std_dev:  56.6645
+E stoch_err:  2.5341
+T_mean_grad:  386.0979
+E mean grad: -193.6349
+E std_dev grad:  307.5181
+E stoch_err grad:  13.7526
+T_mean_JF:  383.9158
+E mean JF: -195.8169
+E std_dev JF:  159.0882
+E stoch_err JF:  7.1146
+
+Energy per particle:
+T_mean:  11.9292
+V_mean: -18.1166
+E mean: -6.1875
+E std_dev:  1.7708
+E stoch_err:  0.0792
+T_mean_grad:  12.0656
+E mean grad: -6.0511
+E std_dev grad:  9.6099
+E stoch_err grad:  0.4298
+T_mean_JF:  11.9974
+E mean JF: -6.1193
+E std_dev JF:  4.9715
+E stoch_err JF:  0.2223
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0159e+02
+Median on "cleaned" values: -2.0159e+02
+MAD Dispersion on "cleaned" values: 3.0021e+01
+Std dev on "cleaned" values: 5.6665e+01
+
+Std to MAD ratio:  1.2731
+control function:  1.0000
+
+upper energy clipping interval: -5.1487e+01
+max energy:  1.2874e+02
+upper energy choosen:  1.2874e+02
+lower energy clipping interval: -3.5170e+02
+min energy: -4.0668e+02
+lower energy choosen: -4.0668e+02
+
+Energy mean clipped: -1.9800e+02
+Energy mean non-clipped: -1.9800e+02
+
+Gradient norm before clip: 43.080301
+Gradient norm after: 43.080301
+
+Epoch: 28
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5356
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  385.1696
+V_mean: -583.6611
+E mean: -198.4914
+E std_dev:  61.1307
+E stoch_err:  2.7338
+T_mean_grad:  382.4499
+E mean grad: -201.2111
+E std_dev grad:  287.3812
+E stoch_err grad:  12.8521
+T_mean_JF:  383.8098
+E mean JF: -199.8513
+E std_dev JF:  150.5030
+E stoch_err JF:  6.7307
+
+Energy per particle:
+T_mean:  12.0366
+V_mean: -18.2394
+E mean: -6.2029
+E std_dev:  1.9103
+E stoch_err:  0.0854
+T_mean_grad:  11.9516
+E mean grad: -6.2878
+E std_dev grad:  8.9807
+E stoch_err grad:  0.4016
+T_mean_JF:  11.9941
+E mean JF: -6.2454
+E std_dev JF:  4.7032
+E stoch_err JF:  0.2103
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  1/500=0.20%
+
+Median of finite values: -2.0043e+02
+Median on "cleaned" values: -2.0043e+02
+MAD Dispersion on "cleaned" values: 2.9337e+01
+Std dev on "cleaned" values: 6.1131e+01
+
+Std to MAD ratio:  1.4055
+control function:  1.0000
+
+upper energy clipping interval: -5.3749e+01
+max energy:  5.4724e+02
+upper energy choosen:  5.4724e+02
+lower energy clipping interval: -3.4712e+02
+min energy: -3.7016e+02
+lower energy choosen: -3.7016e+02
+
+Energy mean clipped: -1.9849e+02
+Energy mean non-clipped: -1.9849e+02
+
+Gradient norm before clip: 34.872109
+Gradient norm after: 34.872109
+
+Epoch: 29
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5378
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  389.4198
+V_mean: -593.6025
+E mean: -204.1828
+E std_dev:  48.2072
+E stoch_err:  2.1559
+T_mean_grad:  380.7857
+E mean grad: -212.8168
+E std_dev grad:  263.7408
+E stoch_err grad:  11.7948
+T_mean_JF:  385.1027
+E mean JF: -208.4998
+E std_dev JF:  129.4059
+E stoch_err JF:  5.7872
+
+Energy per particle:
+T_mean:  12.1694
+V_mean: -18.5501
+E mean: -6.3807
+E std_dev:  1.5065
+E stoch_err:  0.0674
+T_mean_grad:  11.8996
+E mean grad: -6.6505
+E std_dev grad:  8.2419
+E stoch_err grad:  0.3686
+T_mean_JF:  12.0345
+E mean JF: -6.5156
+E std_dev JF:  4.0439
+E stoch_err JF:  0.1809
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0276e+02
+Median on "cleaned" values: -2.0276e+02
+MAD Dispersion on "cleaned" values: 2.6657e+01
+Std dev on "cleaned" values: 4.8207e+01
+
+Std to MAD ratio:  1.2198
+control function:  1.0000
+
+upper energy clipping interval: -6.9472e+01
+max energy:  2.1076e+02
+upper energy choosen:  2.1076e+02
+lower energy clipping interval: -3.3604e+02
+min energy: -3.8092e+02
+lower energy choosen: -3.8092e+02
+
+Energy mean clipped: -2.0418e+02
+Energy mean non-clipped: -2.0418e+02
+
+Gradient norm before clip: 42.308420
+Gradient norm after: 42.308420
+
+Epoch: 30
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5336
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  383.3913
+V_mean: -581.8213
+E mean: -198.4300
+E std_dev:  53.9186
+E stoch_err:  2.4113
+T_mean_grad:  363.5012
+E mean grad: -218.3201
+E std_dev grad:  282.7844
+E stoch_err grad:  12.6465
+T_mean_JF:  373.4463
+E mean JF: -208.3751
+E std_dev JF:  145.9232
+E stoch_err JF:  6.5259
+
+Energy per particle:
+T_mean:  11.9810
+V_mean: -18.1819
+E mean: -6.2009
+E std_dev:  1.6850
+E stoch_err:  0.0754
+T_mean_grad:  11.3594
+E mean grad: -6.8225
+E std_dev grad:  8.8370
+E stoch_err grad:  0.3952
+T_mean_JF:  11.6702
+E mean JF: -6.5117
+E std_dev JF:  4.5601
+E stoch_err JF:  0.2039
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9838e+02
+Median on "cleaned" values: -1.9838e+02
+MAD Dispersion on "cleaned" values: 2.7354e+01
+Std dev on "cleaned" values: 5.3919e+01
+
+Std to MAD ratio:  1.3295
+control function:  1.0000
+
+upper energy clipping interval: -6.1605e+01
+max energy:  1.4946e+02
+upper energy choosen:  1.4946e+02
+lower energy clipping interval: -3.3515e+02
+min energy: -4.2652e+02
+lower energy choosen: -4.2652e+02
+
+Energy mean clipped: -1.9843e+02
+Energy mean non-clipped: -1.9843e+02
+
+Gradient norm before clip: 34.266578
+Gradient norm after: 34.266578
+
+Epoch: 31
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5357
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  381.7611
+V_mean: -583.1475
+E mean: -201.3864
+E std_dev:  53.9141
+E stoch_err:  2.4111
+T_mean_grad:  380.4699
+E mean grad: -202.6776
+E std_dev grad:  284.2375
+E stoch_err grad:  12.7115
+T_mean_JF:  381.1155
+E mean JF: -202.0320
+E std_dev JF:  146.0348
+E stoch_err JF:  6.5309
+
+Energy per particle:
+T_mean:  11.9300
+V_mean: -18.2234
+E mean: -6.2933
+E std_dev:  1.6848
+E stoch_err:  0.0753
+T_mean_grad:  11.8897
+E mean grad: -6.3337
+E std_dev grad:  8.8824
+E stoch_err grad:  0.3972
+T_mean_JF:  11.9099
+E mean JF: -6.3135
+E std_dev JF:  4.5636
+E stoch_err JF:  0.2041
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  1/500=0.20%
+
+Median of finite values: -2.0428e+02
+Median on "cleaned" values: -2.0428e+02
+MAD Dispersion on "cleaned" values: 2.8285e+01
+Std dev on "cleaned" values: 5.3914e+01
+
+Std to MAD ratio:  1.2856
+control function:  1.0000
+
+upper energy clipping interval: -6.2849e+01
+max energy:  2.1976e+02
+upper energy choosen:  2.1976e+02
+lower energy clipping interval: -3.4570e+02
+min energy: -3.6844e+02
+lower energy choosen: -3.6844e+02
+
+Energy mean clipped: -2.0139e+02
+Energy mean non-clipped: -2.0139e+02
+
+Gradient norm before clip: 25.847430
+Gradient norm after: 25.847430
+
+Epoch: 32
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5312
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  376.4216
+V_mean: -579.0186
+E mean: -202.5969
+E std_dev:  58.9396
+E stoch_err:  2.6359
+T_mean_grad:  386.0928
+E mean grad: -192.9258
+E std_dev grad:  306.6187
+E stoch_err grad:  13.7124
+T_mean_JF:  381.2572
+E mean JF: -197.7614
+E std_dev JF:  157.1633
+E stoch_err JF:  7.0286
+
+Energy per particle:
+T_mean:  11.7632
+V_mean: -18.0943
+E mean: -6.3312
+E std_dev:  1.8419
+E stoch_err:  0.0824
+T_mean_grad:  12.0654
+E mean grad: -6.0289
+E std_dev grad:  9.5818
+E stoch_err grad:  0.4285
+T_mean_JF:  11.9143
+E mean JF: -6.1800
+E std_dev JF:  4.9114
+E stoch_err JF:  0.2196
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0318e+02
+Median on "cleaned" values: -2.0318e+02
+MAD Dispersion on "cleaned" values: 2.8975e+01
+Std dev on "cleaned" values: 5.8940e+01
+
+Std to MAD ratio:  1.3720
+control function:  1.0000
+
+upper energy clipping interval: -5.8311e+01
+max energy:  4.9135e+02
+upper energy choosen:  4.9135e+02
+lower energy clipping interval: -3.4806e+02
+min energy: -4.6596e+02
+lower energy choosen: -4.6596e+02
+
+Energy mean clipped: -2.0260e+02
+Energy mean non-clipped: -2.0260e+02
+
+Gradient norm before clip: 31.952871
+Gradient norm after: 31.952871
+
+Epoch: 33
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5327
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  375.7607
+V_mean: -572.0182
+E mean: -196.2575
+E std_dev:  69.8876
+E stoch_err:  3.1255
+T_mean_grad:  379.2333
+E mean grad: -192.7849
+E std_dev grad:  337.4374
+E stoch_err grad:  15.0907
+T_mean_JF:  377.4970
+E mean JF: -194.5212
+E std_dev JF:  184.4180
+E stoch_err JF:  8.2474
+
+Energy per particle:
+T_mean:  11.7425
+V_mean: -17.8756
+E mean: -6.1330
+E std_dev:  2.1840
+E stoch_err:  0.0977
+T_mean_grad:  11.8510
+E mean grad: -6.0245
+E std_dev grad:  10.5449
+E stoch_err grad:  0.4716
+T_mean_JF:  11.7968
+E mean JF: -6.0788
+E std_dev JF:  5.7631
+E stoch_err JF:  0.2577
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9974e+02
+Median on "cleaned" values: -1.9974e+02
+MAD Dispersion on "cleaned" values: 2.6376e+01
+Std dev on "cleaned" values: 6.9888e+01
+
+Std to MAD ratio:  1.7872
+control function:  1.0000
+
+upper energy clipping interval: -6.7860e+01
+max energy:  8.5897e+02
+upper energy choosen:  8.5897e+02
+lower energy clipping interval: -3.3162e+02
+min energy: -3.5446e+02
+lower energy choosen: -3.5446e+02
+
+Energy mean clipped: -1.9626e+02
+Energy mean non-clipped: -1.9626e+02
+
+Gradient norm before clip: 77.178009
+Gradient norm after: 77.178009
+
+Epoch: 34
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5305
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  386.4401
+V_mean: -591.1458
+E mean: -204.7057
+E std_dev:  51.5366
+E stoch_err:  2.3048
+T_mean_grad:  389.5460
+E mean grad: -201.5998
+E std_dev grad:  296.2134
+E stoch_err grad:  13.2471
+T_mean_JF:  387.9930
+E mean JF: -203.1527
+E std_dev JF:  143.6985
+E stoch_err JF:  6.4264
+
+Energy per particle:
+T_mean:  12.0763
+V_mean: -18.4733
+E mean: -6.3971
+E std_dev:  1.6105
+E stoch_err:  0.0720
+T_mean_grad:  12.1733
+E mean grad: -6.3000
+E std_dev grad:  9.2567
+E stoch_err grad:  0.4140
+T_mean_JF:  12.1248
+E mean JF: -6.3485
+E std_dev JF:  4.4906
+E stoch_err JF:  0.2008
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9903e+02
+Median on "cleaned" values: -1.9903e+02
+MAD Dispersion on "cleaned" values: 2.7425e+01
+Std dev on "cleaned" values: 5.1537e+01
+
+Std to MAD ratio:  1.2675
+control function:  1.0000
+
+upper energy clipping interval: -6.1907e+01
+max energy:  1.2378e+02
+upper energy choosen:  1.2378e+02
+lower energy clipping interval: -3.3616e+02
+min energy: -4.1175e+02
+lower energy choosen: -4.1175e+02
+
+Energy mean clipped: -2.0471e+02
+Energy mean non-clipped: -2.0471e+02
+
+Gradient norm before clip: 43.428761
+Gradient norm after: 43.428761
+
+Epoch: 35
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5337
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  387.6306
+V_mean: -585.0146
+E mean: -197.3840
+E std_dev:  49.3252
+E stoch_err:  2.2059
+T_mean_grad:  372.3085
+E mean grad: -212.7061
+E std_dev grad:  266.5188
+E stoch_err grad:  11.9191
+T_mean_JF:  379.9696
+E mean JF: -205.0450
+E std_dev JF:  134.9021
+E stoch_err JF:  6.0330
+
+Energy per particle:
+T_mean:  12.1135
+V_mean: -18.2817
+E mean: -6.1682
+E std_dev:  1.5414
+E stoch_err:  0.0689
+T_mean_grad:  11.6346
+E mean grad: -6.6471
+E std_dev grad:  8.3287
+E stoch_err grad:  0.3725
+T_mean_JF:  11.8740
+E mean JF: -6.4077
+E std_dev JF:  4.2157
+E stoch_err JF:  0.1885
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9877e+02
+Median on "cleaned" values: -1.9877e+02
+MAD Dispersion on "cleaned" values: 2.5640e+01
+Std dev on "cleaned" values: 4.9325e+01
+
+Std to MAD ratio:  1.2976
+control function:  1.0000
+
+upper energy clipping interval: -7.0568e+01
+max energy:  1.5792e+02
+upper energy choosen:  1.5792e+02
+lower energy clipping interval: -3.2696e+02
+min energy: -3.6182e+02
+lower energy choosen: -3.6182e+02
+
+Energy mean clipped: -1.9738e+02
+Energy mean non-clipped: -1.9738e+02
+
+Gradient norm before clip: 19.253636
+Gradient norm after: 19.253636
+
+Epoch: 36
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5291
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  380.0094
+V_mean: -578.7827
+E mean: -198.7733
+E std_dev:  51.5572
+E stoch_err:  2.3057
+T_mean_grad:  388.9413
+E mean grad: -189.8413
+E std_dev grad:  311.9367
+E stoch_err grad:  13.9502
+T_mean_JF:  384.4753
+E mean JF: -194.3073
+E std_dev JF:  158.2982
+E stoch_err JF:  7.0793
+
+Energy per particle:
+T_mean:  11.8753
+V_mean: -18.0870
+E mean: -6.2117
+E std_dev:  1.6112
+E stoch_err:  0.0721
+T_mean_grad:  12.1544
+E mean grad: -5.9325
+E std_dev grad:  9.7480
+E stoch_err grad:  0.4359
+T_mean_JF:  12.0149
+E mean JF: -6.0721
+E std_dev JF:  4.9468
+E stoch_err JF:  0.2212
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9953e+02
+Median on "cleaned" values: -1.9953e+02
+MAD Dispersion on "cleaned" values: 2.6188e+01
+Std dev on "cleaned" values: 5.1557e+01
+
+Std to MAD ratio:  1.3279
+control function:  1.0000
+
+upper energy clipping interval: -6.8590e+01
+max energy:  3.0316e+02
+upper energy choosen:  3.0316e+02
+lower energy clipping interval: -3.3047e+02
+min energy: -3.7362e+02
+lower energy choosen: -3.7362e+02
+
+Energy mean clipped: -1.9877e+02
+Energy mean non-clipped: -1.9877e+02
+
+Gradient norm before clip: 15.938131
+Gradient norm after: 15.938131
+
+Epoch: 37
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5281
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  394.3902
+V_mean: -594.0805
+E mean: -199.6903
+E std_dev:  61.7451
+E stoch_err:  2.7613
+T_mean_grad:  371.1285
+E mean grad: -222.9521
+E std_dev grad:  295.0654
+E stoch_err grad:  13.1957
+T_mean_JF:  382.7594
+E mean JF: -211.3212
+E std_dev JF:  158.4397
+E stoch_err JF:  7.0856
+
+Energy per particle:
+T_mean:  12.3247
+V_mean: -18.5650
+E mean: -6.2403
+E std_dev:  1.9295
+E stoch_err:  0.0863
+T_mean_grad:  11.5978
+E mean grad: -6.9673
+E std_dev grad:  9.2208
+E stoch_err grad:  0.4124
+T_mean_JF:  11.9612
+E mean JF: -6.6038
+E std_dev JF:  4.9512
+E stoch_err JF:  0.2214
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9858e+02
+Median on "cleaned" values: -1.9858e+02
+MAD Dispersion on "cleaned" values: 2.7379e+01
+Std dev on "cleaned" values: 6.1745e+01
+
+Std to MAD ratio:  1.5211
+control function:  1.0000
+
+upper energy clipping interval: -6.1682e+01
+max energy:  7.1887e+02
+upper energy choosen:  7.1887e+02
+lower energy clipping interval: -3.3547e+02
+min energy: -3.6489e+02
+lower energy choosen: -3.6489e+02
+
+Energy mean clipped: -1.9969e+02
+Energy mean non-clipped: -1.9969e+02
+
+Gradient norm before clip: 63.323621
+Gradient norm after: 63.323621
+
+Epoch: 38
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5248
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  382.3050
+V_mean: -583.6278
+E mean: -201.3228
+E std_dev:  46.8124
+E stoch_err:  2.0935
+T_mean_grad:  390.1917
+E mean grad: -193.4361
+E std_dev grad:  317.9537
+E stoch_err grad:  14.2193
+T_mean_JF:  386.2483
+E mean JF: -197.3795
+E std_dev JF:  156.1236
+E stoch_err JF:  6.9821
+
+Energy per particle:
+T_mean:  11.9470
+V_mean: -18.2384
+E mean: -6.2913
+E std_dev:  1.4629
+E stoch_err:  0.0654
+T_mean_grad:  12.1935
+E mean grad: -6.0449
+E std_dev grad:  9.9361
+E stoch_err grad:  0.4444
+T_mean_JF:  12.0703
+E mean JF: -6.1681
+E std_dev JF:  4.8789
+E stoch_err JF:  0.2182
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0035e+02
+Median on "cleaned" values: -2.0035e+02
+MAD Dispersion on "cleaned" values: 2.6977e+01
+Std dev on "cleaned" values: 4.6812e+01
+
+Std to MAD ratio:  1.1704
+control function:  1.0000
+
+upper energy clipping interval: -6.5471e+01
+max energy:  1.2970e+00
+upper energy choosen:  1.2970e+00
+lower energy clipping interval: -3.3524e+02
+min energy: -3.7162e+02
+lower energy choosen: -3.7162e+02
+
+Energy mean clipped: -2.0132e+02
+Energy mean non-clipped: -2.0132e+02
+
+Gradient norm before clip: 27.198860
+Gradient norm after: 27.198860
+
+Epoch: 39
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5279
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  385.4137
+V_mean: -584.6509
+E mean: -199.2372
+E std_dev:  65.6099
+E stoch_err:  2.9342
+T_mean_grad:  379.8206
+E mean grad: -204.8303
+E std_dev grad:  341.4416
+E stoch_err grad:  15.2697
+T_mean_JF:  382.6171
+E mean JF: -202.0337
+E std_dev JF:  184.9321
+E stoch_err JF:  8.2704
+
+Energy per particle:
+T_mean:  12.0442
+V_mean: -18.2703
+E mean: -6.2262
+E std_dev:  2.0503
+E stoch_err:  0.0917
+T_mean_grad:  11.8694
+E mean grad: -6.4009
+E std_dev grad:  10.6700
+E stoch_err grad:  0.4772
+T_mean_JF:  11.9568
+E mean JF: -6.3136
+E std_dev JF:  5.7791
+E stoch_err JF:  0.2585
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0096e+02
+Median on "cleaned" values: -2.0096e+02
+MAD Dispersion on "cleaned" values: 2.4587e+01
+Std dev on "cleaned" values: 6.5610e+01
+
+Std to MAD ratio:  1.7999
+control function:  1.0000
+
+upper energy clipping interval: -7.8021e+01
+max energy:  7.6029e+02
+upper energy choosen:  7.6029e+02
+lower energy clipping interval: -3.2389e+02
+min energy: -3.9741e+02
+lower energy choosen: -3.9741e+02
+
+Energy mean clipped: -1.9924e+02
+Energy mean non-clipped: -1.9924e+02
+
+Gradient norm before clip: 62.328252
+Gradient norm after: 62.328252
+
+Epoch: 40
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5255
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  396.3360
+V_mean: -592.0257
+E mean: -195.6897
+E std_dev:  54.9510
+E stoch_err:  2.4575
+T_mean_grad:  381.7830
+E mean grad: -210.2427
+E std_dev grad:  299.9489
+E stoch_err grad:  13.4141
+T_mean_JF:  389.0595
+E mean JF: -202.9662
+E std_dev JF:  148.9074
+E stoch_err JF:  6.6593
+
+Energy per particle:
+T_mean:  12.3855
+V_mean: -18.5008
+E mean: -6.1153
+E std_dev:  1.7172
+E stoch_err:  0.0768
+T_mean_grad:  11.9307
+E mean grad: -6.5701
+E std_dev grad:  9.3734
+E stoch_err grad:  0.4192
+T_mean_JF:  12.1581
+E mean JF: -6.3427
+E std_dev JF:  4.6534
+E stoch_err JF:  0.2081
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9489e+02
+Median on "cleaned" values: -1.9489e+02
+MAD Dispersion on "cleaned" values: 2.5952e+01
+Std dev on "cleaned" values: 5.4951e+01
+
+Std to MAD ratio:  1.4282
+control function:  1.0000
+
+upper energy clipping interval: -6.5133e+01
+max energy:  3.4187e+02
+upper energy choosen:  3.4187e+02
+lower energy clipping interval: -3.2465e+02
+min energy: -4.2075e+02
+lower energy choosen: -4.2075e+02
+
+Energy mean clipped: -1.9569e+02
+Energy mean non-clipped: -1.9569e+02
+
+Gradient norm before clip: 28.114606
+Gradient norm after: 28.114606
+
+Epoch: 41
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5286
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  387.1294
+V_mean: -587.9157
+E mean: -200.7863
+E std_dev:  66.0233
+E stoch_err:  2.9526
+T_mean_grad:  384.9704
+E mean grad: -202.9453
+E std_dev grad:  318.5360
+E stoch_err grad:  14.2454
+T_mean_JF:  386.0499
+E mean JF: -201.8658
+E std_dev JF:  169.2513
+E stoch_err JF:  7.5691
+
+Energy per particle:
+T_mean:  12.0978
+V_mean: -18.3724
+E mean: -6.2746
+E std_dev:  2.0632
+E stoch_err:  0.0923
+T_mean_grad:  12.0303
+E mean grad: -6.3420
+E std_dev grad:  9.9542
+E stoch_err grad:  0.4452
+T_mean_JF:  12.0641
+E mean JF: -6.3083
+E std_dev JF:  5.2891
+E stoch_err JF:  0.2365
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0113e+02
+Median on "cleaned" values: -2.0113e+02
+MAD Dispersion on "cleaned" values: 2.7653e+01
+Std dev on "cleaned" values: 6.6023e+01
+
+Std to MAD ratio:  1.6104
+control function:  1.0000
+
+upper energy clipping interval: -6.2864e+01
+max energy:  8.1649e+02
+upper energy choosen:  8.1649e+02
+lower energy clipping interval: -3.3939e+02
+min energy: -4.0917e+02
+lower energy choosen: -4.0917e+02
+
+Energy mean clipped: -2.0079e+02
+Energy mean non-clipped: -2.0079e+02
+
+Gradient norm before clip: 46.385192
+Gradient norm after: 46.385192
+
+Epoch: 42
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5269
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  393.1893
+V_mean: -591.0449
+E mean: -197.8556
+E std_dev:  45.9809
+E stoch_err:  2.0563
+T_mean_grad:  388.4102
+E mean grad: -202.6347
+E std_dev grad:  266.6329
+E stoch_err grad:  11.9242
+T_mean_JF:  390.7997
+E mean JF: -200.2452
+E std_dev JF:  128.4342
+E stoch_err JF:  5.7438
+
+Energy per particle:
+T_mean:  12.2872
+V_mean: -18.4702
+E mean: -6.1830
+E std_dev:  1.4369
+E stoch_err:  0.0643
+T_mean_grad:  12.1378
+E mean grad: -6.3323
+E std_dev grad:  8.3323
+E stoch_err grad:  0.3726
+T_mean_JF:  12.2125
+E mean JF: -6.2577
+E std_dev JF:  4.0136
+E stoch_err JF:  0.1795
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9827e+02
+Median on "cleaned" values: -1.9827e+02
+MAD Dispersion on "cleaned" values: 2.8834e+01
+Std dev on "cleaned" values: 4.5981e+01
+
+Std to MAD ratio:  1.0756
+control function:  1.0000
+
+upper energy clipping interval: -5.4101e+01
+max energy: -8.7987e-01
+upper energy choosen: -8.7987e-01
+lower energy clipping interval: -3.4244e+02
+min energy: -3.6458e+02
+lower energy choosen: -3.6458e+02
+
+Energy mean clipped: -1.9786e+02
+Energy mean non-clipped: -1.9786e+02
+
+Gradient norm before clip: 49.374111
+Gradient norm after: 49.374111
+
+Epoch: 43
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5286
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  387.1870
+V_mean: -589.7332
+E mean: -202.5461
+E std_dev:  52.5120
+E stoch_err:  2.3484
+T_mean_grad:  375.3986
+E mean grad: -214.3346
+E std_dev grad:  264.4773
+E stoch_err grad:  11.8278
+T_mean_JF:  381.2928
+E mean JF: -208.4403
+E std_dev JF:  133.3085
+E stoch_err JF:  5.9617
+
+Energy per particle:
+T_mean:  12.0996
+V_mean: -18.4292
+E mean: -6.3296
+E std_dev:  1.6410
+E stoch_err:  0.0734
+T_mean_grad:  11.7312
+E mean grad: -6.6980
+E std_dev grad:  8.2649
+E stoch_err grad:  0.3696
+T_mean_JF:  11.9154
+E mean JF: -6.5138
+E std_dev JF:  4.1659
+E stoch_err JF:  0.1863
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0213e+02
+Median on "cleaned" values: -2.0213e+02
+MAD Dispersion on "cleaned" values: 2.5613e+01
+Std dev on "cleaned" values: 5.2512e+01
+
+Std to MAD ratio:  1.3828
+control function:  1.0000
+
+upper energy clipping interval: -7.4067e+01
+max energy:  2.9755e+02
+upper energy choosen:  2.9755e+02
+lower energy clipping interval: -3.3020e+02
+min energy: -4.0203e+02
+lower energy choosen: -4.0203e+02
+
+Energy mean clipped: -2.0255e+02
+Energy mean non-clipped: -2.0255e+02
+
+Gradient norm before clip: 30.454757
+Gradient norm after: 30.454757
+
+Epoch: 44
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5274
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  389.3302
+V_mean: -591.9887
+E mean: -202.6585
+E std_dev:  48.7262
+E stoch_err:  2.1791
+T_mean_grad:  375.6043
+E mean grad: -216.3844
+E std_dev grad:  253.2816
+E stoch_err grad:  11.3271
+T_mean_JF:  382.4673
+E mean JF: -209.5215
+E std_dev JF:  122.8558
+E stoch_err JF:  5.4943
+
+Energy per particle:
+T_mean:  12.1666
+V_mean: -18.4996
+E mean: -6.3331
+E std_dev:  1.5227
+E stoch_err:  0.0681
+T_mean_grad:  11.7376
+E mean grad: -6.7620
+E std_dev grad:  7.9150
+E stoch_err grad:  0.3540
+T_mean_JF:  11.9521
+E mean JF: -6.5475
+E std_dev JF:  3.8392
+E stoch_err JF:  0.1717
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0000e+02
+Median on "cleaned" values: -2.0000e+02
+MAD Dispersion on "cleaned" values: 2.7237e+01
+Std dev on "cleaned" values: 4.8726e+01
+
+Std to MAD ratio:  1.2067
+control function:  1.0000
+
+upper energy clipping interval: -6.3815e+01
+max energy: -3.8543e+01
+upper energy choosen: -3.8543e+01
+lower energy clipping interval: -3.3618e+02
+min energy: -3.9174e+02
+lower energy choosen: -3.9174e+02
+
+Energy mean clipped: -2.0266e+02
+Energy mean non-clipped: -2.0266e+02
+
+Gradient norm before clip: 21.388767
+Gradient norm after: 21.388767
+
+Epoch: 45
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5268
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  382.6329
+V_mean: -584.1693
+E mean: -201.5364
+E std_dev:  46.2751
+E stoch_err:  2.0695
+T_mean_grad:  377.8351
+E mean grad: -206.3343
+E std_dev grad:  288.5775
+E stoch_err grad:  12.9056
+T_mean_JF:  380.2340
+E mean JF: -203.9353
+E std_dev JF:  145.0615
+E stoch_err JF:  6.4873
+
+Energy per particle:
+T_mean:  11.9573
+V_mean: -18.2553
+E mean: -6.2980
+E std_dev:  1.4461
+E stoch_err:  0.0647
+T_mean_grad:  11.8073
+E mean grad: -6.4479
+E std_dev grad:  9.0180
+E stoch_err grad:  0.4033
+T_mean_JF:  11.8823
+E mean JF: -6.3730
+E std_dev JF:  4.5332
+E stoch_err JF:  0.2027
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0276e+02
+Median on "cleaned" values: -2.0276e+02
+MAD Dispersion on "cleaned" values: 2.5554e+01
+Std dev on "cleaned" values: 4.6275e+01
+
+Std to MAD ratio:  1.2214
+control function:  1.0000
+
+upper energy clipping interval: -7.4990e+01
+max energy:  8.6885e+01
+upper energy choosen:  8.6885e+01
+lower energy clipping interval: -3.3053e+02
+min energy: -3.5653e+02
+lower energy choosen: -3.5653e+02
+
+Energy mean clipped: -2.0154e+02
+Energy mean non-clipped: -2.0154e+02
+
+Gradient norm before clip: 19.089935
+Gradient norm after: 19.089935
+
+Epoch: 46
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5239
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  380.3678
+V_mean: -585.1050
+E mean: -204.7372
+E std_dev:  48.0971
+E stoch_err:  2.1510
+T_mean_grad:  381.3645
+E mean grad: -203.7405
+E std_dev grad:  276.5666
+E stoch_err grad:  12.3684
+T_mean_JF:  380.8661
+E mean JF: -204.2388
+E std_dev JF:  137.0347
+E stoch_err JF:  6.1284
+
+Energy per particle:
+T_mean:  11.8865
+V_mean: -18.2845
+E mean: -6.3980
+E std_dev:  1.5030
+E stoch_err:  0.0672
+T_mean_grad:  11.9176
+E mean grad: -6.3669
+E std_dev grad:  8.6427
+E stoch_err grad:  0.3865
+T_mean_JF:  11.9021
+E mean JF: -6.3825
+E std_dev JF:  4.2823
+E stoch_err JF:  0.1915
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0291e+02
+Median on "cleaned" values: -2.0291e+02
+MAD Dispersion on "cleaned" values: 2.7562e+01
+Std dev on "cleaned" values: 4.8097e+01
+
+Std to MAD ratio:  1.1770
+control function:  1.0000
+
+upper energy clipping interval: -6.5099e+01
+max energy:  1.7978e-01
+upper energy choosen:  1.7978e-01
+lower energy clipping interval: -3.4072e+02
+min energy: -3.8880e+02
+lower energy choosen: -3.8880e+02
+
+Energy mean clipped: -2.0474e+02
+Energy mean non-clipped: -2.0474e+02
+
+Gradient norm before clip: 8.485704
+Gradient norm after: 8.485704
+
+Epoch: 47
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5254
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  390.9139
+V_mean: -591.0239
+E mean: -200.1100
+E std_dev:  43.5600
+E stoch_err:  1.9481
+T_mean_grad:  367.2243
+E mean grad: -223.7996
+E std_dev grad:  252.0839
+E stoch_err grad:  11.2735
+T_mean_JF:  379.0691
+E mean JF: -211.9548
+E std_dev JF:  123.5545
+E stoch_err JF:  5.5255
+
+Energy per particle:
+T_mean:  12.2161
+V_mean: -18.4695
+E mean: -6.2534
+E std_dev:  1.3613
+E stoch_err:  0.0609
+T_mean_grad:  11.4758
+E mean grad: -6.9937
+E std_dev grad:  7.8776
+E stoch_err grad:  0.3523
+T_mean_JF:  11.8459
+E mean JF: -6.6236
+E std_dev JF:  3.8611
+E stoch_err JF:  0.1727
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9900e+02
+Median on "cleaned" values: -1.9900e+02
+MAD Dispersion on "cleaned" values: 2.5252e+01
+Std dev on "cleaned" values: 4.3560e+01
+
+Std to MAD ratio:  1.1635
+control function:  1.0000
+
+upper energy clipping interval: -7.2737e+01
+max energy:  1.2298e+01
+upper energy choosen:  1.2298e+01
+lower energy clipping interval: -3.2526e+02
+min energy: -4.0734e+02
+lower energy choosen: -4.0734e+02
+
+Energy mean clipped: -2.0011e+02
+Energy mean non-clipped: -2.0011e+02
+
+Gradient norm before clip: 13.560305
+Gradient norm after: 13.560305
+
+Epoch: 48
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5249
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  380.1976
+V_mean: -584.1133
+E mean: -203.9156
+E std_dev:  55.3339
+E stoch_err:  2.4746
+T_mean_grad:  379.2528
+E mean grad: -204.8604
+E std_dev grad:  298.9358
+E stoch_err grad:  13.3688
+T_mean_JF:  379.7252
+E mean JF: -204.3880
+E std_dev JF:  157.7559
+E stoch_err JF:  7.0551
+
+Energy per particle:
+T_mean:  11.8812
+V_mean: -18.2535
+E mean: -6.3724
+E std_dev:  1.7292
+E stoch_err:  0.0773
+T_mean_grad:  11.8517
+E mean grad: -6.4019
+E std_dev grad:  9.3417
+E stoch_err grad:  0.4178
+T_mean_JF:  11.8664
+E mean JF: -6.3871
+E std_dev JF:  4.9299
+E stoch_err JF:  0.2205
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0392e+02
+Median on "cleaned" values: -2.0392e+02
+MAD Dispersion on "cleaned" values: 2.5904e+01
+Std dev on "cleaned" values: 5.5334e+01
+
+Std to MAD ratio:  1.4408
+control function:  1.0000
+
+upper energy clipping interval: -7.4399e+01
+max energy:  3.9033e+02
+upper energy choosen:  3.9033e+02
+lower energy clipping interval: -3.3344e+02
+min energy: -3.6047e+02
+lower energy choosen: -3.6047e+02
+
+Energy mean clipped: -2.0392e+02
+Energy mean non-clipped: -2.0392e+02
+
+Gradient norm before clip: 39.469046
+Gradient norm after: 39.469046
+
+Epoch: 49
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5272
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  393.8367
+V_mean: -597.7036
+E mean: -203.8669
+E std_dev:  44.8369
+E stoch_err:  2.0052
+T_mean_grad:  368.9915
+E mean grad: -228.7121
+E std_dev grad:  259.7215
+E stoch_err grad:  11.6151
+T_mean_JF:  381.4141
+E mean JF: -216.2895
+E std_dev JF:  125.7665
+E stoch_err JF:  5.6244
+
+Energy per particle:
+T_mean:  12.3074
+V_mean: -18.6782
+E mean: -6.3708
+E std_dev:  1.4012
+E stoch_err:  0.0627
+T_mean_grad:  11.5310
+E mean grad: -7.1473
+E std_dev grad:  8.1163
+E stoch_err grad:  0.3630
+T_mean_JF:  11.9192
+E mean JF: -6.7590
+E std_dev JF:  3.9302
+E stoch_err JF:  0.1758
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0023e+02
+Median on "cleaned" values: -2.0023e+02
+MAD Dispersion on "cleaned" values: 2.7062e+01
+Std dev on "cleaned" values: 4.4837e+01
+
+Std to MAD ratio:  1.1175
+control function:  1.0000
+
+upper energy clipping interval: -6.4924e+01
+max energy: -4.8052e+01
+upper energy choosen: -4.8052e+01
+lower energy clipping interval: -3.3554e+02
+min energy: -4.3969e+02
+lower energy choosen: -4.3969e+02
+
+Energy mean clipped: -2.0387e+02
+Energy mean non-clipped: -2.0387e+02
+
+Gradient norm before clip: 31.249457
+Gradient norm after: 31.249457
+
+Epoch: 50
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5285
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  377.9685
+V_mean: -578.2529
+E mean: -200.2844
+E std_dev:  50.2650
+E stoch_err:  2.2479
+T_mean_grad:  382.9389
+E mean grad: -195.3140
+E std_dev grad:  336.3903
+E stoch_err grad:  15.0438
+T_mean_JF:  380.4537
+E mean JF: -197.7992
+E std_dev JF:  173.5456
+E stoch_err JF:  7.7612
+
+Energy per particle:
+T_mean:  11.8115
+V_mean: -18.0704
+E mean: -6.2589
+E std_dev:  1.5708
+E stoch_err:  0.0702
+T_mean_grad:  11.9668
+E mean grad: -6.1036
+E std_dev grad:  10.5122
+E stoch_err grad:  0.4701
+T_mean_JF:  11.8892
+E mean JF: -6.1812
+E std_dev JF:  5.4233
+E stoch_err JF:  0.2425
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0218e+02
+Median on "cleaned" values: -2.0218e+02
+MAD Dispersion on "cleaned" values: 2.3007e+01
+Std dev on "cleaned" values: 5.0265e+01
+
+Std to MAD ratio:  1.4736
+control function:  1.0000
+
+upper energy clipping interval: -8.7141e+01
+max energy:  2.6508e+02
+upper energy choosen:  2.6508e+02
+lower energy clipping interval: -3.1721e+02
+min energy: -4.0892e+02
+lower energy choosen: -4.0892e+02
+
+Energy mean clipped: -2.0028e+02
+Energy mean non-clipped: -2.0028e+02
+
+Gradient norm before clip: 37.746575
+Gradient norm after: 37.746575
+
+Epoch: 51
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5289
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  378.4951
+V_mean: -580.2513
+E mean: -201.7562
+E std_dev:  46.9789
+E stoch_err:  2.1010
+T_mean_grad:  385.8555
+E mean grad: -194.3958
+E std_dev grad:  317.8236
+E stoch_err grad:  14.2135
+T_mean_JF:  382.1753
+E mean JF: -198.0760
+E std_dev JF:  158.8240
+E stoch_err JF:  7.1028
+
+Energy per particle:
+T_mean:  11.8280
+V_mean: -18.1329
+E mean: -6.3049
+E std_dev:  1.4681
+E stoch_err:  0.0657
+T_mean_grad:  12.0580
+E mean grad: -6.0749
+E std_dev grad:  9.9320
+E stoch_err grad:  0.4442
+T_mean_JF:  11.9430
+E mean JF: -6.1899
+E std_dev JF:  4.9633
+E stoch_err JF:  0.2220
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9886e+02
+Median on "cleaned" values: -1.9886e+02
+MAD Dispersion on "cleaned" values: 2.5307e+01
+Std dev on "cleaned" values: 4.6979e+01
+
+Std to MAD ratio:  1.2521
+control function:  1.0000
+
+upper energy clipping interval: -7.2327e+01
+max energy:  8.9846e+01
+upper energy choosen:  8.9846e+01
+lower energy clipping interval: -3.2540e+02
+min energy: -3.7658e+02
+lower energy choosen: -3.7658e+02
+
+Energy mean clipped: -2.0176e+02
+Energy mean non-clipped: -2.0176e+02
+
+Gradient norm before clip: 27.372266
+Gradient norm after: 27.372266
+
+Epoch: 52
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5255
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  380.1884
+V_mean: -582.0290
+E mean: -201.8405
+E std_dev:  50.0818
+E stoch_err:  2.2397
+T_mean_grad:  379.0139
+E mean grad: -203.0150
+E std_dev grad:  325.0493
+E stoch_err grad:  14.5366
+T_mean_JF:  379.6012
+E mean JF: -202.4278
+E std_dev JF:  164.6809
+E stoch_err JF:  7.3648
+
+Energy per particle:
+T_mean:  11.8809
+V_mean: -18.1884
+E mean: -6.3075
+E std_dev:  1.5651
+E stoch_err:  0.0700
+T_mean_grad:  11.8442
+E mean grad: -6.3442
+E std_dev grad:  10.1578
+E stoch_err grad:  0.4543
+T_mean_JF:  11.8625
+E mean JF: -6.3259
+E std_dev JF:  5.1463
+E stoch_err JF:  0.2301
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0366e+02
+Median on "cleaned" values: -2.0366e+02
+MAD Dispersion on "cleaned" values: 2.7569e+01
+Std dev on "cleaned" values: 5.0082e+01
+
+Std to MAD ratio:  1.2253
+control function:  1.0000
+
+upper energy clipping interval: -6.5812e+01
+max energy:  1.7260e+02
+upper energy choosen:  1.7260e+02
+lower energy clipping interval: -3.4151e+02
+min energy: -3.6580e+02
+lower energy choosen: -3.6580e+02
+
+Energy mean clipped: -2.0184e+02
+Energy mean non-clipped: -2.0184e+02
+
+Gradient norm before clip: 26.774114
+Gradient norm after: 26.774114
+
+Epoch: 53
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5268
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  389.3031
+V_mean: -592.0865
+E mean: -202.7834
+E std_dev:  44.0827
+E stoch_err:  1.9714
+T_mean_grad:  381.5841
+E mean grad: -210.5025
+E std_dev grad:  251.8055
+E stoch_err grad:  11.2611
+T_mean_JF:  385.4436
+E mean JF: -206.6429
+E std_dev JF:  126.0032
+E stoch_err JF:  5.6350
+
+Energy per particle:
+T_mean:  12.1657
+V_mean: -18.5027
+E mean: -6.3370
+E std_dev:  1.3776
+E stoch_err:  0.0616
+T_mean_grad:  11.9245
+E mean grad: -6.5782
+E std_dev grad:  7.8689
+E stoch_err grad:  0.3519
+T_mean_JF:  12.0451
+E mean JF: -6.4576
+E std_dev JF:  3.9376
+E stoch_err JF:  0.1761
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0369e+02
+Median on "cleaned" values: -2.0369e+02
+MAD Dispersion on "cleaned" values: 2.4150e+01
+Std dev on "cleaned" values: 4.4083e+01
+
+Std to MAD ratio:  1.2312
+control function:  1.0000
+
+upper energy clipping interval: -8.2936e+01
+max energy:  1.0192e+02
+upper energy choosen:  1.0192e+02
+lower energy clipping interval: -3.2444e+02
+min energy: -3.9030e+02
+lower energy choosen: -3.9030e+02
+
+Energy mean clipped: -2.0278e+02
+Energy mean non-clipped: -2.0278e+02
+
+Gradient norm before clip: 12.028971
+Gradient norm after: 12.028971
+
+Epoch: 54
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5245
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  397.4271
+V_mean: -599.0717
+E mean: -201.6446
+E std_dev:  44.2670
+E stoch_err:  1.9797
+T_mean_grad:  364.7502
+E mean grad: -234.3215
+E std_dev grad:  240.0588
+E stoch_err grad:  10.7358
+T_mean_JF:  381.0886
+E mean JF: -217.9831
+E std_dev JF:  118.9966
+E stoch_err JF:  5.3217
+
+Energy per particle:
+T_mean:  12.4196
+V_mean: -18.7210
+E mean: -6.3014
+E std_dev:  1.3833
+E stoch_err:  0.0619
+T_mean_grad:  11.3984
+E mean grad: -7.3225
+E std_dev grad:  7.5018
+E stoch_err grad:  0.3355
+T_mean_JF:  11.9090
+E mean JF: -6.8120
+E std_dev JF:  3.7186
+E stoch_err JF:  0.1663
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0227e+02
+Median on "cleaned" values: -2.0227e+02
+MAD Dispersion on "cleaned" values: 2.1452e+01
+Std dev on "cleaned" values: 4.4267e+01
+
+Std to MAD ratio:  1.3918
+control function:  1.0000
+
+upper energy clipping interval: -9.5009e+01
+max energy:  1.8125e+01
+upper energy choosen:  1.8125e+01
+lower energy clipping interval: -3.0953e+02
+min energy: -3.8799e+02
+lower energy choosen: -3.8799e+02
+
+Energy mean clipped: -2.0164e+02
+Energy mean non-clipped: -2.0164e+02
+
+Gradient norm before clip: 7.177264
+Gradient norm after: 7.177264
+
+Epoch: 55
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5275
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  381.0002
+V_mean: -581.5805
+E mean: -200.5803
+E std_dev:  50.5197
+E stoch_err:  2.2593
+T_mean_grad:  386.4589
+E mean grad: -195.1216
+E std_dev grad:  317.3248
+E stoch_err grad:  14.1912
+T_mean_JF:  383.7295
+E mean JF: -197.8510
+E std_dev JF:  162.2961
+E stoch_err JF:  7.2581
+
+Energy per particle:
+T_mean:  11.9063
+V_mean: -18.1744
+E mean: -6.2681
+E std_dev:  1.5787
+E stoch_err:  0.0706
+T_mean_grad:  12.0768
+E mean grad: -6.0976
+E std_dev grad:  9.9164
+E stoch_err grad:  0.4435
+T_mean_JF:  11.9915
+E mean JF: -6.1828
+E std_dev JF:  5.0718
+E stoch_err JF:  0.2268
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0084e+02
+Median on "cleaned" values: -2.0084e+02
+MAD Dispersion on "cleaned" values: 2.6144e+01
+Std dev on "cleaned" values: 5.0520e+01
+
+Std to MAD ratio:  1.3033
+control function:  1.0000
+
+upper energy clipping interval: -7.0118e+01
+max energy:  1.5107e+02
+upper energy choosen:  1.5107e+02
+lower energy clipping interval: -3.3156e+02
+min energy: -3.8227e+02
+lower energy choosen: -3.8227e+02
+
+Energy mean clipped: -2.0058e+02
+Energy mean non-clipped: -2.0058e+02
+
+Gradient norm before clip: 25.509201
+Gradient norm after: 25.509201
+
+Epoch: 56
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5274
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  386.8096
+V_mean: -589.3001
+E mean: -202.4905
+E std_dev:  49.3952
+E stoch_err:  2.2090
+T_mean_grad:  387.1139
+E mean grad: -202.1862
+E std_dev grad:  283.8490
+E stoch_err grad:  12.6941
+T_mean_JF:  386.9617
+E mean JF: -202.3383
+E std_dev JF:  135.2568
+E stoch_err JF:  6.0489
+
+Energy per particle:
+T_mean:  12.0878
+V_mean: -18.4156
+E mean: -6.3278
+E std_dev:  1.5436
+E stoch_err:  0.0690
+T_mean_grad:  12.0973
+E mean grad: -6.3183
+E std_dev grad:  8.8703
+E stoch_err grad:  0.3967
+T_mean_JF:  12.0926
+E mean JF: -6.3231
+E std_dev JF:  4.2268
+E stoch_err JF:  0.1890
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0002e+02
+Median on "cleaned" values: -2.0002e+02
+MAD Dispersion on "cleaned" values: 2.9005e+01
+Std dev on "cleaned" values: 4.9395e+01
+
+Std to MAD ratio:  1.1487
+control function:  1.0000
+
+upper energy clipping interval: -5.4999e+01
+max energy:  4.2057e-01
+upper energy choosen:  4.2057e-01
+lower energy clipping interval: -3.4505e+02
+min energy: -5.0885e+02
+lower energy choosen: -5.0885e+02
+
+Energy mean clipped: -2.0249e+02
+Energy mean non-clipped: -2.0249e+02
+
+Gradient norm before clip: 26.519174
+Gradient norm after: 26.519174
+
+Epoch: 57
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5292
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  382.2473
+V_mean: -583.7621
+E mean: -201.5148
+E std_dev:  49.1560
+E stoch_err:  2.1983
+T_mean_grad:  379.2948
+E mean grad: -204.4673
+E std_dev grad:  270.5642
+E stoch_err grad:  12.1000
+T_mean_JF:  380.7711
+E mean JF: -202.9911
+E std_dev JF:  137.0543
+E stoch_err JF:  6.1293
+
+Energy per particle:
+T_mean:  11.9452
+V_mean: -18.2426
+E mean: -6.2973
+E std_dev:  1.5361
+E stoch_err:  0.0687
+T_mean_grad:  11.8530
+E mean grad: -6.3896
+E std_dev grad:  8.4551
+E stoch_err grad:  0.3781
+T_mean_JF:  11.8991
+E mean JF: -6.3435
+E std_dev JF:  4.2829
+E stoch_err JF:  0.1915
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0433e+02
+Median on "cleaned" values: -2.0433e+02
+MAD Dispersion on "cleaned" values: 2.9797e+01
+Std dev on "cleaned" values: 4.9156e+01
+
+Std to MAD ratio:  1.1127
+control function:  1.0000
+
+upper energy clipping interval: -5.5347e+01
+max energy: -6.3341e+00
+upper energy choosen: -6.3341e+00
+lower energy clipping interval: -3.5332e+02
+min energy: -3.7149e+02
+lower energy choosen: -3.7149e+02
+
+Energy mean clipped: -2.0151e+02
+Energy mean non-clipped: -2.0151e+02
+
+Gradient norm before clip: 13.786910
+Gradient norm after: 13.786910
+
+Epoch: 58
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5255
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  388.7159
+V_mean: -587.7804
+E mean: -199.0645
+E std_dev:  54.2258
+E stoch_err:  2.4251
+T_mean_grad:  378.5761
+E mean grad: -209.2043
+E std_dev grad:  322.5974
+E stoch_err grad:  14.4270
+T_mean_JF:  383.6460
+E mean JF: -204.1344
+E std_dev JF:  163.7852
+E stoch_err JF:  7.3247
+
+Energy per particle:
+T_mean:  12.1474
+V_mean: -18.3681
+E mean: -6.2208
+E std_dev:  1.6946
+E stoch_err:  0.0758
+T_mean_grad:  11.8305
+E mean grad: -6.5376
+E std_dev grad:  10.0812
+E stoch_err grad:  0.4508
+T_mean_JF:  11.9889
+E mean JF: -6.3792
+E std_dev JF:  5.1183
+E stoch_err JF:  0.2289
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9765e+02
+Median on "cleaned" values: -1.9765e+02
+MAD Dispersion on "cleaned" values: 2.6157e+01
+Std dev on "cleaned" values: 5.4226e+01
+
+Std to MAD ratio:  1.3983
+control function:  1.0000
+
+upper energy clipping interval: -6.6866e+01
+max energy:  2.8555e+02
+upper energy choosen:  2.8555e+02
+lower energy clipping interval: -3.2844e+02
+min energy: -4.0513e+02
+lower energy choosen: -4.0513e+02
+
+Energy mean clipped: -1.9906e+02
+Energy mean non-clipped: -1.9906e+02
+
+Gradient norm before clip: 27.853240
+Gradient norm after: 27.853240
+
+Epoch: 59
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5250
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  375.8500
+V_mean: -577.1547
+E mean: -201.3046
+E std_dev:  70.0554
+E stoch_err:  3.1330
+T_mean_grad:  396.1229
+E mean grad: -181.0317
+E std_dev grad:  362.3839
+E stoch_err grad:  16.2063
+T_mean_JF:  385.9865
+E mean JF: -191.1682
+E std_dev JF:  196.5973
+E stoch_err JF:  8.7921
+
+Energy per particle:
+T_mean:  11.7453
+V_mean: -18.0361
+E mean: -6.2908
+E std_dev:  2.1892
+E stoch_err:  0.0979
+T_mean_grad:  12.3788
+E mean grad: -5.6572
+E std_dev grad:  11.3245
+E stoch_err grad:  0.5064
+T_mean_JF:  12.0621
+E mean JF: -5.9740
+E std_dev JF:  6.1437
+E stoch_err JF:  0.2748
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -2.0091e+02
+Median on "cleaned" values: -2.0091e+02
+MAD Dispersion on "cleaned" values: 2.7970e+01
+Std dev on "cleaned" values: 7.0055e+01
+
+Std to MAD ratio:  1.6894
+control function:  1.0000
+
+upper energy clipping interval: -6.1058e+01
+max energy:  9.6380e+02
+upper energy choosen:  9.6380e+02
+lower energy clipping interval: -3.4076e+02
+min energy: -3.9254e+02
+lower energy choosen: -3.9254e+02
+
+Energy mean clipped: -2.0130e+02
+Energy mean non-clipped: -2.0130e+02
+
+Gradient norm before clip: 67.888177
+Gradient norm after: 67.888177
+
+Epoch: 60
+Learning rate: 2.0000e-03
+
+Sampling:
+burned sweep: 5
+delta: 2.0092
+Acceptance ratio: 0.5221
+
+Computing Energy:
+System of  32 particles
+
+Total Energy of system:
+T_mean:  388.9852
+V_mean: -593.9063
+E mean: -204.9211
+E std_dev:  55.9562
+E stoch_err:  2.5024
+T_mean_grad:  396.8783
+E mean grad: -197.0280
+E std_dev grad:  302.0378
+E stoch_err grad:  13.5075
+T_mean_JF:  392.9318
+E mean JF: -200.9746
+E std_dev JF:  138.8330
+E stoch_err JF:  6.2088
+
+Energy per particle:
+T_mean:  12.1558
+V_mean: -18.5596
+E mean: -6.4038
+E std_dev:  1.7486
+E stoch_err:  0.0782
+T_mean_grad:  12.4024
+E mean grad: -6.1571
+E std_dev grad:  9.4387
+E stoch_err grad:  0.4221
+T_mean_JF:  12.2791
+E mean JF: -6.2805
+E std_dev JF:  4.3385
+E stoch_err JF:  0.1940
+
+
+Applying minSR::
+Fraction non-finite values:  0/500=0.00%
+Fraction clipped values:  0/500=0.00%
+
+Median of finite values: -1.9754e+02
+Median on "cleaned" values: -1.9754e+02
+MAD Dispersion on "cleaned" values: 2.9414e+01
+Std dev on "cleaned" values: 5.5956e+01
+
+Std to MAD ratio:  1.2831
+control function:  1.0000
+
+upper energy clipping interval: -5.0473e+01
+max energy: -4.3964e+01
+upper energy choosen: -4.3964e+01
+lower energy clipping interval: -3.4461e+02
+min energy: -4.4359e+02
+lower energy choosen: -4.4359e+02
+
+Energy mean clipped: -2.0492e+02
+Energy mean non-clipped: -2.0492e+02
+
+Gradient norm before clip: 68.506675
+Gradient norm after: 68.506675
+
+
+Run started at: 12/11/2026 06:18:29
+Run finished at: 12/11/2026 07:04:23
+
+Elapsed time: 0 hh 45 mm 54.03 ss

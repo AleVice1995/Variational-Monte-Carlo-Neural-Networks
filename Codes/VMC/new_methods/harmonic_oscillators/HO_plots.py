@@ -12,6 +12,9 @@ from VMC.new_methods.class_and_functions.Neural_Networks_models import  Neural_N
 from VMC.new_methods.class_and_functions.utils import autocorrelation_length
 from VMC.new_methods.class_and_functions.sampler import Sampler
 from VMC.new_methods.class_and_functions.Energy import compute_energy_local
+
+torch.set_default_dtype(torch.float64)
+
 device=torch.device("cpu")
 
 checkpoint = torch.load("VMC/new_methods/harmonic_oscillators/checkpoint_HO.pth", map_location=device, weights_only=False)
@@ -209,7 +212,7 @@ sampler=Sampler(n_particles=n_particles, dimension=dimension,
 MC_samples=5000
 batch_autocorr=1
 current_config_autocorr, acceptance_ratio_autocorr=sampler.metropolis_sampling_parallel_walkers_batch(model_HO, current_config, delta_list[-1], 
-                        MC_samples, sweep_per_save=10, batch=batch_autocorr, burned_sweep=3, save_data=True)
+                        MC_samples, sweep_per_save=4, batch=batch_autocorr, burned_sweep=3, save_data=True)
 
 data_autocorr=compute_energy_local(model_HO, current_config_autocorr, kinetic_factor, potentials,
                           exp_function, n_particles)
@@ -232,6 +235,7 @@ if autocorr_terms<saved_samples_per_walker:
     C_tau_terms_mean=C_tau_terms_mean.detach().cpu().numpy()
     C_tot=0.5+np.sum(C_tau_terms_mean[1:])
     # C_tot=np.sum(C_tau_terms_mean)
+    print(f"C_tot: {C_tot: .04f}")
     tau=np.arange(autocorr_terms)
     
     x_data_exp_model_HO=np.linspace(0,autocorr_terms-1, 1000)

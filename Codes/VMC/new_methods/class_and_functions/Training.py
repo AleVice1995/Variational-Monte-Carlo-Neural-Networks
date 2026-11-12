@@ -73,7 +73,7 @@ def training_NN_VMC(model, sampler, epochs,
         elif epoch<20:
             burned_sweep=10
         else:
-            burned_sweep=3
+            burned_sweep=5
         print(f"burned sweep: {burned_sweep:d}")
         if file is not None:
             file.write(f"burned sweep: {burned_sweep:d}\n")
